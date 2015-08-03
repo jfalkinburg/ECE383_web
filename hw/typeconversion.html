@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ECE383</title>
+        <meta name="description" content="ECE 383 - Embedded Systems II with the Digilent Atlys at the United States Air Force Academy (USAFA).">
+        <meta name="author" content="Chris Coulston">
+        <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
+        <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
+    </head>
+    <body>
+
+        <div class = "container">
+            <div class = "navbar navbar-inverse">
+                <div class = "navbar-inner">
+                    <a class = "brand" href="../index.html">ECE 383</a>
+                    <ul class = "nav">
+                        <li><a href="../index.html">Home</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href="./hw3.html">&ltPrev</a></li>
+                        <li><a href="./hw5.html">Next&gt</a></li>
+                    </ul>
+
+                    </ul>
+                </div>
+            </div>
+
+
+<h1>Homework #4 - Not completed yet</h1>
+Guidelines
+<ul>
+<li>Complete your work on green engineering paper
+<li>Staple in upper left if more than one sheet.
+<li>Format the top of the first sheet as follows.
+<table border =1>
+<tr><td>ECE 383	<td>[Your name]	<td>HW#1	<td>[Due Date]	<td>[Page ref]
+</table>
+The page reference for the first page of a four page document would be 1/4, the
+second page of this document would be labeled 2/4 and so on.  
+<li>Do not write on the back side of the green engineering paper
+</ul>
+<br><br>
+
+
+<ol>
+
+
+Create a digital circuit that converts 18-bit 2's complement numbers
+into 18-bit unsigned values using a special scaling.  The idea of the
+rescaling is to preserve the order of the 2's complement values while
+shifting them to positive values.  The following diagram shows the input
+values on the top of the number line and the output values from your circuit
+below the number line.  
+<ul>
+<li>The largest 18-bit 2's complement value is 2^17-1 = 131071.  This number gets 
+scaled to the largest 18-bit unsigned value 2^18-1 = 262143.  
+
+<li>The "middle-most" 18-bit 2's complement value 0 gets shifted to the
+"middle-most" 18-bit unsigned value 2^17 = 131072. 
+
+<li>The smallest 18-bit 2's complement value is -2^17 = -131072.  This number gets 
+scaled to the smallest 18-bit unsigned value 0.
+</ul>
+
+<img src="./hw3.gif"><br><br>
+
+You will have to figure out the design of the circuit, but I would recomend that
+you try to solve the problem using an if/then approach.  The solution is very
+simple, but the journey is fraught with pitfalls.
+
+
+
+
+</body>
+</html>
+

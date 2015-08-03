@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<!----- http://getbootstrap.com/css/ ----->
+    <head>
+        <title>ECE 383 - Lecture Notes</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="ECE 383- Embedded Systems II">
+        <meta name="author" content="Chris Coulston">
+        <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
+        <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
+    </head>
+
+<body>
+        <div class = "container">
+            <div class = "navbar navbar-inverse">
+                <div class = "navbar-inner">
+                    <a class = "brand" href="../index.html">ECE 383</a>
+                    <ul class="nav pull-right">
+                        <li><a href="./lecture10.html">&ltPrev</a></li>
+                        <li><a href="./lecture12.html">Next&gt</a></li>
+                    </ul>
+                </div>
+            </div>
+
+<table class="table table-striped table-bordered table-condensed">
+<tr><td>Date:</td>	<td>February 8/9</td></tr>
+<tr><td>Lecture:</td>	<td>11</td></tr>
+<tr><td>Homework	<td><a href="../hw/hw8.html">HW #8</a>
+<tr><td>Status		<td bgcolor = #FFFFF0>Not Started<!--<td bgcolor = #FFD0D0>In Progress --> <!--<td bgcolor = #D0FFD0>Complete -->
+<tr><td>Code 		<td>	<a href="./code/lec11.vhdl">lec11.vhdl<br>
+				<a href="./code/lec11_dp.vhdl">lec11_dp.vhdl<br>
+				<a href="./code/keyboard.vhd">keyboard.vhd<br>
+				<a href="./code/lec11_tb.vhdl">lec11_tb.vhdl</a>
+</table>
+
+
+<h2>Datapath and control - timing</h2>
+There are several important reasons to examine the timing behavior of a datapath
+and control circuit.  First, so that we can make informed predictions about
+the expected clocking frequency of our circuits.  Second, so that we can 
+identify critical paths in our circuit.  Third, so that we can develop our
+intuition about the operation of these complex circuits.<br><br>
+
+To facilitate a discussion of the timing behavior of the datapath and control
+circuit, lets examine the circuit from last lecture, the search algorithm for
+a minimum shown below.
+
+<br><img src="./img/lecture11-1.gif"><br><br>
+
+Like we did in our last lecture, we will examine the time its takes, starting from
+a positive clock edge, to get the next state setup on the flip flops in the FSM.
+The positive clock edge has two
+primary effects: It causes the FSM to transition into a new state and it
+causes the registers in the datapath to latch new values. The propagation
+delay of the flip flops is referred to as Tp(A). Since the datapath
+requires a valid control word before it can begin, the critical path includes
+the output equation logic.<br><br>
+
+The D flip flops which store the state of the control unit are the
+input of the OEs. The delay between the application of a
+valid Q to when the OEs assert their new values is referred to as Tp(B).<br><br>
+
+The OEs of the FSM are the control word to the datapath 
+telling the elements in the datapath what operation to perform.
+Sequential logic components do not actually perform their instructed operations
+until the next clock edge arrives. On the other hand, combinational
+logic components perform their operations immediately.  It is easy to construct
+  datapath instances where the control word effects the status input to
+the control unit. For example, the control word selects an input of a mux,
+whose output is routed to a comparator, whose status output is sent to the
+control unit. Thus, the combinational logic is on the critical path because
+its delay constrains the maximum clocking frequency. The time difference
+between the application of a valid control word to the datapath and the
+status input to the control unit becoming valid is referred to as Tp(C). <br><br>
+
+The status input to the control unit are routed to the MIE logic.
+The delay between the status inputs becoming valid and the
+MIEs becoming valid is referred to as Tp(D).<br><Br>
+
+Once the memory inputs have stabilized, they must be allowed some
+setup time before the next clock edge. The setup time is referred to as Tp(E).<br><br>
+
+
+<br><img src="./img/lecture11-2.gif"><br><br>
+
+
+
+<h2>VHDL Instantiation</h2>
+
+There are two important points that need to be made regarding
+VHDL instantiation.  <br><br>
+
+<b>Binding</b><br>
+The term "binding" is used to refer to the technique of assigning
+signals in the top-level entity (caller) to the signals in the instance.
+Up till now we have been using a verbose binding technique where
+the signals in the top-level and instance are explicitly related.
+
+For example, in lecture 10, we used the following instantiation to 
+bind the signals of a generic counter to the testbench.
+
+<pre>
+   uut: lec10 
+        Generic map(5)
+        PORT MAP (
+          clk => clk,
+          reset => reset,
+          crtl => crtl,
+          D => loadInput,
+          Q => cntOutput);
+</pre>
+
+In this case, the signals clk, reset, crtl, D and Q were defined
+inside the lec10 component.  The signals clk, reset, crtl, loadInput,
+and cntOutput were defined as signals in the higher-level testbench.
+However, we could shorten this instantiation by using the default binding
+calling convention shown in the code below.
+
+<pre>
+   uut: lec10 
+        Generic map(5)
+        PORT MAP (clk, reset, crtl, loadInput, cntOutput);
+</pre>
+
+The important point to make here is that when you use the default 
+binding, the order of the signals must match the exact same order
+that is defined in the entity description.  This generates a 
+more compact instantiation statement. <br><Br>
+
+
+<b>Unused outputs and the OPEN keyword</b><br>
+There will be cases where you have a component that you would 
+like to instantiate, but do not need all the output signals.
+A good example is given by the comparator below.
+
+<pre>
+entity compare is
+    generic(N: integer := 4);
+    port(x,y : in unsigned(N-1 downto 0);
+         g,l,e: out std_logic);
+end compare;
+</pre>
+
+Note that g=1 when x>y, and l=1 when x<y, and e=1 when x=y.  If you 
+wanted to know if 2 signals (say A and B) were equal to one another
+but did not care about less and greater, then you could use the 
+following component instantation.
+<pre>
+    example: compare port map (A,B,OPEN, OPEN, equal);
+</pre>
+
+This notifies the synthesis engine that it can remove the logic
+associated with any of the OPEN signals and reduce the resources
+used on the FPGA.<br><br>
+
+<b>Subvectors and concatination</b><br>
+There are times when we will need to rebuild a std_logic_vector
+from pieces of other vectors.  In order to accomplish this you
+will need to understant subvectors and the concatination operation.
+Since vector are defined as signal(7 downto 0), you can replace
+the limits with anything in between to get a small subvector. 
+So, for example, you could ask for signal(5 downto 2) for a 4-bit
+sub-vector of signal.<br>
+The concatination operation, &, is a way to "glue" two vectors together.
+So for example, to build a 8-bit vector you could legally
+write in VHDL signal(3 downto 1) & signal (7 downto 3);<br>
+
+These two concepts come together in the shift register used in the
+lecture 11 code, which contains the following line of VHDL code.
+
+<pre>
+shiftReg <= kbData & shiftReg (10 downto 1);                    
+</pre>
+
+
+<h2>Keyboard serial to parallel converter</h2>
+
+
+<table class="table table-striped table-bordered table-condensed">
+<tr><td>Nomenclature:		<td>PS/2 Keyboard
+<tr><td>Data Input: 		<td>none
+<tr><td>Data Output: 		<td>1-bit data, nominally logic 1
+<tr><td>Control: 		<td>none
+<tr><td>Status: 		<td>none
+<tr><td>Others: 		<td>1-bit clk, nominally logic 1
+<tr><td>Physical Input: 	<td>key press and key release events
+<tr><td>Physical Output:	<td>none
+<tr><td>Behavior:		<td>When a key is pressed, its 8-bit make code 
+			is transmitted. When a key is released, an 8-bit break code
+			is transmitted, immediately followed by the key's 8-bit scan code.
+</table>
+
+While the table implies a keyboard is an output-only device, the truth
+is the clock and data lines are open collector signals. In other words, the
+clock and data lines can safely be manipulated by the external world to 
+configure a keyboard. A common example of such bidirectional communication
+occurs every time the Caps Lock key is pressed on a keyboard. When
+this happens, the keyboard sends the Caps Lock scan code to the PC and
+the PC in return writes a Toggle Caps Lock LED command to the keyboard.
+Since the keyboard scan code reader does not write to the keyboard,
+it assumes that the clock and data signals are outputs from the keyboard.
+When a keyboard key is pressed, the keyboard sends one packet of information
+as shown at the top of Figure 9.14. The 8-bit data contained in this
+make code is the scan code of the key pressed. The relationship between the
+keys and their scan codes is not at all obvious and is not based on ASCII.
+The exact codes are immaterial to the discussion; the curious reader can
+perform a quick Internet search on PS/2 keyboard scan codes to get a
+complete listing. When a key is released, two packets are transmitted as
+shown at the top of Figure 9.14. The break code is almost always equal to
+0xF0. The final packet is the scan code of the released key.
+
+
+<br><img src="./img/lecture11-3.gif"><br><br>
+
+While there is a scan code for "a" key, there is not a scan code for "A".
+The device reading the keyboard interprets the make code for shift, and
+then sees a make code for "a". From this, the device reading the keyboard
+should understand that the user wants a capital "A". More than likely, the
+user will release the "a", first causing its break code and scan code to be
+transmitted, followed by the break and scan code for the "shift" key.
+Each of these packets consists of 11 bits as shown in the lower half of
+Figure 9.14. The data from the keyboard is always valid on the falling edge
+of the clock signal. The keyboard asserts new data on or around the rising
+edge of the clock. The 11-bit data packet always begins with a start bit
+equal to 0. Following the start bit are 8-bits of data, transmitted 
+least-significant bit first. Following the data bits is an odd-parity bit, whose
+value is set by the keyboard so that the total number of 1s transmitted in
+the eight data bits plus the parity bit equals an odd number. For example,
+if the eight data bits are 01100011, then the parity bit would equal 1 so
+that the total number of 1s would be an odd number, in this case 5. By
+adding some additional circuitry, the parity bit can be used to detect errors
+in transmission. Following the parity bit, the final bit of the data packet,
+the stop bit, is sent and is always equal to 1.
+
+
+<table class="table table-striped table-bordered table-condensed">
+<tr><td>Nomenclature: 	<td>Keyboard scan code reader
+<tr><td>Data Input: 	<td>1-bit kd data, nominally logic 1 1-bit kd clk, 
+			nominally logic 1
+<tr><td>Data Output: 	<td>8-bit scan code
+<tr><td>Control: 	<td>none
+<tr><td>Status: 	<td>1-bit busy, nominally logic 0
+<tr><td>Others: 	<td>1-bit clk, nominally logic 1
+<tr><td>Behavior: 	<td>Interprets the PS/2 keyboard clk and data signal
+			from a keypress event and outputs the associated scan
+			code. The busy signal goes high when the first data
+			bit arrives and stays high until the last data bit is
+			received. Busy is low only when there is a valid scan
+			code on the output.
+</table>
+
+Looking at the timing diagram and the description above, I came up with
+the following algorithm.
+
+<pre>
+1. while(1) {
+2.     busy=0;
+3.     while (kb_clk == 1);
+4.     busy=1;
+5.     for (count=0 count<33; count++) {
+6.         while(kb_clk == 1);
+7.         shift = (shift << 1) | kb_data;
+8.         while(kb_clk == 0);
+9.     } // end for
+10.     scan = shift[9-2]
+11. } // end while 1
+</pre>
+
+
+Now lets build the datapath and control using the technique learned in lecture 10.
+Your homework is to build the control unit for the keyboard scancode reader.
+
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ECE383</title>
+        <meta name="description" content="ECE 383 - Embedded Systems II with the Digilent Atlys at the United States Air Force Academy (USAFA).">
+        <meta name="author" content="Chris Coulston">
+        <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
+        <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
+    </head>
+    <body>
+
+        <div class = "container">
+            <div class = "navbar navbar-inverse">
+                <div class = "navbar-inner">
+                    <a class = "brand" href="../index.html">ECE 383</a>
+                    <ul class="nav pull-right">
+                        <li><a href="./hw5.html">&ltPrev</a></li>
+                        <li><a href="./hw7.html">Next&gt</a></li>
+                    </ul>
+
+                    </ul>
+                </div>
+            </div>
+
+
+<h1>Homework #6</h1>
+Guidelines
+<ul>
+<li>Complete your work on green engineering paper
+<li>Staple in upper left if more than one sheet.
+<li>Format the top of the first sheet as follows.
+<table border =1>
+<tr><td>ECE 383	<td>[Your name]	<td>HW#9	<td>[Due Date]	<td>[Page ref]
+</table>
+The page reference for the first page of a four page document would be 1/4, the
+second page of this document would be labeled 2/4 and so on.  
+<li>Do not write on the back side of the green engineering paper
+</ul>
+<br><br>
+
+
+<ol>
+
+
+<li>Crusty the engineer is a well intentioned employee in your organization
+who, unfortunately, is caught in some kind of 70's time warp.  Crusty is 
+convinced that a FSM built using discrete logic gates will outperform your
+shiny new 100Mhz FPGA design. Arguing with Crusty has come to nothing and its
+time to put an end to this once and for all.  You are going to do the 
+calculations to see how fast a discrete logic gate realization can run.
+<br><br>
+
+You are to build the FSM using the the architecture given in Lecture 9.
+Use the positive edge triggered 
+flip flops inside the SN74LS273N chip, and the AND, OR and NOT gates inside 
+the SN74LS08N, SN74LS32N, and SN74LS04N chips respectively.  You are to 
+assume that the logic inside the MIE and OE boxes are 2-level combinational 
+logic (solved using a kmap).  You will need to pull the technical documents 
+for the chips by searching Digi-Key and clicking on the Datasheet in
+the part view.  When given a choice, always use the worst-case time estimates 
+from the data sheets.
+<br><br>
+
+To make your point you will need to show Crusty the details of your calculations,
+making sure to document where the numbers came from.  
+<ol type="a">
+<li>Calculate the minimum clock period and the maximum clocking frequency.  
+
+<li>How many times faster is the discrete logic realization compared 
+to a 100Mhz FPGA realization?  
+
+<li>Check out the <a href="http://en.wikipedia.org/wiki/Logic_family">Logic Families</a> 
+entry on wikipedia.  Excluding the G series, what TTL family type should have the 
+highest clocking rate?  
+
+<li>Provide a rough estimate of the clocking frequency of a FSM built from this 
+type of logic.  Making sure to show your calculation.
+
+<li>List at least two other performance related dimension could you 
+argue that an FPGA solution would be superior.  Briefly describe 
+how you would make your case.
+</ol>
+
+<br><br>
+
+<li>
+Complete the timing diagram below assuming that the register is 
+positive edge trigger and has an asynchronous active low reset.
+
+<br><img src="./hw6.gif"><br><br>
+
+
+</ol>
+
+</body>
+</html>
+

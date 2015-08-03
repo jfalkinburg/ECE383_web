@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<!----- http://getbootstrap.com/css/ ----->
+    <head>
+        <title>ECE 383 - Lecture Notes</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="ECE 383- Embedded Systems II">
+        <meta name="author" content="Chris Coulston">
+        <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
+        <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
+    </head>
+
+<body>
+        <div class = "container">
+            <div class = "navbar navbar-inverse">
+                <div class = "navbar-inner">
+                    <a class = "brand" href="../index.html">ECE 383</a>
+                    <ul class="nav pull-right">
+                        <li><a href="./lecture12.html">&ltPrev</a></li>
+                        <li><a href="./lecture18.html">Next&gt</a></li>
+                    </ul>
+                </div>
+            </div>
+
+<table class="table table-striped table-bordered table-condensed">
+<tr><td>Date:</td>	<td>February 29/March 1</td></tr>
+<tr><td>Lecture:</td>	<td>17</td></tr>
+<tr><td>Homework	<td><a href="../hw/hw9.html">HW #9</a></td></tr>
+<tr><td>Status		<td bgcolor = #FFFFF0>Not Started<!--<td bgcolor = #FFD0D0>In Progress --> <!--<td bgcolor = #D0FFD0>Complete -->
+<tr><td>Handout		<td><a href="../hand/hand17.docx">hand17.docx</a></td></tr>
+<tr><td>Code 		<td>	<a href="./code/lec17.vhdl">lec17.vhdl<br>
+				<a href="./code/lec17.c">lec17.c</a>
+</table>
+
+
+
+<h2>microBlaze</h2>
+The goal of today's class is to bring you up to speed on how to
+instantiate a microBlaze processor on our Spartan 6, integrate
+a custom piece of VHDL code to the processor, and then to write
+some C-code to run on the microBlaze to control the custom 
+VHDL module.  A few words about the microBlaze are in order here:
+
+<ul>
+<li> Thirty-two 32-bit general purpose registers
+<li> 32-bit instruction word with three operands and two addressing modes
+<li> 32-bit address bus
+<li> Single issue (3 or 5)-stage pipeline
+</ul>
+
+The following image was copied from the "MicroBlaze Processor Reference Guide"
+and summarizes the major features of the processor.
+
+<br><img src="./img/lecture17-4.gif"><br><br>
+
+The rest of the class will be devoted to getting two simple microBlaze 
+designs operations.
+
+
+<h2>Tutorial Overview</h2>
+<p>In this tutorial, you will be introduced to the tool flow for simple MicroBlaze designs.  Specifically, you will create a design that continuously reads the input from UART and writes that value to the LEDs.</p>
+<h2>System Requirements</h2>
+<p>You must complete the following installation items before you can follow the steps of this tutorial:</p>
+<ul>
+<li>Install Xilinx ISE 14.X System Edition.  This includes ISE Project Navigator, PlanAhead, Software Development Kit, and Platform Studio.</li>
+<li>Download the Atlys_BSB_Support_v_3_6.zip from the Digilent Atlys support site.<ul>
+<li>Extract this folder to a permanent location on your computer.</li>
+<li>This tutorial assumes you have it extracted to: <code>C:/Xilinx/Atlys_BSB_Support_v_3_6</code></li>
+<li><strong>Ensure you run the <code>inst_uninst</code> batch file in the <code>Digilent_AXI_IPCore_Support_v_1_33</code> folder!</strong></li>
+</ul>
+</li>
+<li>From the Digilent website, download and install the &quot;Digilent Plugin for Xilinx Tools.&quot;<ul>
+<li>The installation instructions are included as a PDF in the downloaded zip file.</li>
+<li>This is the most important paragraph in the installation instructions: <em>The Digilent Plug-in can be installed in the ISE installation directory by copying libCseDigilent.dll (libCseDigilent.so on Linux systems) and libCseDigilent.xml to the plugins directory. For the Windows version of ISE Design Suite, the typical location is <code>C:\Xilinx\14.1\ISE_DS\ISE\lib\nt\plugins\Digilent\libCseDigilent</code>. For 64-bit Windows, use nt64 inplace of nt.</em></li>
+</ul>
+</li>
+</ul>
+<h2>Create Basic Hardware Platform (UART)</h2>
+<p>The steps in this section will guide you through the process of creating a hardware platform for your embedded FPGA design.  The ultimate product is a bitfile you can use to download to your FPGA.</p>
+<ul>
+<li>Open Xilinx Platform Studio</li>
+</ul>
+<p><img src="./lecture17Images/open_platform_studio.jpg" alt="Open Platform Studio"></p>
+<ul>
+<li>Click &quot;Create New Project Using Base System Builder&quot;</li>
+</ul>
+<p><img src="./lecture17Images/new_project.jpg" alt=""></p>
+<ul>
+<li>In the first window of the wizard:</li>
+</ul>
+<p><img src="./lecture17Images/first_window.jpg" alt=""></p>
+<ul>
+<li>Under &quot;New Project,&quot; browse to the folder you would like to save your project files.  Note: This does not create a subdirectory for you!</li>
+<li>Select the &quot;AXI System&quot; as your interconnect type</li>
+<li>Under &quot;Set Project Peripheral Repository Search Path,&quot; enter the location you extracted the Atlys support zip file.  Note: You must select the &quot;Atlys_AXI*/lib&quot; subdirectory.</li>
+<li>Click &quot;OK&quot;<ul>
+<li>Now you enter into the Base System Builder wizard setup, which is specific to the Atlys board.  This wizard will set which board you are working with, how to configure the MicroBlaze processor(s), and which peripherals you will need.  In general, leave everything to their default values, except where noted here.</li>
+</ul>
+</li>
+<li><p>First window: Select the Digilint Atlys board, Revision C</p>
+<p><img src="./lecture17Images/atlys_rev_c.jpg" alt=""></p>
+</li>
+<li><p>Second window: Remove all the peripherals in the bottom portion of the window. </p>
+<p><img src="./lecture17Images/remove_peripherals.jpg" alt=""></p>
+</li>
+</ul>
+<ul>
+<li>There are three main tabs under the &quot;System Assembly View&quot; that you will work with.</li>
+</ul>
+<p><img src="./lecture17Images/system_assembly_view.jpg" alt=""></p>
+<ul>
+<li>Bus Interfaces - This is where you will connect your peripherals to various busses.  For our design, everything will be connected to the same bus as the MicroBlaze processor.</li>
+<li>Ports - This is where you define how the input/output ports from the various peripherals connect to FPGA pins.  The names of the pins/ports are listed under this tab, but you still have to modify the UCF to specify which physical pin you are connected to on the FPGA.</li>
+<li>Addresses - This is where you specify the memory-mapped address range for each peripheral.  You need to be careful to give a large enough address block to cover all the software registers available in that peripheral.  For peripherals you have not created, you can look at the datasheet for help on the needed memory size.<ul>
+<li>There are two tabs under the side window that are also useful.</li>
+</ul>
+</li>
+</ul>
+<p><img src="./lecture17Images/tabs.jpg" alt=""></p>
+<ul>
+<li>IP Catalog - this is a list of available peripherals that you can connect to your MicroBlaze processor.  We will use the &quot;UART Lite&quot; peripheral to communicate our UART-to-USB connection your computer.</li>
+<li>Project - This is where you can access the &quot;raw&quot; files that Platform Studio manages for you<ul>
+<li>UCF File - where you name/configure the FPGA pins</li>
+<li>MHS File - where the peripherals configuration is stored (address, ports, bus, etc.)</li>
+<li>Add an &quot;AXI UART (Lite)&quot; peripheral from the IP Catalog</li>
+</ul>
+</li>
+</ul>
+<p><img src="./lecture17Images/ip_catalog.jpg" alt=""></p>
+<ul>
+<li>Baud Rate: 9600</li>
+<li>Number of Bits: 8</li>
+<li>Parity: False<ul>
+<li>Under the &quot;Bus Interfaces&quot; tab, ensure the <code>axi_uartlite_0</code> peripheral is connected to the same bus as MicroBlaze.  This lets the UART module communicate with your MicroBlaze processor.</li>
+</ul>
+</li>
+</ul>
+<p><img src="./lecture17Images/bus_interfaces.jpg" alt=""></p>
+<ul>
+<li>Under the &quot;Ports&quot; tab, connect the RX and TX lines for the <code>axi_uartlite_0</code> to external pins.  This just gives the name of the port to look for in the UCF file.</li>
+</ul>
+<p><img src="./lecture17Images/ports.jpg" alt=""></p>
+<ul>
+<li>Under the &quot;Addresses&quot; tab, change the base address for <code>xps_uartlite_0</code> to <code>0x84000000</code> with a size of <code>64K</code></li>
+</ul>
+<p><img src="./lecture17Images/addresses.jpg" alt=""></p>
+<ul>
+<li>Finally, add the following lines to the UCF file so that the UART peripheral knows which pins to use for RX and TX:</li>
+</ul>
+<p><code>net axi_uartlite_0_RX_pin LOC=A16 | IOSTANDARD = LVCMOS33;</code></p>
+<p><code>net axi_uartlite_0_TX_pin LOC=B16 | IOSTANDARD = LVCMOS33;</code></p>
+<ul>
+<li>Finally, click the &quot;Generate BitStream&quot; button to create your hardware bitfile.  Note: This process will take about 10 minutes!  For a more complicated design, it can take hours or days.</li>
+</ul>
+<h2>Write Simple Software</h2>
+<p>Now that the hardware is designed, you can write software to run on your embedded MicroBlaze hardware platform.  In this section, you will write the needed C code to interface with MicroBlaze and its UART peripheral.</p>
+<ul>
+<li>Click the &quot;Export Design&quot; button, and then select &quot;Export &amp; Launch SDK.&quot;  Make sure the &quot;Include bitstream and BMM&quot; checkbox is checked.</li>
+</ul>
+<p><img src="./lecture17Images/export_design.jpg" alt=""></p>
+<ul>
+<li>Xilinx SDK will ask you where you want to place your &quot;workspace.&quot;  Create a new folder somewhere on your computer where you will store the source projects for this tutorial.</li>
+</ul>
+<p><img src="./lecture17Images/workspace.jpg" alt=""></p>
+<ul>
+<li>Click File -&gt; New -&gt; Application Project</li>
+<li>Name your project anything you want (without spaces!), and then click &quot;Next.&quot;</li>
+</ul>
+<p><img src="./lecture17Images/application_project.jpg" alt=""></p>
+<ul>
+<li>Select &quot;Empty Application&quot;</li>
+</ul>
+<p><img src="./lecture17Images/empty_application.jpg" alt=""></p>
+<ul>
+<li>In the <code>src</code> folder of your new project, create a new C source file named <code>main.c</code>.</li>
+</ul>
+<p><img src="./lecture17Images/new_source.jpg" alt=""></p>
+<ul>
+<li>Type the following code into the new file:</li>
+</ul>
+<pre class='brush: c'>
+#include &lt;xuartlite_l.h&gt;
+#include &lt;xparameters.h&gt;
+
+int main(void)
+{
+  while (1)
+  {
+    unsigned char c;
+    c = XUartLite_RecvByte(0x84000000);
+    XUartLite_SendByte(0x84000000, c);
+  }
+
+  return 0;
+}</pre>
+<h2>Run &amp; Debug Software</h2>
+<p>This section will guide you through the process of downloading your code (<code>.elf</code> file) and hardware (<code>.bit</code> file) onto the FPGA.  You will even learn how to debug your code, including breakpoints and looking at registers/variable values, real-time on the FPGA hardware.</p>
+<ul>
+<li>Go to Xilinx Tools -&gt; Configure JTAG Settings</li>
+<li>Under &quot;Type,&quot; select &quot;Digilent USB Cable&quot; and then click &quot;OK&quot;</li>
+</ul>
+<p><img src="./lecture17Images/configure_jtag.jpg" alt=""></p>
+<ul>
+<li>Click the &quot;Program FPGA&quot; button </li>
+<li>Under the software configuration, choose the <code>*.elf</code> file that matches the name of your project.  Then click &quot;Program&quot;</li>
+</ul>
+<p><img src="./lecture17Images/program_fpga.jpg" alt=""></p>
+<ul>
+<li>Once this process is complete, you can now open up your favorite serial terminal and see your characters echoed back from the FPGA.  Congratulations! You have created your first embedded MicroBlaze FPGA system!</li>
+<li>If you need to debug your software code, you can click the <img src="./lecture17Images/debug.jpg" alt=""> button, &quot;Launch on Hardware&quot;, to get a full debug interface.  From this debug window, you can step through the code, observe register/ variable values, set debug points, etcetera. [Note: When I did this in Xilinx 14.4, I needed to add a &quot;Debug Configuration&quot; of &quot;Xilinx C/C++ ELF&quot; in order to get the correct debug setup.  I left all the default settings, and it worked correctly with the hardware.]</li>
+<li>What if you need to debug hardware?  Well, you should use a combination of robust simulations, hardware logic analyzers, and (if necessary) ChipScope.  The last option is beyond the scope of this course due to time constraints.</li>
+</ul>
+<h2>Add Custom IP (LEDs)</h2>
+<p>Now that we have learned how to work with pre-built hardware IP peripherals, you will now create a simple custom IP peripheral that allows you to access the LEDs from software.</p>
+<ul>
+<li>In Xilinx Platform Studio, go to Hardware -&gt; Create or Import Peripheral</li>
+<li>On the next screen, be sure &quot;Create templates for new peripheral&quot; is selected</li>
+</ul>
+<p><img src="./lecture17Images/periph_templates.jpg" alt=""></p>
+<ul>
+<li>On the next screen, create an EDK user repository where you can store all the peripherals you create in this class.  You will probably want to be able to reuse this peripheral in other projects.</li>
+</ul>
+<p><img src="./lecture17Images/create_periph.jpg" alt=""></p>
+<ul>
+<li>Type whatever name (without spaces!) you want for your peripheral.</li>
+</ul>
+<p><img src="./lecture17Images/name_version.jpg" alt=""></p>
+<ul>
+<li>The MicroBlaze processor in our design is using the AXI interface.  Be sure to select &quot;AXI4-Lite&quot; as the interface type.</li>
+</ul>
+<p><img src="./lecture17Images/bus_interfaces.jpg" alt=""></p>
+<ul>
+<li>Leave &quot;User logic software register&quot; and &quot;Include data phase timer&quot; checked.</li>
+</ul>
+<p><img src="./lecture17Images/services.jpg" alt=""></p>
+<ul>
+<li>Change the number of software-accessible registers to 8.  This will create the boilerplate VHDL code for 8 32-bit registers that you can read from and write to from software.  Eight is overkill for this example, but the VHDL code will illustrate how to expand your design to include more registers.</li>
+</ul>
+<p><img src="./lecture17Images/sw_register.jpg" alt=""></p>
+<ul>
+<li>Leave the defaults on the IP Interconnect screen.</li>
+</ul>
+<p><img src="./lecture17Images/ip_interconnect.jpg" alt=""></p>
+<ul>
+<li>You do not need to create a simulation platform for this example.</li>
+</ul>
+<p><img src="./lecture17Images/sim_support.jpg" alt=""></p>
+<ul>
+<li>Check the &quot;Generate ISE and XST project files...&quot; checkbox.</li>
+</ul>
+<p><img src="./lecture17Images/gen_proj_files.png" alt=""></p>
+<ul>
+<li>Click Finish</li>
+</ul>
+<p><img src="./lecture17Images/finish.jpg" alt=""></p>
+<ul>
+<li>You have created the custom peripheral.  Now you need to update the &quot;user logic&quot; in the peripheral to implement the functionality you desire.</li>
+<li>Using your file browser, go to the location you saved your repository.  In my case, this is: <code>C:\Users\michael.tanner\Development\FPGA\ip_repo\MyProcessorIPLib\pcores\microblaze_tutorial_v1_00_a</code></li>
+<li>You will see three different folders that make up your custom peripheral:<ul>
+<li><code>data</code> - this contains the &quot;settings&quot; for your peripheral.  In particular, you may need to modify the <code>*.mpd</code> and <code>*.pao</code> files.  XPS uses these files to determine the &quot;interface&quot; to your custom IP peripheral.<ul>
+<li>The <code>*.mpd</code> file can be used to specify &quot;ports&quot; that will be connected to FPGA pins under the &quot;Ports&quot; tab of XPS.</li>
+<li>The <code>*.pao</code> file lists all the VHDL files you need to build your peripheral.  If you add a separate file (e.g., video synchronization), you need to list it in this file.  Order matters, so place the dependent files last.</li>
+</ul>
+</li>
+<li><code>devel</code> - this contains the automatically generated project navigator files to help you develop and simulate your hardware design.</li>
+<li><code>hdl</code> - this contains the actual VHDL files that implement the logic of your design.  If you add VHDL files to the peripheral, this is the directory you place them in.</li>
+</ul>
+</li>
+<li>To create our custom peripheral that allows up to write any value to the LEDs, we will take the following steps:<ul>
+<li>Modify the <code>*.mpd</code> file to let XPS know about the &quot;LED&quot; port it can be connected to FPGA pins through your projectbs UCF file.</li>
+<li>Modify the &quot;your_peripheral.vhd&quot; (the name of your peripheral) to add the &quot;LED&quot; output and then connect it into the structural instantiation of your &quot;user logic.&quot;</li>
+<li>Modify the <code>user_logic.vhd</code> file to include an LED output, and then connect one of the pre-created software registers to the LED output.</li>
+<li>Add the peripheral to our XPS design</li>
+<li>Generate the bitfile</li>
+</ul>
+</li>
+<li>First we need to modify the <code>*.mpd</code> file to let XPS know about the &quot;LED&quot; port it can be connected to FPGA pins through your projectbs UCF file.  Add the following line to your <code>*.mpd</code> file in the &quot;ports&quot; section:
+<code>PORT LED = &quot;&quot;, DIR = O, VEC=[7:0]</code></li>
+<li>Now we need to modify the <code>your_peripheral.vhd</code> (the name of your peripheral) to add the &quot;LED&quot; output and then connect it into the structural instantiation of your &quot;user logic.&quot;<ul>
+<li>In the entity definition for your top-level peripheral VHDL file, find the &quot;ADD USER PORTS BELOW THIS LINE&quot; comment.  Add the following port:
+<code>LED : out std_logic_vector(7 downto 0);</code></li>
+<li>In the structural instantiation of the user logic file, find the &quot;MAP USER PORTS BELOW THIS LINE&quot; comment.  Add the following port map:
+<code>LED =&gt; LED,</code></li>
+</ul>
+</li>
+<li>Modify the &quot;user_logic.vhd&quot; file to include an LED output, and then connect one of the pre-created software registers to the LED output.<ul>
+<li>In the entity definition for user logic VHDL file, find the &quot;ADD USER PORTS BELOW THIS LINE&quot; comment.  Add the following port:
+<code>LED : out std_logic_vector(7 downto 0);</code></li>
+<li>Find the &quot;USER logic implementation added here&quot; comment.  Add the following line:
+<code>LED &lt;= slv_reg0(31 downto 24);</code></li>
+<li>At this point, you have completed the custom logic for your peripheral.  However, take the time to look at the two process statements below your user logic.<ul>
+<li>The first process is used to write to software registers.  In other words, the software is writing a value, and your user logic is storing it into one of the <code>slv_reg*</code> registers.</li>
+<li>The second process is used to read from software registers.  In other words, the software is reading a value, and your user logic is writing the  <code>slv_reg*</code> register  value onto the data bus.</li>
+<li>In the next lab (and probably your final project), you will need to modify this slave register read/write logic to implement the required functionality.</li>
+<li>In addition, you may need to structurally instantiate some other logic you have created.  Be sure you update your <code>*.pao</code> file to iaclude any additional VHDL files required in your design.  Also, make sure your files are in the correct library.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Add the peripheral to our XPS design</p>
+<ul>
+<li>From the IP catalog, add your peripheral</li>
+</ul>
+<p><img src="./lecture17Images/add_periph.jpg" alt=""></p>
+<ul>
+<li>Under the &quot;Bus Interfaces&quot; tab, add the peripheral to the same bus as your MicroBlaze processor.</li>
+</ul>
+<p><img src="./lecture17Images/same_bus.jpg" alt=""></p>
+<ul>
+<li>Under the &quot;Ports&quot; tab, make an external connection for your peripheral&#39;s LED port.</li>
+</ul>
+<p><img src="./lecture17Images/external_connection.jpg" alt=""></p>
+<ul>
+<li>Add the following lines to your UCF file:</li>
+</ul>
+<pre>
+net led_bank_0_LED_pin(7) LOC=N12 | IOSTANDARD = LVCMOS33;
+net led_bank_0_LED_pin(6) LOC=P16 | IOSTANDARD = LVCMOS33;
+net led_bank_0_LED_pin(5) LOC=D4  | IOSTANDARD = LVCMOS33;
+net led_bank_0_LED_pin(4) LOC=M13 | IOSTANDARD = LVCMOS33;
+net led_bank_0_LED_pin(3) LOC=L14 | IOSTANDARD = LVCMOS33;
+net led_bank_0_LED_pin(2) LOC=N14 | IOSTANDARD = LVCMOS33;
+net led_bank_0_LED_pin(1) LOC=M14 | IOSTANDARD = LVCMOS33;
+net led_bank_0_LED_pin(0) LOC=U18 | IOSTANDARD = LVCMOS33;
+</pre>
+
+<ul>
+<li>Under the &quot;Addresses&quot; tab, change the base address for your custom peripheral to 0x83000000 with a size of 64K.</li>
+</ul>
+<p><img src="./lecture17Images/base_address.jpg" alt=""></p>
+<ul>
+<li>Note: If you ever make changes to your peripheral (<code>pao</code>, <code>vhdl</code>, <code>mpd</code>, etc.), you can update your XPS project by going to Project -&gt; Rescan User Repositories</li>
+</ul>
+</li>
+<li>Generate the bitfile</li>
+<li>Export the design to Xilinx SDK</li>
+</ul>
+<h2>Update Software</h2>
+<p>Finally, you will write software that reads in a value from UART, echoes that value to the UART and LEDs.</p>
+<ul>
+<li>Confirm that you want to import the new bitfile and design to your SDK project.</li>
+<li>Add the following lines to your <code>main.c</code> file, where you deem appropriate:</li>
+</ul>
+<pre><code class="lang-c">#include &lt;xil_io.h&gt;
+Xil_Out8(0x83000000, c);</code></pre>
+<ul>
+<li>Program the FPGA with your new bitfile and elf file.</li>
+<li>Run your favorite terminal program to verify that the FPGA is echoing your characters to your terminal and the LEDs.</li>
+<li>Note: look through the <code>xil_io.h</code> file to see the different options you have to read from and write to memory.  These are just simple macros that provide you shortcuts to perform memory operations.  All of this should be review from when we first introduced you to the C programming language.</li>
+</ul>
+<h2>Conclusion</h2>
+<p>We have covered quite a lot of ground in this tutorial.  It is critical that you understand each step of this development process, as this is critical to your next lab and the final project.  Be sure you ask your instructor if you are unsure about anything we covered in this tutorial.  Specifically, you should understand the following:</p>
+<ul>
+<li>Create an embedded MicroBlaze hardware platform with Xilinx Platform Studio</li>
+<li>Add a standard peripheral component:<ul>
+<li>Connect it to the MicroBlaze bus</li>
+<li>Configure its memory-mapped address</li>
+<li>Connect input/output ports to FPGA pins</li>
+</ul>
+</li>
+<li>Create and add a custom peripheral:<ul>
+<li>Make individual read/write registers available from software</li>
+<li>Structurally add additional VHDL modules in separate files</li>
+</ul>
+</li>
+<li>Write software to interface with any given MicroBlaze peripheral.  In particular, you should be able to write to and read from the peripheralbs software registers.</li>
+<li>Test and debug your software/hardware on the FPGA.</li>
+</ul>
+
+        </div>
+    </body>
+</html>
+

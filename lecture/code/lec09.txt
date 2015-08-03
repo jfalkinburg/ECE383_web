@@ -1,0 +1,26 @@
+.i 6			# .i specifies the number of inputs 
+.o 3			# .o specifies the number of outputs 
+.ilb Q2 Q1 Q0 R C T    	# This line specifies the names of the inputs in order 
+.ob  D2 D1 D0		# This line specifies the names of the outputs in order 
+   			# The first six digits (before the space) correspond 
+  			# to the inputs, the three after the space correspond 
+   			# to the outputs, both in order specified above. 
+
+000 -0- 000		# WaitEnter + c' => WaitEnter
+000 -1- 001		# WaitEnter + c' => WaitRead
+
+001 0-- 001		# WaitRead + R' => WaitRead
+001 1-- 010		# WaitRead + R => Set30
+
+010 --- 011		# Set30 => WaitLeave
+
+011 -10 011		# WaitLeave + T'C => WaitLeave
+011 -11 100		# WaitLeave + TC => Set3
+011 -0- 000		# WaitLeave + c' => WaitEnter
+
+100 --- 101		# Set3 => Goose
+
+101 --0 101		# Goose + T' => Goose
+101 --1 010		# Goose + T => Set30
+
+.e	     	# Signifies the end of the file.

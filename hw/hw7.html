@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ECE383</title>
+        <meta name="description" content="ECE 383 - Embedded Systems II with the Digilent Atlys at the United States Air Force Academy (USAFA).">
+        <meta name="author" content="Chris Coulston">
+        <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
+        <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
+    </head>
+    <body>
+
+        <div class = "container">
+            <div class = "navbar navbar-inverse">
+                <div class = "navbar-inner">
+                    <a class = "brand" href="../index.html">ECE 383</a>
+                    <ul class="nav pull-right">
+                        <li><a href="./hw6.html">&ltPrev</a></li>
+                        <li><a href="./hw8.html">Next&gt</a></li>
+                    </ul>
+
+                    </ul>
+                </div>
+            </div>
+
+
+<h1>Homework #7</h1>
+Guidelines
+<ul>
+<li>Complete your work on green engineering paper
+<li>Staple in upper left if more than one sheet.
+<li>Format the top of the first sheet as follows.
+<table border =1>
+<tr><td>ECE 383	<td>[Your name]	<td>HW#9	<td>[Due Date]	<td>[Page ref]
+</table>
+The page reference for the first page of a four page document would be 1/4, the
+second page of this document would be labeled 2/4 and so on.  
+<li>Do not write on the back side of the green engineering paper
+</ul>
+<br><br>
+
+
+<ol>
+
+<li>
+Complete the timing diagram below assuming that the register is 
+positive edge trigger and has an asynchronous active low reset.
+<br><img src="./hw7-1.gif"><br><br>
+
+<li>In an ideal world when the button on the ATYLS board were pressed,
+the output go solidly from 5 volts to ground. Unfortunately, push-buttons 
+are mechanical devices with contacts that literally bounce when contact
+is made and broken. This bouncing will cause the voltage to oscillate 
+several times times in quick succession.
+<br><br>
+
+Switch bouncing is a major problem in digital circuits because the
+circuit sees the signal change several times and may take actions appropriate
+for each of these bounce values when the user only intended a single actions
+to take place. Your task in this problem is to implement a version of a clever 
+technique used by one of the cadets in our class to solve it for Lab 1.<br><br>
+
+Design a FSM machine that looks at left and right directional buttons and counts up
+once only after a two button sequence is pressed.  The sequence is
+left button, press and release and the right button is press and release.  Use
+the generic counter linked in lecture 10 to instantiate a 3-bit counter.
+<br><br>
+
+Your testbench should show the following button press sequence:<br>
+left (press then release), brief pause, <br>
+left (press then release), brief pause,<br>
+right (press then release), brief pause,<br>
+right (press then release), brief pause,<br>
+left (press then release), brief pause,<br>
+right (press then release) brief pause.<br>
+The brief pause between the presses is meant to simulate a switch bounce
+when, for example, one left button press is followed immediately by
+another left button press.   In order to
+effectively simulate this phenomena, the brief pause must be longer
+than a single clock cycle. 
+<br><br>
+
+Turn in:
+<ul>	<li>The state diagram for your FSM (hand drawn is fine).
+	<li>Hardcopy of the VHDL describing your FSM
+	<li>Image of your testbench output in Isim showing the 
+	following signals - remove all other signals.
+	<ul>	<li>clk
+		<li>reset
+		<li>FSM state
+		<li>left and right button
+		<li>Count value	</ul>
+</ul>
+<br><br>
+
+</ol>
+
+</body>
+</html>

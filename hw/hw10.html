@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ECE383</title>
+        <meta name="description" content="ECE 383 - Embedded Systems II with the Digilent Atlys at the United States Air Force Academy (USAFA).">
+        <meta name="author" content="Chris Coulston">
+        <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
+        <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
+    </head>
+    <body>
+
+        <div class = "container">
+            <div class = "navbar navbar-inverse">
+                <div class = "navbar-inner">
+                    <a class = "brand" href="../index.html">ECE 383</a>
+                    <ul class="nav pull-right">
+                        <li><a href="./hw9.html">&ltPrev</a></li>
+                        <li><a href="./hw11.html">Next&gt</a></li>
+                    </ul>
+
+                    </ul>
+                </div>
+            </div>
+
+
+<h1>Homework #10</h1>
+Guidelines
+<ul>
+<li>Complete your work on green engineering paper
+<li>Staple in upper left if more than one sheet.
+<li>Format the top of the first sheet as follows.
+<table border =1>
+<tr><td>ECE 383	<td>[Your name]	<td>HW#10	<td>[Due Date]	<td>[Page ref]
+</table>
+The page reference for the first page of a four page document would be 1/4, the
+second page of this document would be labeled 2/4 and so on.  
+<li>Do not write on the back side of the green engineering paper
+</ul>
+<br><br>
+
+
+<h2>Assignment</h2>
+<ol>
+<li>Complete the development of the example in Lecture 18.
+<li>Modify the lec10 component to include a roll signal that
+is asserted whenever the counter is at the maximum count value.
+In order to accomplish this with the generic counter width
+you may need to create a temporary signal that is equal to the
+highest count value. 
+
+<pre>
+    maxCount <= (others => '1');
+</pre>
+
+</ol>
+
+<h2>Note</h2>
+You will most likely get an error that looks like the following:
+<pre>
+'Invoking: MicroBlaze Print Size'
+mb-size lab3.elf  |tee "lab3.elf.size"
+   text          data           bss           dec           hex       filename
+   8100           272          8244         16616          40e8       lab3.elf
+'Finished building: lab3.elf.size'
+
+Building target: lec18.elf
+Invoking: MicroBlaze gcc linker
+mb-gcc -Wl,-T -Wl, bla bla bla  -Wl,--start-group,-lxil,-lgcc,-lc,--end-group
+c:/xilinx/14.7/ise_ds/edk/gnu/ bla bla /ld.exe: lec18.elf section `.stack' will not fit in region `microblaze_0_i_bram_ctrl_microblaze_0_d_bram_ctrl'
+c:/xilinx/14.7/ise_ds/edk/gnu/ bla bla /ld.exe: region `microblaze_0_i_bram_ctrl_microblaze_0_d_bram_ctrl' overflowed by 80 bytes
+collect2: ld returned 1 exit status
+make: *** [lec18.elf] Error 1
+</pre>
+<br><br>
+
+Look at the MicroBlaze Print Size output and you will find that the value 
+under dec (size of your program (instructions + data) in decimal bytes) 
+is larger than you 
+allocated in EDK for the microblaze memory.  The solution is to 
+increase the size of the instruction and data memory in EDK and 
+recompile (see figure below). As you will see in the Print Size output
+above, I ran into this problem when my program JUST exceeded the 16K 
+I had allocated for it in EDK.
+
+<br><img src="./hw10-1.gif"><br><br>
+
+After you make this change, you will need to increase the stack and heap
+space inside SDK.  To do this, open the linker script (lscript.ld) and then
+increase the size of your memory to reflect the size entered in EDK.  Finally
+you can increase the stack and heap sizes to cover that needed in the error
+message.
+
+<br><img src="./hw10-2.gif"><br><br>
+
+</body>
+</html>
+

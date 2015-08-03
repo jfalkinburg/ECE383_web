@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ECE383</title>
+        <meta name="description" content="ECE 383 - Embedded Systems II with the Digilent Atlys at the United States Air Force Academy (USAFA).">
+        <meta name="author" content="Chris Coulston">
+        <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
+        <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
+    </head>
+    <body>
+
+        <div class = "container">
+            <div class = "navbar navbar-inverse">
+                <div class = "navbar-inner">
+                    <a class = "brand" href="../index.html">ECE 383</a>
+                    <ul class = "nav">
+                        <li><a href="../index.html">Home</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href="./hw3.html">&ltPrev</a></li>
+                        <li><a href="./hw5.html">Next&gt</a></li>
+                    </ul>
+
+                    </ul>
+                </div>
+            </div>
+
+
+<h1>Homework #4</h1>
+Guidelines
+<ul>
+<li>Complete your work on green engineering paper
+<li>Staple in upper left if more than one sheet.
+<li>Format the top of the first sheet as follows.
+<table border =1>
+<tr><td>ECE 383	<td>[Your name]	<td>HW#1	<td>[Due Date]	<td>[Page ref]
+</table>
+The page reference for the first page of a four page document would be 1/4, the
+second page of this document would be labeled 2/4 and so on.  
+<li>Do not write on the back side of the green engineering paper
+</ul>
+<br><br>
+
+
+<ol>
+
+
+
+<li>Instantiate a pair of cascaded counters, similar to those in Figure 13.2 
+of the text.  The pair of counters operate in a coordinated fashion, with one
+counter representing a least significant value, and the other a most significant
+value.  When the least significant counter is going to roll over, the most
+significant counter will count up by one.  At no other time will the most 
+significant counter increment.
+<br><br>
+
+You should have one counter that operates according to the
+following truth table.
+
+<table class="table table-striped table-bordered table-condensed">
+<tr><td>clk		<td>reset	<td>crtl	<td>Q+		
+<tr><td>0,1,falling	<td>x		<td>x		<td>Q		
+<tr><td>rising		<td>0		<td>x		<td>0		
+<tr><td>rising		<td>1		<td>0		<td>Q		
+<tr><td>rising		<td>1		<td>1		<td>Q+1 mod 5	
+</table>
+
+You should instantiate this counter twice and add some glue logic between 
+the two devices so that the most significant counter counts up only when the
+less significant counter is going to roll over.  Include the truth table for
+the glue logic as an explicit comment in your VHDL code.  The high-level
+architecture for this assignment is given in the block diagram below.  Please
+note that the "roll" signal coming from the counter probably should not
+be included in your counter, rather it would be easier to realize as a
+a combinational logic statement along side the two counter instances.
+
+<br><img src="./hw4.gif"><br><br>
+
+The top level entity description should look like the following.  When
+crtl = '1', the counters are enabled to count up as a cascade pair, and
+when crtl = '0', the counter should hold their value.
+
+<pre>
+entity hw4 is
+        port(	clk, reset: in std_logic; 
+		crtl: in std_logic;
+		Q1, Q0: out unsigned(2 downto 0));
+end hw4;
+</pre>
+
+<h3>Turn In</h3>
+<ul>	<li>A hard copy of your VHDL code 
+	<li>A testbench exercising the cascade pair.  It must:
+	<ul>	<li>Hold the least significant counter at 4 for one
+		clock cycle (using crtl='0').
+		<li>Roll over the least significant counter once.
+		<li>Show clk, reset, Q1, Q0, (least significant) roll 
+			signal, and the crtl input to the most significant 
+			counter.
+		<li>Remove all junk signals.
+		<li>Fit on one page.
+	</ul>
+</ul>
+
+<h3>Testbench Tip</h3>
+In order to test your cascade counters, you will need to apply a complex
+test sequence to the control signal.  The following VHDL code in your
+testbench will help achieve this.  This is CSA version of the process
+structure given in section 2.2.4 of the textbook.
+<pre>
+crtl <= '1', '0' after 15us, '1' after 16us, '0' after 17us, '1' after 18us;
+</pre>
+
+Check out the testbench linked at the top of lecture 4 for more details.
+
+
+</body>
+</html>
+

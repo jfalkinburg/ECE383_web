@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ECE383</title>
+        <meta name="description" content="ECE 383 - Embedded Systems II with the Digilent Atlys at the United States Air Force Academy (USAFA).">
+        <meta name="author" content="Chris Coulston">
+        <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
+        <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
+    </head>
+    <body>
+
+        <div class = "container">
+            <div class = "navbar navbar-inverse">
+                <div class = "navbar-inner">
+                    <a class = "brand" href="../index.html">ECE 383</a>
+                    <ul class = "nav">
+                        <li><a href="../index.html">Home</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href="./hw2.html">&ltPrev</a></li>
+                        <li><a href="./hw4.html">Next&gt</a></li>
+                    </ul>
+
+                    </ul>
+                </div>
+            </div>
+
+
+<h1>Homework #3</h1>
+Guidelines
+<ul>
+<li>Complete your work on green engineering paper
+<li>Staple in upper left if more than one sheet.
+<li>Format the top of the first sheet as follows.
+<table border =1>
+<tr><td>ECE 383	<td>[Your name]	<td>HW#1	<td>[Due Date]	<td>[Page ref]
+</table>
+The page reference for the first page of a four page document would be 1/4, the
+second page of this document would be labeled 2/4 and so on.  
+<li>Do not write on the back side of the green engineering paper
+</ul>
+<br><br>
+
+
+<ol>
+<li> Draw a hardware schematic, similar to the one at the end of lecture 3,
+for the following circuits.  You are given comparators, muxes and adders;
+do NOT show the internal organization of these devices.  Whenever possible 
+reduce the number of devices required to realize the design.  You should
+assume that X, Y, and Z are unsigned(7 downto 0).
+
+<ol type = "a">
+        <li> if (X==0) then Z = X else Z = Y
+        <li> if (X==Y) then Z = Y else Z = X+Y
+        <li> if (X < Y) then Z = X+4 else Z = Y+6
+        <li> if (X > Y) then Z = X+5 else Z = X+6
+</ol>
+
+<li>
+Create a digital circuit that takes as input a 8-bit unsigned value 
+(provided by the DIP switches) and illuminates an LED if the input
+is a multiple of 17. Do NOT use the remainder or division operations,
+this can easily be accomplished using a single conditional signal
+assignment statement.
+
+<ul>
+<li>A hardcopy of your VHDL file (include a proper header).
+<li>A hardcopy of a timing diagram from Isim showing several inputs and the output.
+<li>A hardcopy of your UCF file.
+<li>Demo your circuit in class on Tuesday.
+</ul>
+
+
+</body>
+</html>
+

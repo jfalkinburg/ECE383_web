@@ -1,0 +1,14 @@
+VCCAUX = 3.3;
+
+NET "clk"		LOC = "L15" | PERIOD = 100 MHz;
+NET "reset"		LOC = "T15" | IOSTANDARD = LVCMOS33;
+
+NET "BIT_CLK" LOC = L13;
+NET "SDATA_IN" LOC = T18;
+NET "SDATA_OUT" LOC = N16;
+NET "SYNC" LOC = U17;
+NET "AC97_n_RESET" LOC = T17;
+
+
+NET "filter_switch<1>" LOC = E4;
+NET "filter_switch<0>" LOC = T5;

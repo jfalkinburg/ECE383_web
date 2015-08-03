@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<!----- http://getbootstrap.com/css/ ----->
+    <head>
+        <title>ECE 383 - Lecture Notes</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="ECE 383- Embedded Systems II">
+        <meta name="author" content="Chris Coulston">
+        <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
+        <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
+    </head>
+
+<body>
+        <div class = "container">
+            <div class = "navbar navbar-inverse">
+                <div class = "navbar-inner">
+                    <a class = "brand" href="../index.html">ECE 383</a>
+                    <ul class="nav pull-right">
+                        <li><a href="./lecture01.html">&ltPrev</a></li>
+                        <li><a href="./lecture03.html">Next&gt</a></li>
+                    </ul>
+
+                    </ul>
+                </div>
+            </div>
+
+<table class="table table-striped table-bordered table-condensed">
+<tr><td>Date:</td>	<td>January  11/12</td></tr>
+<tr><td>Lecture:</td>	<td>2</td></tr>
+<tr><td>Next lecture	<td><a href="../hw/hw2.html">HW#2</a>
+<tr><td>Status          <td bgcolor = #FFFFF0>Not Started<!--<td bgcolor = #FFD0D0>In Progress --> <!--<td bgcolor = #D0FFD0>Complete -->
+<tr><td>Code 		<td><a href="./code/lec02.vhdl">lec02.vhdl</a>
+</table>
+
+
+
+<h2>VHDL</h2>
+As I am wont to say, there is more than one way to skin a cat.  This
+expression should make you happy regardless of your feelings towards
+cats because it means that your personality can be expressed through
+the code that you write.  In lecture 1 we examined a structural
+method of describing a circuit; we transformed the circuit diagram
+into a textual description.  Today we will examine another method of
+VHDL coding; behavioral.
+
+
+<h1>Behavioral</h1>
+A behavioral description of a component describes what the circuit
+does rather than how it is done.  For example, we will consider the
+majority circuit from lecture 1.
+
+<pre>
+------------------------------------------
+-- Author:      Chris Coulston
+-- Date:        Fall 2002
+-- Purp:	Behavior Majority circuit
+------------------------------------------
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity majority is
+        port(	a, b, c	: in std_logic; 
+		f	: out std_logic);
+end majority;
+
+architecture behavior of majority is
+
+begin
+	
+	f <=	'0' when a='0' and b='0' and c='0' else
+		'0' when a='0' and b='0' and c='1' else
+		'0' when a='0' and b='1' and c='0' else
+		'1' when a='0' and b='1' and c='1' else
+		'0' when a='1' and b='0' and c='0' else
+		'1' when a='1' and b='0' and c='1' else
+		'1' when a='1' and b='1' and c='0' else
+		'1';
+
+end behavior;
+</pre>
+
+It is important to note that the single statement in the architecture
+is a concurrent signal assignment statements.  This means that its
+just another hardware statement that could be mixed together with
+some ANDs and some component instantion statements.  Granted its a 
+complex statement.<br><br>
+
+This coding style, while much more intuitive than the combinational
+logic description that was presented in lecture 1, still has some
+room for improvement.  We could take advantage of the concatenation
+operator to make the code more readable.  The idea is to replace
+the (a='0' and b='0' and c='0') statement with something like
+(temp = "000").  This can be done by creating a local variable
+(a signal) which is just the concatenation of the three input
+variables.  This temporary variable will then be used in the
+when statement.  The new streamlined architecture for the majority
+circuit is shown below.<br><br>
+
+<pre>
+architecture behavior of majority is
+
+	signal temp: std_logic_vector(2 downto 0);
+begin
+	
+	temp <= a & b & c;
+	f <=	'0' when temp = "000" else
+		'0' when temp = "001" else
+		'0' when temp = "010" else
+		'1' when temp = "011" else
+		'0' when temp = "100" else
+		'1' when temp = "101" else
+		'1' when temp = "110" else
+		'1'; 
+		
+end behavior;
+</pre>
+
+
+<h2>A note on literals</h2>
+Notice that individual bits are surrounded with single quotes
+and that std_logic_vectors are surrounded with double quotes.
+<u>Any multi-bit literal must be surrounded by double quotes".</u>
+You can specify hexidecimal literals by putting an X in front 
+of the constant.  So for example, X"4E" is a valid VHDL literal.
+
+
+<h2>Component Instantiation</h2>
+In order for VHDL to be a useful in the design process it must allow
+hierarchical design - the ability to include a design unit as a component
+in a higher level design component. This is called creating an
+instance of the entity.  Hierarchical design allows us to abstract away
+some of the details of a design and focus on the high level behaviors.
+This is the same concept of writing subroutines in a high level language.
+<br><br>
+
+The reason to bring this concept up now, is that we use VHDL modules to
+test our VHDL designs.  In the following discussion we are going to
+build a module to test our majority circuit developed above.
+The VHDL module that will do the testing of the majority circuit
+is called a testbench.  Inside of this testbench we will create an
+instance of the majority circuit and apply signals to the majority
+circuit and check to see if the circuit responds with the correct 
+value.  Its important to state up front that <u>testbenches are
+only created for simulations, they are not intended to be synthesized
+onto the fabric of an FPGA.</u>
+<br><Br>
+
+In order to instantiate an instance of the majority circuit inside
+the testbench, you will need make 2 declarations; specify the entity 
+description of the component (lines 4-9 below) and create an instance of 
+the component (line 12-16 below).
+
+<pre>
+1.  ENTITY majority_tb IS
+2.  END majority_tb;
+
+3.  ARCHITECTURE behavior OF majority_tb IS 
+4.     COMPONENT majority
+5.     PORT(	a : IN  std_logic;
+6. 		b : IN  std_logic;
+7.		c : IN  std_logic;
+8.		f : OUT  std_logic);
+9.     END COMPONENT;
+10.    signal s1, s2, s3, s4: std_logic;
+11. begin
+12.    uut: majority PORT MAP (
+13.          a => s1,
+14.          b => s2,
+15.          c => s3,
+16.          f => s4);
+17. end
+</pre>
+
+Lets discuss these further. The first, declaring the entity description
+of the entity to be instantiated(lines 4-9), is really quite easy.  Just 
+replace the term "entity" in the description of the majority circuit with the
+term "component".  Note that this is done inside the architecture of the
+testbench.  The second will require some expansion aided by the 
+following picture.
+
+<br><img src="./img/lecture02-1.gif"><br>
+
+The description of the majority circuit defines what goes on
+<u>inside</u> the architecture.  In terms of the picture above,
+this includes all the gates and wires in the box labeled "uut:majority".
+the variables a,b,c,f inside this box are the port variables in
+the entity description of the majority circuit.  The box labeled
+majority_tb is the testbench which creates an instance of the 
+majority circuit.  The signals labeled s1, s2, s3, s4 are created
+inside the testbench circuit and used to communicate to the 
+majority circuit.  The relationship between these signals and the
+signals inside the majority circuit are described by lines 
+13,14,15,16.  For example, line 13 states that the signal a
+inside the majority circuit is connected to s1 outside the circuit.
+<br><br>
+
+One final note about line 12, the one that declares the instance of
+the majority circuit.  Each instance of an entity should be given
+a distinct name.  This is because we will frequently need to create
+several instances of the same component.  For example, when creating
+a 4-bit adder, we will require 4 instances of a full adder.  This is
+what the "uut" label is for, it uniquely identifies the instance of
+the majority circuit for the compiler.
+<br><br>
+
+You may have noticed that the testbench does not have any signals
+in its entity description.  This is because the testbench will 
+contain code which drives the signals going to the majority circuit.
+We will go into this further in the next section.
+
+
+<h2>Simulation and Testbench</h2>
+You have been provided an example testbench at the top of this page in
+lab02.vhdl.  We have already discussed how to instantiate the majority
+circuit.  Now for the part about applying signals to the majority circuit.
+Just inside the architecture statement, you should see the following four
+lines of code.  Line 1 just makes a constant, the value of TEST_ELEMENTS
+cannot be changed.  Lines 2 and 3 create a pair of new data types.  Line
+4 is really the business, creating an array of test values that are going
+to be applied to the majority circuit.  In this case, it is just every
+combination of 3-bits.  A similar array is defined, called TEST_OUTPUT, 
+which contains the corresponding output for each of these inputs.
+These two arrays are used in the body of the testbench.
+
+<pre>
+1.	CONSTANT TEST_ELEMENTS:integer:=8;
+2.	SUBTYPE INPUT is std_logic_vector(2 downto 0);
+3.	TYPE TEST_INPUT_VECTOR is array (1 to TEST_ELEMENTS) of INPUT;
+4.	SIGNAL TEST_INPUT: TEST_INPUT_VECTOR := ("000", "001", "010", "011", "100", "101", "110", "111");
+</pre>
+
+I want to take this opportunity to reiterate that test benches are not 
+synthesized onto the Xilinx chip, so consequently, the coding style used
+should not be used on any circuit that you intend to synthesize.  Now for
+the business end of the testbench shown in the following code snippet from
+lab02.vhdl  The main purpose of the loop below is to apply each of the 
+8 TEST_INPUT vectors to the majority circuit and check that the output is 
+correct.  Line 2 is where the array is read.  Elsewhere in the body of the
+architecture testVector is broken into individual std_logic bits and 
+applied to the instantiated majority circuit.  The delay in line 3 allows 
+the circuit outputs to settle.  Line 4 is a curious artifact only available
+in a simulation; if the output of the majority circuit, f, does not equal
+test_output(i), the value that the majority should equal, then the code
+in lines 5 and 6 is executed.  Line 5 prints an error message in the console
+area of ISim.  Line 6 halts the simulation.
+
+<pre>
+1.	for i in 1 to TEST_ELEMENTS loop
+2.	    testVector <= test_input(i);
+3.	    wait for 1 us;
+4.	    assert f = test_output(i)
+5.		report "Error in majority circuit for input "  & integer'image(i)
+6.		severity failure;
+7.	    end loop;
+</pre>
+
+In class we will experiment with the simulator.  Some things that I would like
+to go over are:
+
+<ul>
+<li>How to add and remove waveforms to the waveform view.
+<li>How to change the radix of a vector waveform
+<li>How to change the colors of the waveforms.
+<li>How to transcend the design hierarchy.
+<li>How to observe signal values in design hierarchy.
+<li>How to observe signals values in the VHDL code.
+<li>How to save a load a simulation waveform wcfg file.
+</ul>
+
+</html>
