@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ECE383</title>
+        <meta name="description" content="ECE 383 - Embedded Systems II with the Digilent Atlys at the United States Air Force Academy (USAFA).  Covers VHDL.  Free and open FPGA course.">
+        <meta name="author" content="Todd Branchflower">
+        <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
+        <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
+    </head>
+    <body>
+
+        <div class = "container">
+            <div class = "navbar navbar-inverse">
+                <div class = "navbar-inner">
+                    <a class = "brand" href="../../index.html">ECE383</a>
+                    <ul class="nav pull-right">
+                        <li><a href="../lab1/lab1.html">&ltPrev</a></li>
+                        <li><a href="../lab3/lab3.html">Next&gt</a></li>
+                    </ul>
+                </div>
+            </div>
+
+<table class="table table-striped table-bordered table-condensed">
+<tr><td>Start date:</td>	<td>February 17/18</td></tr>
+<tr><td>End date:</td>		<td>February 23/24</td></tr>
+<tr><td>Lab:</td>		<td>2</td></tr>
+<tr><td>Status			<td bgcolor = #FFFFF0>Not Started<!--<td bgcolor = #FFD0D0>In Progress --> <!--<td bgcolor = #D0FFD0>Complete -->
+</table>
+
+
+<h1>Lab 2 - Data Acquisition, Storage and Display</h1>
+
+<h2>Lab Overview</h2>
+In this lab we will integrate the video display controller developed
+in Lab 1 with the audio codec on the ATLYS board to build a basic
+2-channel oscilloscope.  When complete, your lab should generate 
+output similar to the following picture.
+<table width="1100" border="0" cellpadding="5">
+<tr>	<td><img width="600" src="./img/complete.jpg"></td> 
+	<td><img width="700" src="./img/lab2Connections.jpg"></td>
+</tr></table>
+
+<h2>Architecture</h2>
+Just like with the design of Lab 1, Lab 2 is broken down into 
+a bunch of separate modules shown in the block diagram below.
+Some of the components in the block diagram will be given to
+you and some you have already created.  Its important to note
+that some of the components and signals associated with this
+lab will not strictly be needed, but have been included in
+order that this lab may smoothly integrate with Lab 3 and 4
+(keep your fingers crossed).
+
+<br><img src="./img/lab2Arch.gif"><br><br>
+
+The main flow of data through this systems proceeds from left
+to right.  You will provide audio input to the circuit through the 
+blue line-in jack.   This audio jack is connected to a National
+Semiconductor LM4550 AC'97 multi-channel audio codec.  The LM4450 samples
+the audio input at 48kHz into separate 18-bit 2's complement left
+and right channels.  The LM4550 then transfers this data to our Spartan6
+chip over a serial bus through the 5 signals on the left side of the Lab2 
+component.  The serial protocol is quite complex - you will be given the
+AC97_wrapper component to deal with this complexity.  Your circuit will
+be notified of new converted data when the ready signal goes high for
+a single clock cycle.  Your circuit will then do two things with the
+incoming L_bus_out and R_bus_out.  First it will loop both these back
+to the output so that you can verify (by listening on the HP_OUT jack)
+that the AC97 hardware and firmware are operating correctly.  This is
+accomplished with the following VHDL code.
+
+<pre>
+    process (clk)
+    begin
+	if (rising_edge(clk)) then
+	    if reset = '0' then
+		L_bus_in <= (others => '0');
+		R_bus_in <= (others => '0');				
+	    elsif(ready = '1') then
+		L_bus_in <= L_bus_out;
+		R_bus_in <= R_bus_out;
+	    end if;
+	end if;
+    end process;
+</pre>
+
+The second thing you circuit will need to do with the L_bus_out signal is
+to send it, in an unsigned format, to be stored in the block ram (BRAM). 
+Converting the 2's complement values into unsigned is technically easy,
+but may be a little difficult to wrap you head around - lets try.  The
+smallest 2's complement number in 18-bits
+
+
+<table class="table table-striped table-bordered table-condensed">
+<tr><td colspan=2>Input Value		<td colspan=2>Ouput Value
+<tr><td>2's complement	<td>2's value	<td>unsigned	<td>unsigned value
+<tr><td>100...000	<td>-131072	<td>000...000	<td>0
+<tr><td>111...111	<td>-1		<td>011...111	<td>131071
+<tr><td>000...000	<td>0		<td>100...000	<td>131072
+<tr><td>000...001	<td>1		<td>100...001	<td>131073
+<tr><td>011...111	<td>131071	<td>111...111	<td>262143
+</table>
+
+The values in the left 2 columns represent the input value, in this case
+L_bus_out.  The right 2 columns represent the output of the box labeled
+"sign2unsign" in the block diagram.  What we are looking to do is to shift
+the unsigned values up so that they all fall into a positive range.  You will
+need to puzzle over the transformation that accomplishment this - its really simple. 
+<br><br>
+
+The mux circuitry attached to the write address of the RAM will be used in Lab3,
+allowing the microBlaze processor to take over write duties for the RAM.
+Independent of the write circuitry, the read circuit pulls data from the RAM,
+and draws the waveform.  Unlike for the write circuitry, the read circuitry
+needs no FSM control.<br><br>
+
+Since its a very complex piece of circuitry, the entity for the datapath is
+given below.
+
+<h2>Datapath</h2>
+<pre>
+entity lab2_datapath is
+    Port(
+	clk : in  STD_LOGIC;
+	reset : in  STD_LOGIC;
+	SDATA_IN : in STD_LOGIC;
+	BIT_CLK : in STD_LOGIC;
+	SYNC : out STD_LOGIC;
+	SDATA_OUT : out STD_LOGIC;
+	AC97_n_RESET : out STD_LOGIC;
+	tmds : out  STD_LOGIC_VECTOR (3 downto 0);
+	tmdsb : out  STD_LOGIC_VECTOR (3 downto 0);
+	sw: out std_logic_vector(2 downto 0);
+	cw: in std_logic_vector (2 downto 0);
+	btn: in	STD_LOGIC_VECTOR(4 downto 0);
+	exWrAddr: in std_logic_vector(9 downto 0);
+	exWen, exSel: in std_logic;
+	Lbus_out, Rbus_out: out std_logic_vector(15 downto 0);
+	exLbus, exRbus: in std_logic_vector(15 downto 0);
+	flagQ: out std_logic_vector(7 downto 0);
+	flagClear: in std_logic_vector(7 downto 0));
+end lab2_datapath;
+</pre>
+
+<h2>Flag Register</h2>
+In Lab3 we will be integrating most of the components from this lab with the
+MicroBlaze processor.  In order to make this happen smoothly, we will need a
+way to transfer information between the two systems a technique similar to a
+2-line handshake.  To make this possible, you will need to build a component
+called a flag register.
+
+<table class="table table-striped table-bordered table-condensed">
+<tr><td>reset	<td>clk		<td>set	<td>clear	<td>Q+
+<tr><td>0	<td>X		<td>X	<td>X		<td>0
+<tr><td>1	<td>0,1,falling	<td>X	<td>X		<td>Q
+<tr><td>1	<td>rising 	<td>0	<td>0		<td>Q
+<tr><td>1	<td>rising 	<td>1	<td>0		<td>1
+<tr><td>1	<td>rising 	<td>0	<td>1		<td>0
+<tr><td>1	<td>rising 	<td>1	<td>1		<td>X
+</table>
+
+This component will interface our lab2 component with a microBlaze
+as follows.  The lab2 component will produce some piece, put it on a data
+line to microBlaze and then set one of the bits of the flag register.  The
+microBlaze will at some point get around to looking at this bit. When it
+sees that its set, it will grab the data and then clear that flag bit.
+Yes, these are supposed to be just like the flag bits in the MSP 430.
+Build the device to have the following entity declaration:
+
+<pre>
+entity flagRegister is
+	Generic (N: integer := 8);
+	Port(	clk: in  STD_LOGIC;
+			reset : in  STD_LOGIC;
+			set, clear: in std_logic_vector(N-1 downto 0);
+			Q: out std_logic_vector(N-1 downto 0));
+end flagRegister
+</pre>
+
+The set lines should be connected to the following signals.  For the
+time being you can leave the Q outputs to open.
+<ul>	<li>ready
+	<li>v_synch'
+	<li>write_cnt compare output
+</ul>
+
+
+<h2>VHDL Code</h2>
+<ul>	<li><a href="./code/ac97.vhd">ac97.vhd</a>
+	<li><a href="./code/lab2.vhd">lab2.vhd</a>
+	<li><a href="./code/lab2.ucf">lab2.ucf</a>
+	<li><a href="./code/lab2_pack.vhdl">lab2_pack.vhdl</a>
+</ul>
+
+<h2>Generating Audio Waveforms</h2>
+I used the <a href="http://keuwl.com/FunctionGenerator">Keuwl Dual Channel 
+Function Generator</a> app on my Android phone to produce
+audio waveforms into my circuit.  The learning curve is a bit steep
+with this function generator, but it has a ton of capability which
+you may find useful in your lab.
+
+<h2>Required Functionality</h2>
+Get a single channel of the oscilliscpe to display with
+reliable triggering that holds the waveform at a single
+point on the left edge of the display.  A 220Hz waveform
+should display something similar to that shown in the screen
+shot at the top of this page.
+
+<ul>	<li>USe a package file to contain all your component declarations.
+	<li>Use  seperate datapath and control unit.
+	<li>Your datapath must use processes which are similar
+	to our basic building block (counter, register, mux, etc.).
+	I do not want to see one massive process that attempts
+	to do all the work in the datapath.
+	<li>Testbench for the flagRegister.
+	<li>Testbench for the control unit.
+</ul>
+
+<h2>B-level functionality</h2>
+Meet all the requirements of required functionality.
+Add a second channel (in green).  Integrate the button debouncing
+stratigy in HW #7 to debounce the buttons controlling the trigger
+time and trigger volage.  Move the cursors on the screen.
+
+<h2>A-level functionality</h2>
+Meet all the requirements of B-level functionality.
+Use the trigger voltage marker to establish the actual trigger
+voltage used to capture the waveform.  As the trigger is moved
+up and down you should see the point at which the waveform
+intersects the left side of the screen change.
+
+
+<h2>Turn In</h2>
+All your work in this lab is to be submitted using GitLab.  The main 
+part of the lab is your README, documenting your design.
+Your README must include the following:
+
+<ul>
+<li><strong>Introduction</strong> - Provide a brief overview of the 
+problem.</li>
+
+<li><strong>Implementation</strong> - Provide block-diagram of your 
+solution using the <strong>signal names in your code</strong>.  The
+block diagram given above is somewhat incomplete, make sure to include
+corrections to this diagram.  For each module that you built, explain
+its overall purpose, inputs, outputs, and behavior.  Include all your
+vhdl files (code and testbench), wcfg file, and bit files.  Put these
+in a folder called "code".</li>
+
+<li><strong>Test/Debug</strong> - Briefly describe the methods used 
+to verify system functionality. 
+<ul type="a">
+</ul>
+
+List the major problems you encountered and how you fixed them.  
+This should cover all the problems you encountered in the lab and 
+how you fixed them.  Break each problem and solution into separate 
+paragraphs.</li>
+
+<li><strong>Capability</strong> - Well you have built a oscilloscope, what
+are its capabilities?  
+<ol>	<li>The horizontal axis represents time. There are 10 major 
+	divisions on the display; how long does each major division represent?  
+	<li>Each major time division is split into 4 minor division, how long 
+	does each minor division represent?
+
+	<li>Generate a sine wave that can be fully captured on your display
+	(like the yellow channel in the image at the top of this web page).
+	record its height in major and minor vertical divisions.  Measure
+	this same audio output using the break out audio cable.  Record the 
+	peak-to-peak voltage.  Compute the number of volts in each major and
+	minor vertical division.
+
+	<li>Starting at address 0, how long does it take to fill the entire 
+	memory with audio samples (coming in at 48kHz)?
+
+	<li>How long does it take to completely draw the display once?  
+
+	<li>The question is likely relevant to Lab 3 - how long is the
+	vsynch signal held low?
+</ol>
+
+<li><strong>Conclusion</strong> - Explain what your learned from this 
+lab and what changes you would recommend in future years to this lab 
+or the lectures leading up to this lab.</li>
+</ul>
+
+<h2>Grading</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th align="center">Item</th>
+<th align="center">Grade</th>
+<th align="center">Points</th>
+<th align="center">Out of</th>
+<th align="center">Date</th>
+<th>Due</th>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+<td align="center" colspan="1">Required Functionality</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">40</td>
+<td align="center" colspan="1"></td>
+<td>COB L16 </td>
+</tr>
+
+<tr>
+<td align="center" colspan="1">B Functionality</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">10</td>
+<td align="center" colspan="1"></td>
+<td>COB L16 </td>
+</tr>
+
+<tr>
+<td align="center" colspan="1">A Functionality</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">10</td>
+<td align="center" colspan="1"></td>
+<td>COB L16 </td>
+</tr>
+<tr>
+<td align="center" colspan="1">Use of Git / Github</td>
+<td align="center" colspan="1"><strong>On-Time:</strong> 0 ---- Check Minus ---- Check ---- Check Plus ---- <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">5</td>
+<td align="center" colspan="1"></td>
+<td>COB L17</td>
+</tr>
+<tr>
+<td align="center" colspan="1">Code Style</td>
+<td align="center" colspan="1"><strong>On-Time:</strong> 0 ---- Check Minus ---- Check ---- Check Plus ---- <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">10</td>
+<td align="center" colspan="1"></td>
+<td>COB L17</td>
+</tr>
+<tr>
+<td align="center" colspan="1">README</td>
+<td align="center" colspan="1"><strong>On-Time:</strong> 0 ---- Check Minus ---- Check ---- Check Plus ---- <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">25</td>
+<td align="center" colspan="1"></td>
+<td>COB L17</td>
+</tr>
+<tr>
+<td align="center" colspan="1"><strong>Total</strong></td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1"><strong>100</strong></td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1"></td>
+</tr>
+</tbody>
+</table>
+
+
+    </body>
+</html>
+

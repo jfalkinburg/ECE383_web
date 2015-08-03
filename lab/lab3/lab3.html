@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ECE383</title>
+        <meta name="description" content="ECE 383 - Embedded Systems II with the Digilent Atlys at the United States Air Force Academy (USAFA).  Covers VHDL.  Free and open FPGA course.">
+        <meta name="author" content="Todd Branchflower">
+        <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
+        <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
+    </head>
+    <body>
+
+        <div class = "container">
+            <div class = "navbar navbar-inverse">
+                <div class = "navbar-inner">
+                    <a class = "brand" href="../../index.html">ECE383</a>
+                    <ul class="nav pull-right">
+                        <li><a href="../lab2/lab2.html">&ltPrev</a></li>
+                        <li><a href="../lab4/lab4.html">Next&gt</a></li>
+                    </ul>
+                </div>
+            </div>
+
+<table class="table table-striped table-bordered table-condensed">
+<tr><td>Start date:</td>	<td>March 9/10</td></tr>
+<tr><td>End date:</td>		<td>March 15/16</td></tr>
+<tr><td>Lab:</td>		<td>3</td></tr>
+<tr><td>Status			<td bgcolor = #FFFFF0>Not Started<!--<td bgcolor = #FFD0D0>In Progress --> <!--<td bgcolor = #D0FFD0>Complete -->
+</table>
+
+
+<h1>Lab 3 - Software control of a datapath</h1>
+
+<h2>Lab Overview</h2>
+In this lab we will integrate the video display controller developed
+in Lab 2 with the microBlaze processor built using the fabric of the 
+FPGA.  In the preceding lecture we have learned about the EDK and
+SDK tool chains, now its time to put that knowledge to the test by building
+a software controlled datapath.  Lab 2 revealed some shortcomings of our 
+oscilloscope that this lab intends on correcting.
+<ul>	<li>Horizontal trigger point
+	<li>Ability to enable and disable channels to display
+	<li>Ability to trigger off channel 2
+	<li>Ability to change the slope direction for the trigger.
+</ul>
+
+The following figure shows required functionality - your program should allow
+the user to change the position of the triggerVolt and triggerTime indicators
+with the result that the waveform should be drawn so that the periodic waveform
+is increasing through that voltage at that time.
+
+<br><img src="./img/lab3-1.gif"><br><br>
+
+In order to accomplish this you will need to  make some minor changes to the
+lab2 component, create a new piece of IP, and then program it.  Lets walk 
+through these steps.
+<br><br>
+
+<b>Note:</b>
+In your program, you may want to check if the users has hit the
+key on the keyboard without having to actualy read the key.  For
+these cases the following command  will prove useful.  Note that
+"uartRecReg" is a constant, the address of the uart.<br>
+<pre>
+XUartLite_IsRecieveEmpty(uartRecReg);
+</pre>
+<br><br>
+
+
+
+<h2>Hardware</h2>
+With the expectation of the following engineering change orders (ECO) in 
+the table below, the hardware you developed in lab2 will be unchanged.
+For the following ECO, please refer to the high-level architecture
+in <a href="../lab2/lab2.html">lab 2</a>.
+
+<table class="table table-striped table-bordered table-condensed">
+<tr><td>Name:	<td>Trigger Voltage, Trigger Time</td></tr>
+<tr><td>Scope:	<td>lab2_dp and lab2</td></tr>
+<tr><td>Type:	<td>Change to the entity descriptions.</td></tr>
+<tr><td>Details:
+<td>
+<ul>	<li>Inside the lab2_dp component, remove the logic driving
+	the triggerVolt and triggerTime signals into the video component.
+	<li>Remove the buttons signal from the lab2 and lab2_dp entities.
+	<li>Remove the buttons signal from the ucf file.
+	<li>Add the triggerVolt and triggerTime signals to the 
+	lab2 and lab2_dp entity descriptions.
+	<li>Drive the triggerTime and triggerVolt inputs on the video
+	component with the corresponding signals on the lab2_dp entity.
+</ul>
+</td></tr>
+</table>
+
+Your first step will be to create a component for your lab2 component in
+your EDK repository.  This will require you to think about what signals
+are routed to the microBlaze and those going outside the Spartan 6 chip.
+The following table should help.
+
+<table class="table table-striped table-bordered table-condensed">
+
+<tr><td>To/From microBlaze	<td>Outside Spartan 6
+<tr><td>exWrAddr	<td>clk 
+<tr><td>exWen		<td>reset 
+<tr><td>exSel		<td>SDATA_IN 
+<tr><td>L_bus_out, R_bus_out		<td>BIT_CLK 
+<tr><td>exLbus, exRbus	<td>SYNC 
+<tr><td>flagQ		<td>SDATA_OUT 
+<tr><td>flagClear	<td>AC97_n_RESET 
+<tr><td>triggerTime	<td>tmds 
+<tr><td>triggerVolt	<td>tmdsb 
+</table>
+
+<h2>Software</h2>
+
+<ul>
+<li>All the memory mapped hardware registers will have their names setup
+as #define's with a name ending in "Reg".  
+<li>Any register with bit fields will have the bit index setup as 
+#define's with a name ending in "Bit".
+<li>The flagQ and flagClear registers need to be at the same address.
+</ul>
+
+<h2>Required Functionality</h2>
+In order to make required functionality you will need to properly trigger
+the oscilloscope on channel 1 using a positive edge trigger.  Control of
+this process is to be performed using the microBlaze.  The main tasks of
+the microBlaze will include:
+<ul>	<li>Moving audio samples into a pair of circular buffer.  These circular
+	buffers will be maintained in the address space of the microBlaze.  That
+	is you should have two big arrays defined in your program.
+	Use polling of the ready bit of the flag register.
+	<li>Examining the samples looking for a trigger event.
+	<li>Fill the remaining sample slots in memory.
+	<li>Move the appropriate buffer values into the display memory of
+	the oscilloscope (lab2) component.
+	<li>Provide a user menu (through the terminal) allowing the user
+	to adjust the trigger voltage and trigger time.
+</ul>
+
+<h2>B-level Functionality</h2>
+Achieve required functionality.
+<ul>	<li>Use the ready bit of the flag register to trigger an interrupt.
+	The ISR should store the samples (left and right), look for a triggering
+	even, and signal when the stored samples should be transfered to the
+	BRAM in the oscilloscope component.
+</ul>
+
+<h2>A-level Functionality</h2>
+Achieve B-level functionality.  
+<ul>	<li>Ability to enable and disable channels to display
+	<li>Ability to trigger off channel 2
+	<li>Ability to change the slope direction for the trigger.
+</ul>
+
+
+<h2>Using one bit from a vector to trigger an interrupt</h2>
+In order to achieve A functionality, this assignment requires you to use a 
+single bit of Q (the std_logic_vector output from the flag register) as the
+interrupt signal.  This will require some syntax changes as 
+documented below.
+
+<ul>
+<li>In the <b>oscope_v1_1_0.mpd</b> file (located
+in the /data directory in your EDK respository), add the
+following line at the end of the PORT descriptions (just before
+the END statement).  The following assumes that bit 0 of the
+flag register corresponds to the ready signal.
+<pre>
+    PORT FLAGQ = "", DIR = O, VEC=[0:0]
+</pre>
+
+<li>In the <b>yourEdkProjectName.mhs</b> file, add the following
+line at the end of the PORT descriptions in the 
+"BEGIN Interrupt_Counter" block.
+<pre>
+    PORT FLAGQ = interrupt_counter_0_FLAGQ_0
+</pre>
+
+<li>In the <b>yourEdkProjectName.mhs</b> file, add the following
+line at the end of the PORT descriptions in the "BEGIN MicroBlaze"
+block.
+<pre>
+    PORT interrupt = interrupt_counter_0_FLAGQ_0
+</pre>
+
+</ul>
+
+<br><img src="./img/hw11-1.gif"><br><br>
+
+<h2>Grading</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th align="center">Item</th>
+<th align="center">Grade</th>
+<th align="center">Points</th>
+<th align="center">Out of</th>
+<th align="center">Date</th>
+<th>Due</th>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+<td align="center" colspan="1">Required Functionality</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">40</td>
+<td align="center" colspan="1"></td>
+<td>COB L22 </td>
+</tr>
+
+<tr>
+<td align="center" colspan="1">B Functionality</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">10</td>
+<td align="center" colspan="1"></td>
+<td>COB L22 </td>
+</tr>
+
+<tr>
+<td align="center" colspan="1">A Functionality</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">10</td>
+<td align="center" colspan="1"></td>
+<td>COB L22 </td>
+</tr>
+<tr>
+<td align="center" colspan="1">Use of Git / Github</td>
+<td align="center" colspan="1"><strong>On-Time:</strong> 0 ---- Check Minus ---- Check ---- Check Plus ---- <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">5</td>
+<td align="center" colspan="1"></td>
+<td>COB L23</td>
+</tr>
+<tr>
+<td align="center" colspan="1">Code Style</td>
+<td align="center" colspan="1"><strong>On-Time:</strong> 0 ---- Check Minus ---- Check ---- Check Plus ---- <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">10</td>
+<td align="center" colspan="1"></td>
+<td>COB L23</td>
+</tr>
+<tr>
+<td align="center" colspan="1">README</td>
+<td align="center" colspan="1"><strong>On-Time:</strong> 0 ---- Check Minus ---- Check ---- Check Plus ---- <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">25</td>
+<td align="center" colspan="1"></td>
+<td>COB L23</td>
+</tr>
+<tr>
+<td align="center" colspan="1"><strong>Total</strong></td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1"><strong>100</strong></td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1"></td>
+</tr>
+</tbody>
+</table>
+
+
+</body>
+</html>

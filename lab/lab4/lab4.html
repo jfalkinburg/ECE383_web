@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ECE383</title>
+        <meta name="description" content="ECE 383 - Embedded Systems II with the Digilent Atlys at the United States Air Force Academy (USAFA).  Covers VHDL.  Free and open FPGA course.">
+        <meta name="author" content="Todd Branchflower">
+        <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
+        <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
+    </head>
+    <body>
+
+        <div class = "container">
+            <div class = "navbar navbar-inverse">
+                <div class = "navbar-inner">
+                    <a class = "brand" href="../../index.html">ECE383</a>
+                    <ul class="nav pull-right">
+                        <li><a href="../lab3/lab3.html">&ltPrev</a></li>
+                        <li><a href="../lab5/lab5.html">Next&gt</a></li>
+                    </ul>
+                </div>
+            </div>
+
+<table class="table table-striped table-bordered table-condensed">
+<tr><td>Start date:</td>	<td>April 6/7</td></tr>
+<tr><td>End date:</td>		<td>April 12/13</td></tr>
+<tr><td>Lab:</td>		<td>4</td></tr>
+<tr><td>Status			<td bgcolor = #FFFFF0>Not Started<!--<td bgcolor = #FFD0D0>In Progress --> <!--<td bgcolor = #D0FFD0>Complete -->
+</table>
+
+
+<h1>Lab 4 - Function generation</h1>
+The goal of this lab is to generate an audio waveform with a high degree
+of accuracy in both its period and frequency.  
+
+<h2>Lab Overview</h2>
+You are to use Direct Digital Synthesis to reproduce your audio waveform.
+You may choose any waveform so long as its not
+<a href="http://en.wikipedia.org/wiki/Piecewise_linear_function">Piecewise Linear</a>.
+A few interesting examples would be sinusoids, sinc, exponentially damped
+sinusoids, waveform from a musical instrument (guitar, piano, clarinet).  Its 
+your responsibility to get the samples for this waveform.  I would suggest
+either deriving the waveform using a program like Python, a spreadsheet, or
+digitizing the samples using your Lab3.  Once you have your data, it should
+be hardwired into the BRAM using the "init" statements.  Please consult
+the handout associated with 
+<a href="../../lecture/lecture24.html">lesson 24</a> for more details 
+on how to accomplish this.
+
+<h2>Requirements</h2>
+While you have the flexibility to design the waveform generator as you see 
+fit, your system must meet the following requirements:
+<ol>	<li>Use an update rate of 48kHz
+	<li>At 440Hz, the LUT should be incremented by about 1 index.
+	<li>Be able to make between a 0.1Hz and 0.25Hz change in frequency.  
+	<li>Be able to generate a full amplitude waveform.
+</ol>
+
+
+<h2>Hardware</h2>
+You will have to generate the block diagram for this assignment and 
+present it at the beginning of the second lab session for review by 
+your professor.  Your design must be segregated into a datapath and 
+control unit - your design must show the blocks in the datapath and 
+the states in the FSM, the control word and the status word joining 
+the two.  
+
+<h2>Required Functionality</h2>
+Use the slide switches and push buttons to manipulate the phase angle and the 
+amplitude of the waveform.  The 
+<ul>
+<li>Pressing the left button should decrease the frequency of the waveform
+	by the amount set on the slide switches.
+<li>Pressing the right button should decrease the frequency of the waveform 
+	by the amount set on the slide switches.
+</ul>
+The waveform should be played back through the AC97 interface - remember to
+wait for the ready signal.
+
+<h2>B-level Functionality</h2>
+<ul>
+<li>Pressing the up button should increase the amplitude of the waveform
+	by the amount set on the slide switches.
+<li>Pressing the down button should increase the amplitude of the waveform
+	by the amount set on the slide switches.
+<li>Pressing the center button should toggle between 2-different waveforms.
+</ul>
+
+<h2>A-level Functionality</h2>
+Use the microBlaze to manipulate the amplitude and frequency.  The user
+will enter in a integer frequency and you are to produce a waveform 
+at that frequency. 
+
+<h2>Milestone 1</h2>
+At the end of the first lab session, you should have a completed
+hardware diagram drawn in paint or another image editing software 
+and be able to be readiable when printed onto an 8.5x11 sheet of
+paper.  Provide me with a hardcopy of your schematic at the end of
+class.  This diagram must contain the following.
+<ul>
+<li>A border defining the top-level entity.  Borders for each of the 
+	components instantiated with-in the top-level entity.
+<li>All components must be named in the upper left corner.
+<li>All signals entering and exiting components must have their 
+	port name defined just inside the border.
+<li>All signals outside the components must have their width defined 
+	as well as be labeled with their names. 
+</ul>
+
+<h2>Milestone 2</h2>
+At the end of the second lab period you should have a working testbench.
+When simulating your design, have the testbench supply a mock ready signal
+in place of the ready signal generated AC97_wrapper (when put in a testbench,
+the AC97 wrapper is not able to generate a ready signal without a lot of 
+extra work.
+<br><br>
+
+When complete, I expect your timing diagram to look like the following 
+and contain at least:
+<ul>	<li>clk
+	<li>reset
+	<li>ready (simulated using CSA statements in teshbench)
+	<li>FSM state
+	<li>BRAM address
+	<li>Phase increment
+	<li>BRAM data out
+	<li>Amplitude cofficient (if aiming for B or A functionality)
+	<li>Multiplied data out (if aiming for B or A functionality)
+	<li>Slide switches
+	<li>Button values
+</ul>
+
+Your simulation needs to simulate a button press (and release) to 
+change the phase increment and follow-up showing that the BRAM
+address is being incremented by this new value.
+
+<br><img src="./lab4-1.gif"><br><br>
+
+
+<h2>Grading</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th align="center">Item</th>
+<th align="center">Grade</th>
+<th align="center">Points</th>
+<th align="center">Out of</th>
+<th align="center">Date</th>
+<th>Due</th>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+<td align="center" colspan="1">Milestone #1</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">5</td>
+<td align="center" colspan="1"></td>
+<td>End of Lesson L27 </td>
+</tr>
+
+<td align="center" colspan="1">Milestone #2</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">5</td>
+<td align="center" colspan="1"></td>
+<td>End of Lesson L28 </td>
+</tr>
+
+<td align="center" colspan="1">Required Functionality</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">30</td>
+<td align="center" colspan="1"></td>
+<td>COB L29 </td>
+</tr>
+
+<tr>
+<td align="center" colspan="1">B Functionality</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">10</td>
+<td align="center" colspan="1"></td>
+<td>COB L29 </td>
+</tr>
+
+<tr>
+<td align="center" colspan="1">A Functionality</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">10</td>
+<td align="center" colspan="1"></td>
+<td>COB L29 </td>
+</tr>
+<tr>
+<td align="center" colspan="1">Use of Git / Github</td>
+<td align="center" colspan="1"><strong>On-Time:</strong> 0 ---- Check Minus ---- Check ---- Check Plus ---- <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">5</td>
+<td align="center" colspan="1"></td>
+<td>COB L30</td>
+</tr>
+<tr>
+<td align="center" colspan="1">Code Style</td>
+<td align="center" colspan="1"><strong>On-Time:</strong> 0 ---- Check Minus ---- Check ---- Check Plus ---- <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">10</td>
+<td align="center" colspan="1"></td>
+<td>COB L30</td>
+</tr>
+<tr>
+<td align="center" colspan="1">README</td>
+<td align="center" colspan="1"><strong>On-Time:</strong> 0 ---- Check Minus ---- Check ---- Check Plus ---- <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">25</td>
+<td align="center" colspan="1"></td>
+<td>COB L30</td>
+</tr>
+<tr>
+<td align="center" colspan="1"><strong>Total</strong></td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1"><strong>100</strong></td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1"></td>
+</tr>
+</tbody>
+</table>
+
+
+</body>
+</html>

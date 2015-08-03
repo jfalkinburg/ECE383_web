@@ -1,0 +1,19 @@
+VCCAUX = 3.3;
+
+NET "clk"		LOC = "L15" | PERIOD = 100 MHz;
+NET "reset"		LOC = "T15" | IOSTANDARD = LVCMOS33;
+NET "TMDS(0)"	LOC = "D8" | IOSTANDARD = TMDS_33 ; # Blue
+NET "TMDSB(0)"	LOC = "C8" | IOSTANDARD = TMDS_33 ;
+NET "TMDS(1)"	LOC = "C7" | IOSTANDARD = TMDS_33 ; # Red
+NET "TMDSB(1)"	LOC = "A7" | IOSTANDARD = TMDS_33 ;
+NET "TMDS(2)"	LOC = "B8" | IOSTANDARD = TMDS_33 ; # Green
+NET "TMDSB(2)"	LOC = "A8" | IOSTANDARD = TMDS_33 ;
+NET "TMDS(3)"	LOC = "B6" | IOSTANDARD = TMDS_33 ; # Clock
+NET "TMDSB(3)"	LOC = "A6" | IOSTANDARD = TMDS_33 ;
+
+# onBoard PUSH BUTTONS 
+ NET "btn<0>" LOC = "N4";  # Bank = 3, Pin name = IO_L1P,			Sch name = BTNU
+ NET "btn<1>" LOC = "P4";  # Bank = 3, Pin name = IO_L2P,			Sch name = BTNL
+ NET "btn<2>" LOC = "P3";  # Bank = 3, Pin name = IO_L2N,			Sch name = BTND
+ NET "btn<3>" LOC = "F6";  # Bank = 3, Pin name = IO_L55P_M3A13,	Sch name = BTNR
+ NET "btn<4>" LOC = "F5";  # Bank = 3, Pin name = IO_L55N_M3A14,	Sch name = BTNC
