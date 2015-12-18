@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ECE383 - Lab Notebooks</title>
+        <meta name="description" content="ECE 383 - Embedded Systems II with the Digilent Atlys at the United States Air Force Academy (USAFA).  Covers VHDL.  Free and open FPGA course.">
+        <meta name="author" content="Jeff Falkinburg">
+        <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
+        <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
+    </head>
+    <body>
+        <div class = "container">
+            <div class = "navbar navbar-inverse">
+                <div class = "navbar-inner">
+                    <a class = "brand" href="./index.html">ECE383</a>
+                    <ul class = "nav">
+                        <li><a href="../datasheets.html">Datasheets</a></li>
+                        <li><a href="./lab/labs.html">Labs</a></li>
+                        <li><a href="../courseletter.html">Admin</a></li>
+                    </ul>
+                </div>
+            </div>
+            <h1>Labs</h1>
+<h2>General</h2>
+<p>The labs make up a significant portion of both your prog and final grades.  You must complete each one (even for zero credit) to pass the course.  A disciplined approach to design, implementation, and testing are key to your success!  Wiring and coding the entire lab and then trying to figure out why it doesn&#39;t work (they almost never do) can be incredibly painful and time-consuming.  Our experience shows that students who get behind on the labs need to catch up immediately, else the burden of uncompleted labs builds to inescapable levels.</p>
+<h2>Lab Notebooks</h2>
+<p>Lab notebooks are heavily emphasized in this course and constitute a large portion of lab grades.  The lab notebook is maintained as a journal of your lab experience and should allow you, or any knowledgeable engineer, to recreate your project.  For this course, your notebook should contain at least the following (as applicable to the particular lab):</p>
+<ul>
+<li>Descriptive title</li>
+<li>Objectives or purpose</li>
+<li>Prelab</li>
+<li>Preliminary design</li>
+<li>Software flow chart / algorithms</li>
+<li>Hardware schematic</li>
+<li>Well-formatted code</li>
+<li>Debugging</li>
+<li>Testing methodology / results</li>
+<li>Observations and Conclusions</li>
+<li>Documentation</li>
+</ul>
+<p>The actual format is flexible, so don&#39;t be afraid to add something later.  All lab reports must stand up to the <strong>&quot;hit by a bus&quot;</strong> standard.  Should you die, another engineer must be able to continue your work without trouble.</p>
+<p>You are expected to keep your lab notebooks current as you work on a lab.  You will lose substantial points if sections of the lab notebook which should be part of your documentation before the demonstration (such as prelab, approach, flowcharts, testing, debugging, etc.) are entered afterwards.  Your conclusion section, lessons learned, and your final formatted code are not required before your demo.</p>
+<h3>Electronic Lab Notebooks</h3>
+<p>In this class, we will use an electronic lab notebook.  We&#39;ll be using the version control software <strong>git</strong> and your code must be hosted on <a href="http://bitbucket.org">Bitbucket</a>.  Here is the directory structure that must be used if you have more than one code file or more than one image file to be uploaded for a single lab:</p>
+<ul>
+<li>/LabX<ul>
+<li>/code<ul>
+<li>Include all source code here</li>
+</ul>
+</li>
+<li>/images<ul>
+<li>Include all images you use in your notebook here</li>
+</ul>
+</li>
+<li>notebook.md (or README.md)<ul>
+<li>Lab notes not included in your git commit history</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<strong>ECE 383 Lab Notebook Example</strong> - <a href="https://github.com/jfalkinburg/ECE_382_Lab_Ex">https://github.com/jfalkinburg/ECE_382_Lab_Ex</a>
+<p>Your commit history will be used as verification that you&#39;ve been keeping your lab notebook up to date as you progress.  You should commit early and often.</p>
+<p>You&#39;ll still need to hand in your grading sheet so I will know your achieved functionality and can record grades and feedback for you.</p>
+<h2>Coding Standards</h2>
+<h3>General</h3>
+<p>You are expected to use the same structured programming techniques that you were taught in CS110.</p>
+<p>You must comment your code where appropriate.  This doesn&#39;t mean commenting every line you write - that&#39;s distracting and unproductive.  Comments should be used to convey the general purpose of a block of code or explain a section that may be unclear.  You can assume the reader is a knowledgeable engineer.</p>
+<p>Use meaningful, readable variable names - variable1 or var1 or loop1 or L1 are unacceptable.</p>
+<p><strong>Don&#39;t repeat yourself!</strong>  If you find yourself using the same code over and over, you should abstract it into a subroutine or function.</p>
+<h3>Code Headers</h3>
+<p>For each coding file submitted in your lab notebook, ensure you have a header that includes your name, the date, the assignment, a brief purpose of the code, and documentation for that specific file.</p>
+<p>For each subroutine you use, include a header just above the subroutine&#39;s location.  Ensure the author, function, inputs, outputs, and destroyed registers for that subroutine are included in the subroutine header.</p>
