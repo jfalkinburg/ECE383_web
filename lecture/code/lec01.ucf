@@ -1,0 +1,8 @@
+# This is slide switch SW0
+NET "a" LOC = A10;
+# This is slide switch SW1
+NET "b" LOC = D14;
+# This is slide switch SW2
+NET "c" LOC = C14;
+# This is LED LD0
+NET "f" LOC = U18;
