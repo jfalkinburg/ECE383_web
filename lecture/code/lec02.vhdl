@@ -1,15 +1,15 @@
 --------------------------------------------------------------------
--- Name:	Chris Coulston
--- Date:	Jan 6, 2015
+-- Name:	Capt Jeff Falkinburg
+-- Date:	Dec 22, 2015
 -- File:	majority.tb.vhdl
--- HW:	Lecture 2
+-- HW:		Lecture 2
 --	Crs:	ECE 383
 --
--- Purp:	This is a testbench for the majority circuti designed
+-- Purp:	This is a testbench for the majority circuit designed
 --			for homework #1
 --
--- Documentation:	No help, I based this off a some previous labs I
---						generated at Penn State.  I also consulted
+-- Documentation:	Dr. Chris Coulston based this off a some previous 
+--						labs he used at Penn State.  He also consulted
 --						page 36 of our text for some useful syntax.	
 --
 -- Academic Integrity Statement: I certify that, while others may have 
