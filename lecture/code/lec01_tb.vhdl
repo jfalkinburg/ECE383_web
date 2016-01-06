@@ -1,8 +1,19 @@
 ----------------------------------------------------------------------
 -- Name:	Capt Jeff Falkinburg
 -- Date:	Spring 2016
+-- File: lec01_tb.vhd
+-- HW:	Lecture 1
 -- Pupr:	Test bench for Lecture 1 - majority circuit  
-----------------------------------------------------------------------
+--
+-- Doc:	None
+-- 	
+-- Academic Integrity Statement: I certify that, while others may have 
+-- assisted me in brain storming, debugging and validating this program, 
+-- the program itself is my own work. I understand that submitting code 
+-- which is the work of other individuals is a violation of the honor   
+-- code.  I also understand that if I knowingly give my original work to 
+-- another individual is also a violation of the honor code. 
+----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.std_logic_1164.all;
 

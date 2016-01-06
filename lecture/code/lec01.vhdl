@@ -1,11 +1,25 @@
-------------------------------------------
+----------------------------------------------------------------------------------
 -- Comments start with two dashes
 -- You should always have the following
--- three lines in all of your code
--- Author:	Capt Jeff Falkinburg
+--		lines in all of your code
+----------------------------------------------------------------------------------
+-- Name:	Capt Jeff Falkinburg
 -- Date:	Spring 2016
--- Purp:	Majority circuit
-------------------------------------------
+-- File: lec01.vhd
+-- HW:	Lecture 1
+-- Purp:	Majority circuit - output is high if the majority of inputs
+-- 		are high
+--
+-- Doc:	<list the names of the people who you helped>
+-- 		<list the names of the people who assisted you>
+-- 	
+-- Academic Integrity Statement: I certify that, while others may have 
+-- assisted me in brain storming, debugging and validating this program, 
+-- the program itself is my own work. I understand that submitting code 
+-- which is the work of other individuals is a violation of the honor   
+-- code.  I also understand that if I knowingly give my original work to 
+-- another individual is also a violation of the honor code. 
+----------------------------------------------------------------------------------
 library IEEE;						-- These lines are similar to a #include in C
 use IEEE.std_logic_1164.all;
 
