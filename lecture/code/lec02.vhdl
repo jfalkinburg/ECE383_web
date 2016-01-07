@@ -8,9 +8,8 @@
 -- Purp:	This is a testbench for the majority circuit designed
 --			for homework #1
 --
--- Documentation:	Dr. Chris Coulston based this off a some previous 
---						labs he used at Penn State.  He also consulted
---						page 36 of our text for some useful syntax.	
+-- Documentation:	Based this off a some previous labs and consulted 
+--					page 36 of our text for some useful syntax.	
 --
 -- Academic Integrity Statement: I certify that, while others may have 
 -- assisted me in brain storming, debugging and validating this program, 

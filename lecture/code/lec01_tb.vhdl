@@ -5,7 +5,8 @@
 -- HW:	Lecture 1
 -- Pupr:	Test bench for Lecture 1 - majority circuit  
 --
--- Doc:	None
+-- Documentation:	Based this off a some previous labs and consulted 
+--					page 36 of our text for some useful syntax.	
 -- 	
 -- Academic Integrity Statement: I certify that, while others may have 
 -- assisted me in brain storming, debugging and validating this program, 
