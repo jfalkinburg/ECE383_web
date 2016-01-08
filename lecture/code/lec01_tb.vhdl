@@ -1,8 +1,9 @@
 ----------------------------------------------------------------------
 -- Name:	Capt Jeff Falkinburg
 -- Date:	Spring 2016
--- File: lec01_tb.vhd
--- HW:	Lecture 1
+-- Course: 	ECE 383
+-- File: 	lec01_tb.vhd
+-- HW:		Lecture 1
 -- Pupr:	Test bench for Lecture 1 - majority circuit  
 --
 -- Documentation:	Based this off a some previous labs and consulted 

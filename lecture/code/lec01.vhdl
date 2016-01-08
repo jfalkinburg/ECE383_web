@@ -5,10 +5,11 @@
 ----------------------------------------------------------------------------------
 -- Name:	Capt Jeff Falkinburg
 -- Date:	Spring 2016
--- File: lec01.vhd
--- HW:	Lecture 1
+-- Course: 	ECE 383
+-- File: 	lec01.vhd
+-- HW:		Lecture 1
 -- Purp:	Majority circuit - output is high if the majority of inputs
--- 		are high
+-- 			are high
 --
 -- Doc:	<list the names of the people who you helped>
 -- 		<list the names of the people who assisted you>
