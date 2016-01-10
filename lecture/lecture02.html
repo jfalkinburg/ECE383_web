@@ -34,7 +34,7 @@
 
 
 
-<h2>VHDL</h2>
+<h1>VHDL</h1>
 As I am wont to say, there is more than one way to skin a cat.  This
 expression should make you happy regardless of your feelings towards
 cats because it means that your personality can be expressed through
@@ -43,8 +43,74 @@ method of describing a circuit; we transformed the circuit diagram
 into a textual description.  Today we will examine another method of
 VHDL coding; behavioral.
 
+<h2>Structural</h2>
+<ul>
+	<li>In structural view, a circuit is constructed by smaller parts.
+	<li>Structural description specifies the types of parts and connections.
+	<li>Essentially a textual description of a schematic
+	<li>Done by using “component” in VHDL
+	<ol>
+			<li>First declared (make known)
+			<li>Then instantiated (used)
+	</ol>
+</ul>
 
-<h1>Behavioral</h1>
+<pre>
+------------------------------------------
+-- Author:      Capt Jeff Falkinburg
+-- Date:        Spring 2016
+-- Purp:	Structural Majority circuit
+------------------------------------------
+library IEEE;						-- These lines are similar to a #include in C
+use IEEE.std_logic_1164.all;
+library unisim;					-- Use these libraries if you are using primitive components
+use unisim.vcomponents.all;
+
+entity majority is
+	port(	a, b, c:	in std_logic; 
+					f:	out std_logic);
+end majority;
+
+architecture structure of majority is
+component AND2
+	port ( i0, i1	: in std_logic;
+			 o 		: out std_logic);
+end component;
+				
+component OR3
+	port ( i0, i1, i2	: in std_logic;
+			 o 			: out std_logic);
+end component;
+				
+signal	s1, s2, s3: std_logic;	-- wires which begin and end in the component
+
+begin 
+	unit1:	AND2
+	port map (	-- s1 <= a and b;			
+		i0 => a,
+		i1 => b,
+		o	=>	s1);
+	unit2:	AND2
+	port map (	-- s2 <= b and c;			
+		i0 => b,
+		i1 => c,
+		o	=>	s2);
+	unit3:	AND2
+	port map (	-- s3 <= a and c;			
+		i0 => a,
+		i1 => c,
+		o	=>	s3);
+	unit4:	OR3
+	port map (	-- f <= s1 or s2 or s3;			
+		i0 => s1,
+		i1 => s2,
+		i2	=>	s3,
+		o => f);
+
+end structure;
+</pre>
+
+<h2>Behavioral</h2>
 A behavioral description of a component describes what the circuit
 does rather than how it is done.  For example, we will consider the
 majority circuit from lecture 1.
