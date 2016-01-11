@@ -87,22 +87,22 @@ signal	s1, s2, s3: std_logic;	-- wires which begin and end in the component
 
 begin 
 	unit1:	AND2
-	port map (	-- s1 <= a and b;			
+	port map (		-- s1 <= a and b;			
 		i0 => a,
 		i1 => b,
-		o	=>	s1);
+		o => s1);
 	unit2:	AND2
-	port map (	-- s2 <= b and c;			
+	port map (		-- s2 <= b and c;			
 		i0 => b,
 		i1 => c,
-		o	=>	s2);
+		o => s2);
 	unit3:	AND2
-	port map (	-- s3 <= a and c;			
+	port map (		-- s3 <= a and c;			
 		i0 => a,
 		i1 => c,
-		o	=>	s3);
+		o => s3);
 	unit4:	OR3
-	port map (	-- f <= s1 or s2 or s3;			
+	port map (		-- f <= s1 or s2 or s3;			
 		i0 => s1,
 		i1 => s2,
 		i2	=>	s3,
