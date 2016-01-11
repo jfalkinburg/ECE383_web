@@ -64,7 +64,7 @@ begin
 		
 		wait for 10 ns; 
 		assert F = test_out(i)
- 				report "Error with input i in majority circuit "
+ 				report "Error with input " & integer'image(i) & " in majority circuit "
 				severity failure;
 				
 	end loop;
