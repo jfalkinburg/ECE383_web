@@ -43,7 +43,7 @@ chip.
 
 The designers of the Atlys board decided to connect some of these
 pins to specific hardware modules.  These connections are described in the 
-<a href="http://www.digilentinc.com/data/products/atlys/atlys_rm_v2.pdf">Atyls Board Reference Manual</a>.
+<a href="../.datasheets/atlys_rm.pdf">Atyls Board Reference Manual</a>.
 Of interest are the connections described on pages 19, highlighting the switches
 and LEDs on the board.
 <br><br>
@@ -84,7 +84,7 @@ end circuit;
 
 architecture error of circuit is
 begin
-    q <= some cool logical stuf using clk and data;
+    q <= some cool logical stuff using clk and data;
     not_q <= not q;
 end error;
 </pre>
@@ -93,7 +93,7 @@ The solution is to assign "some cool logical stuff using clk and data" to
 a temporary variable and then have 
 
 <pre>
-    temp <= some cool logical stuf using clk and data;
+    temp <= some cool logical stuff using clk and data;
     q <= temp;
     not_q <= not temp;
 </pre>
