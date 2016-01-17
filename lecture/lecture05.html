@@ -29,10 +29,11 @@
 <tr><td>Date:</td>	<td>January  20</td></tr>
 <tr><td>Lecture:</td>	<td>5</td></tr>
 <tr><td>Next lecture	<td><a href="../hw/hw5.html">HW5</a>
-<tr><td>Status		<td bgcolor = #FFFFF0>Not Started<!--<td bgcolor = #FFD0D0>In Progress --> <!--<td bgcolor = #D0FFD0>Complete -->
+<tr><td>Status		<td bgcolor = #FFD0D0>In Progress <!--<td bgcolor = #FFFFF0>Not Started --> <!--<td bgcolor = #D0FFD0>Complete -->
 <tr><td>Handout		<td><a href="../hand/hand05.docx">hand05.docx</a>
 <tr><td>Code		<td>	<a href="./code/lec05.vhdl">lec05.vhdl</a><br>
 				<a href="./code/lec05.ucf">lec05.ucf</a>
+<tr><td>Lesson Slides<td><a href="./slides/ECE_383_Lec5.pptx">ECE_383_Lec5.pptx</a>
 </table>
 
 
@@ -61,7 +62,7 @@ the validity of the output ripples from the most to the least significant bit.
 Since real logic gates have delay, there is a delay to get a valid bit.  This
 delay is the focus of this lecture.
 
-<h2>Gated and non-gates circuit</h2>
+<h2>Gated and non-gated circuit</h2>
 In the upcoming lab you will have to design a circuit to output 2 signals crucial to the
 proper operation of the VGA display.  In order for these outputs to properly drive the 
 display they need to be both glitch free and promptly available after a clock edge.  This
@@ -115,7 +116,7 @@ The difference is how this is accomplished; the table below illustrates.
 At first glance you would not be faulted for thinking that these two circuits have
 identical outputs.  Theoretically, they do, but reality has a cruel surprise in the
 the form of glitches.  If you connect an oscilloscope up to the PMOD connector (see
-page 21 of the Atlys Board Reference Manual) corresponding to JB(3) and JB(2) (the 
+page 18 of the Atlys Board Reference Manual) corresponding to JB(3) and JB(2) (the 
 most 2 significant bits of the non-gated comparator outputs) you would see the 
 trace below.
 
