@@ -27,7 +27,7 @@
 <tr><td>Date:</td>	<td>February 10</td></tr>
 <tr><td>Lecture:</td>	<td>12</td></tr>
 <tr><td>Handout		<td><a href="../hand/hand12.docx">hand12.docx</a></td></tr>
-<tr><td>Status		<td bgcolor = #FFD0D0>In Progress <!--<td bgcolor = #FFFFF0>Not Started<td bgcolor = #FFD0D0>In Progress --> <!--<td bgcolor = #D0FFD0>Complete -->
+<tr><td>Status		<td bgcolor = #D0FFD0>Complete <!--<td bgcolor = #FFFFF0>Not Started<td bgcolor = #FFD0D0>In Progress --> <!--<td bgcolor = #FFD0D0>In Progress -->
 <tr><td>Code 		<td>	<a href="./code/lec12_dp.vhdl">lec12_dp.vhdl<br>
 				<a href="./code/lec12_tb.vhdl">lec12_tb.vhdl</a>
 <tr><td>Lesson Slides<td><a href="./slides/ECE_383_Lec12.pptx">ECE_383_Lec12.pptx</a>
@@ -43,7 +43,7 @@ them in a design.  Today we will talk about both.<br><br>
 
 To start your journey, you need to look through the first page of the
 <a href="http://www.xilinx.com/support/documentation/data_sheets/ds160.pdf">
-Spartan-6 Family Overview</a>.  The second page lists quantifies how many
+Spartan-6 Family Overview</a>.  The second page lists quantities how many
 of these resources our ATLYS boards have.  For reference we are using the
 XC6SLX45 chip.  It has some pretty impressive stats.  Of significance
 to us is the block rams and the DSP blocks.<br><br>
@@ -53,7 +53,7 @@ In our upcoming Lab2, you will need a large RAM to store 18-bit audio samples
 streaming in from the ATLYS board.  The Xilinx FPGA on our board, a Spartan 6,
 contains built in block RAMs (BRAMs).  You can select of the three main BRAMS
 configuration (BRAM_SDP_MACRO, BRAM_SINGLE_MACRO, BRAM_TDP_MACRO) available 
-in the UNIMACRO library.  We will be using a BRAM_SDP_MACRO in our design.  According 
+in the UNIMACRO library.  We will be using a BRAM_SDP_MACRO in our design.  According to
 <a href="http://www.xilinx.com/support/documentation/sw_manuals/xilinx12_4/spartan6_hdl.pdf">Spartan-6 Libraries Guide for HDL Designs</a>.<br><br>
 
 <dir>
@@ -62,7 +62,7 @@ FPGA devices contain several block RAM memories that can be configured as genera
 
 A schematic symbol of this memory is shown below.  Note, that inputs are on the
 left and outputs on the right.  The left top side lists all the write functions
-left left, the reads.  Each of the three types of BRAMs are highly configurable,
+left bottom, the reads.  Each of the three types of BRAMs are highly configurable,
 so much so that it can be overwhelming to the new designer.  
 
 <br><img src="./img/lecture12-1.gif"><br><br>
