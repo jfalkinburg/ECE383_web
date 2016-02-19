@@ -1,6 +1,7 @@
 ----------------------------------------------------------------------------------
 -- Name:	Capt Jeff Falkinburg
 -- Date:	Spring 2016
+-- Course:	ECE 383
 -- File: lab2_datapath_tb.vhd
 -- HW:	Lab 2 
 -- Pupr:	Lab 2 Datapath Testbench drives the blue audio jack input using the to
