@@ -30,6 +30,7 @@
 </table>
 
 
+
 <h1>Lab 2 - Data Acquisition, Storage and Display</h1>
 
 <h2>Lab Overview</h2>
@@ -191,6 +192,7 @@ time being you can leave the Q outputs to open.
 	<li><a href="./code/lab2.vhd">lab2.vhd</a>
 	<li><a href="./code/lab2.ucf">lab2.ucf</a>
 	<li><a href="./code/lab2_pack.vhdl">lab2_pack.vhdl</a>
+	<li><a href="./code/Lab2_datapath_tb.vhd">Lab2_datapath_tb.vhd</a>
 </ul>
 
 <h2>Generating Audio Waveforms</h2>
@@ -215,6 +217,12 @@ shot at the top of this page.
 	to do all the work in the datapath.
 	<li>Testbench for the flagRegister.
 	<li>Testbench for the control unit.
+	<li>Testbench for the datapath unit showing data (different value than 
+	what is given in the testbench) coming out of the AC'97 audio codec and being 
+	converted from signed to unsigned and then to std_logic_vector to go into your BRAM.
+	Include calculations to back up what the waveform shows.
+	<li>Testbench for the datapath unit showing that same data coming out of the BRAM.
+	This will require you to set your control words on the testbench.
 </ul>
 
 <h2>B-level functionality</h2>
