@@ -222,8 +222,11 @@ shot at the top of this page.
 	what is given in the testbench) coming out of the AC'97 audio codec and being 
 	converted from signed to unsigned and then to std_logic_vector to go into your BRAM.
 	Include calculations to back up what the waveform shows.
-	<li>For Bonus Points:  Testbench for the datapath unit showing that same data coming out of the BRAM.
-	This will require you to set your control words on the testbench.  Additionally, you will have to drive the pixel_clock on the Video Module.  
+	<li>For Bonus Points:  Testbench for the datapath unit showing that same data coming out of the BRAM.  
+	Make sure you show the read address and the data values coming out.  This will require you to set your 
+	control words on the testbench.  Additionally, you will have to drive the pixel_clock on the Video Module.
+	Once you get the datapath testbench running you will notice that DCM module doesn't put out a clock in the 
+	Video Module.  
 </ul>
 
 <h2>B-level functionality</h2>
