@@ -8,7 +8,7 @@
         <meta name="author" content="Capt Jeff Falkinburg">
         <link rel='stylesheet' type='text/css' href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css'>
         <script src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js'></script>
-		<META HTTP-EQUIV="refresh" CONTENT="120"> <!--added this line to force page refresh every 120 seconds-->
+		<META HTTP-EQUIV="refresh" CONTENT="660"> <!--added this line to force page refresh every 660 seconds-->
     </head>
 
 <body>
@@ -268,7 +268,7 @@ int main(void)
 </ul>
 </li>
 <li>To create our custom peripheral that allows up to write any value to the LEDs, we will take the following steps:<ul>
-<li>Modify the <code>*.mpd</code> file to let XPS know about the &quot;LED&quot; port it can be connected to FPGA pins through your projectbs UCF file.</li>
+<li>Modify the <code>*.mpd</code> file to let XPS know about the &quot;LED&quot; port it can be connected to FPGA pins through your projects UCF file.</li>
 <li>Modify the &quot;your_peripheral.vhd&quot; (the name of your peripheral) to add the &quot;LED&quot; output and then connect it into the structural instantiation of your &quot;user logic.&quot;</li>
 <li>Modify the <code>user_logic.vhd</code> file to include an LED output, and then connect one of the pre-created software registers to the LED output.</li>
 <li>Add the peripheral to our XPS design</li>
@@ -308,21 +308,22 @@ int main(void)
 </ul>
 <p><img src="./lecture17Images/same_bus.jpg" alt=""></p>
 <ul>
-<li>Under the &quot;Ports&quot; tab, make an external connection for your peripheral&#39;s LED port.</li>
+<li>Under the &quot;Ports&quot; tab, make an external connection for your peripheral&#39;s LED port.  Name it something like "ece383_tutorial_0_LED_pin".</li>
 </ul>
 <p><img src="./lecture17Images/external_connection.jpg" alt=""></p>
 <ul>
-<li>Add the following lines to your UCF file:</li>
+<li>Add the following lines to your UCF file (Located in the Data Folder):</li>
 </ul>
 <pre>
-net led_bank_0_LED_pin(7) LOC=N12 | IOSTANDARD = LVCMOS33;
-net led_bank_0_LED_pin(6) LOC=P16 | IOSTANDARD = LVCMOS33;
-net led_bank_0_LED_pin(5) LOC=D4  | IOSTANDARD = LVCMOS33;
-net led_bank_0_LED_pin(4) LOC=M13 | IOSTANDARD = LVCMOS33;
-net led_bank_0_LED_pin(3) LOC=L14 | IOSTANDARD = LVCMOS33;
-net led_bank_0_LED_pin(2) LOC=N14 | IOSTANDARD = LVCMOS33;
-net led_bank_0_LED_pin(1) LOC=M14 | IOSTANDARD = LVCMOS33;
-net led_bank_0_LED_pin(0) LOC=U18 | IOSTANDARD = LVCMOS33;
+# Note: Net name should match the LED Port Name.
+net ece383_tutorial_0_LED_pin(7) LOC=N12 | IOSTANDARD = LVCMOS33;
+net ece383_tutorial_0_LED_pin(6) LOC=P16 | IOSTANDARD = LVCMOS33;
+net ece383_tutorial_0_LED_pin(5) LOC=D4  | IOSTANDARD = LVCMOS33;
+net ece383_tutorial_0_LED_pin(4) LOC=M13 | IOSTANDARD = LVCMOS33;
+net ece383_tutorial_0_LED_pin(3) LOC=L14 | IOSTANDARD = LVCMOS33;
+net ece383_tutorial_0_LED_pin(2) LOC=N14 | IOSTANDARD = LVCMOS33;
+net ece383_tutorial_0_LED_pin(1) LOC=M14 | IOSTANDARD = LVCMOS33;
+net ece383_tutorial_0_LED_pin(0) LOC=U18 | IOSTANDARD = LVCMOS33;
 </pre>
 
 <ul>
@@ -334,7 +335,7 @@ net led_bank_0_LED_pin(0) LOC=U18 | IOSTANDARD = LVCMOS33;
 </ul>
 </li>
 <li>Generate the bitfile</li>
-<li>Export the design to Xilinx SDK</li>
+<li>Export the design to Xilinx SDK.  Note: You may have to restart SDK to see the new system.bit file.</li>
 </ul>
 <h2>Update Software</h2>
 <p>Finally, you will write software that reads in a value from UART, echoes that value to the UART and LEDs.</p>
@@ -364,7 +365,7 @@ Xil_Out8(0x83000000, c);</code></pre>
 <li>Structurally add additional VHDL modules in separate files</li>
 </ul>
 </li>
-<li>Write software to interface with any given MicroBlaze peripheral.  In particular, you should be able to write to and read from the peripheralbs software registers.</li>
+<li>Write software to interface with any given MicroBlaze peripheral.  In particular, you should be able to write to and read from the peripheral software registers.</li>
 <li>Test and debug your software/hardware on the FPGA.</li>
 </ul>
 
