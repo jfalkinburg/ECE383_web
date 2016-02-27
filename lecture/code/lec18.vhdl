@@ -26,7 +26,7 @@ entity lec10 is
 	generic (N: integer := 4);
 	Port(	clk: in  STD_LOGIC;
 			reset : in  STD_LOGIC;
-			crtl: in std_logic_vector(1 downto 0);
+			ctrl: in std_logic_vector(1 downto 0);
 			D: in unsigned (N-1 downto 0);
 			Q: out unsigned (N-1 downto 0));
 end lec10;
@@ -38,7 +38,7 @@ architecture behavior of lec10 is
 begin
 
 	-----------------------------------------------------------------------------
-	--		crtl
+	--		ctrl
 	--		00			hold
 	--		01			count up mod 10
 	--		10			load D
@@ -49,11 +49,11 @@ begin
 		if (rising_edge(clk)) then
 			if (reset = '0') then
 				processQ <= (others => '0');
-			elsif (crtl = "01") then
+			elsif (ctrl = "01") then
 				processQ <= processQ + 1;
-			elsif (crtl = "10") then
+			elsif (ctrl = "10") then
 				processQ <= unsigned(D);
-			elsif (crtl = "11") then
+			elsif (ctrl = "11") then
 				processQ <= (others => '0');
 			end if;
 		end if;

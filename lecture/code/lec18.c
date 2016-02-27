@@ -24,7 +24,7 @@
 #define	uartReadReg		0x84000000			// read <= RX, write=>TX
 
 #define countQReg		0x83000000			// 8 LSBs of slv_reg0 read=Q, write=D
-#define	countCrtlReg	0x83000004			// 2 LSBs of slv_reg2 are control
+#define	countCtrlReg	0x83000004			// 2 LSBs of slv_reg2 are control
 
 #define count_HOLD		0x00				// The control bits are defined in the VHDL
 #define	count_COUNT		0x01				// code contained in lec18.vhdl.  They are
@@ -67,8 +67,8 @@ int main(void) {
     		// Tell the counter to count up
     		//-------------------------------------------------
     		case 'c':
-    			Xil_Out8(countCrtlReg,count_COUNT);
-    			Xil_Out8(countCrtlReg,count_HOLD);
+    			Xil_Out8(countCtrlReg,count_COUNT);
+    			Xil_Out8(countCtrlReg,count_HOLD);
     			break;
 
         	//-------------------------------------------------
@@ -78,7 +78,7 @@ int main(void) {
         		xil_printf("Enter a 0-9 value to store in the counter: ");
             	c=XUartLite_RecvByte(uartReadReg) - 0x30;
         		Xil_Out8(countQReg,c);					// put value into slv_reg1
-        		Xil_Out8(countCrtlReg,count_LOAD);				// load command
+        		Xil_Out8(countCtrlReg,count_LOAD);				// load command
     			xil_printf("%c\r\n",c+0x30);
         		break;
 
@@ -86,7 +86,7 @@ int main(void) {
             // Reset the counter
             //-------------------------------------------------
             case 'r':
-            	Xil_Out8(countCrtlReg,count_RESET);				// reset command
+            	Xil_Out8(countCtrlReg,count_RESET);				// reset command
             	break;
 
             //-------------------------------------------------

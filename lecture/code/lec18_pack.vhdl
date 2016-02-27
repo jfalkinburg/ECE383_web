@@ -17,7 +17,7 @@ package lec18Parts is
 		generic (N: integer := 4);
 		Port(	clk: in  STD_LOGIC;
 				reset : in  STD_LOGIC;
-				crtl: in std_logic_vector(1 downto 0);
+				ctrl: in std_logic_vector(1 downto 0);
 				D: in unsigned (N-1 downto 0);
 				Q: out unsigned (N-1 downto 0));
 	end component;
