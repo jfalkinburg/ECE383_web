@@ -142,7 +142,7 @@ entity counter is
 	 
 	--clk: in  STD_LOGIC;
 	--reset : in  STD_LOGIC;
-	--crtl: in std_logic_vector(1 downto 0);
+	--ctrl: in std_logic_vector(1 downto 0);
 	--D: in unsigned (7 downto 0);
 	--Q: out unsigned (7 downto 0); 
 	LED: out std_logic_vector(7 downto 0); 
