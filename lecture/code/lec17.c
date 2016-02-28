@@ -24,7 +24,7 @@
 #define	uartReadReg		0x84000000			// read <= RX, write=>TX
 
 #define countQReg		0x83000000			// 8 LSBs of slv_reg0 read=Q, write=D
-#define	countCtrlReg	0x83000004			// 2 LSBs of slv_reg2 are control
+#define	countCtrlReg	0x83000004			// 2 LSBs of slv_reg1 are control
 
 #define count_HOLD		0x00				// The control bits are defined in the VHDL
 #define	count_COUNT		0x01				// code contained in lec17.vhdl.  They are
