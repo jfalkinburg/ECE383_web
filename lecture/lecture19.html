@@ -27,7 +27,7 @@
 <tr><td>Date:</td>	<td>March 4</td></tr>
 <tr><td>Lecture:</td>	<td>19</td></tr>
 <tr><td>Homework	<td><a href="../hw/hw11.html">HW #11</a></td></tr>
-<tr><td>Status		<td bgcolor = #FFFFF0>Not Started<!--<td bgcolor = #FFD0D0>In Progress --> <!--<td bgcolor = #D0FFD0>Complete -->
+<tr><td>Status		<td bgcolor = #FFD0D0>In Progress <!--<td bgcolor = #FFFFF0>Not Started--> <!--<td bgcolor = #D0FFD0>Complete -->
 <tr><td>Code		<td><a href="./code/lec19.c">lec19.c</a></td></tr>
 <tr><td>Tech Docs	
 <td><a href="http://www.xilinx.com/support/documentation/sw_manuals/xilinx11/oslib_rm.pdf">OS and Libraries Document Collection</a><br>
@@ -132,8 +132,13 @@ figure below.
 
 <br><img src="./img/lecture19-1.gif"><br><br>
 
-You are now ready to program this new piece of hardware.  So
-Generate BitStream and then EXport Design.
+You may have to register the roll signal long enough for the microblaze to 
+register the interrupt similar to the flag register you created in Lab 2.  Additionally,
+you will also need to add more BRAM to the MicroBlaze in EDK (see Homework #10). 
+
+You are now ready to program this new piece of hardware.  So Generate BitStream 
+and then Export Design.  
+
 
 
 <h2>C programming</h2>

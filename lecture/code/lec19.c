@@ -1,13 +1,13 @@
 //--------------------------------------------------------------------
-//-- Name:	Chris Coulston
-//-- Date:	Feb 22, 2015
-//-- File:	lec18.c
-//-- Event:	Lecture 18
+//-- Name:	Capt Jeff Falkinburg
+//-- Date:	Feb 28, 2016
+//-- File:	lec19.c
+//-- Event:	Lecture 19
 //-- Crs:	ECE 383
 //--
-//-- Purp:	Responds to an interrupt event from the counter roll over.
+//-- Purp:	Lecture 18 implements a custom IP to microBlaze.
 //--
-//-- Documentation:	I borrowed some techniques from my ECE382 examples
+//-- Documentation:	Adapted from Lecture 18 to add in interrupt.
 //--
 //-- Academic Integrity Statement: I certify that, while others may have
 //-- assisted me in brain storming, debugging and validating this program,
@@ -24,11 +24,14 @@
 
 #define	uartReadReg		0x84000000			// read <= RX, write=>TX
 
-#define countQReg		0x83000000			// 8 LSBs of slv_reg0 read=Q, write=D
-#define	countCrtlReg	0x83000004			// 2 LSBs of slv_reg2 are control
+#define countBase		0x83000000
+#define countQReg		countBase			// 8 LSBs of slv_reg0 read=Q, write=D
+#define	countCrtlReg	countBase+4			// 2 LSBs of slv_reg1 are control
+#define	countFlagReg	countBase+8			// 1 LSBs of slv_reg2 (0) roll flag
+#define	countClearReg	countBase+0xc		// 1 LSBs of slv_reg3 (0) roll clear flag
 
 #define count_HOLD		0x00				// The control bits are defined in the VHDL
-#define	count_COUNT		0x01				// code contained in lec18.vhdl.  They are
+#define	count_COUNT		0x01				// code contained in lec17.vhdl.  They are
 #define	count_LOAD		0x02				// added here to centralize the bit values in
 #define count_RESET		0x03				// a single place.
 
@@ -42,26 +45,32 @@ int main(void) {
     microblaze_register_handler((XInterruptHandler) myISR, (void *) 0);
     microblaze_enable_interrupts();
 
+    Xil_Out8(countClearReg, 0x01);					// Clear the flag and then you MUST
+	Xil_Out8(countClearReg, 0x00);					// allow the flag to be reset later
+
     while(1) {
 
     	c=XUartLite_RecvByte(uartReadReg);
 
-    	switch(c) {
+		switch(c) {
 
     		//-------------------------------------------------
     		// Reply with the help menu
     		//-------------------------------------------------
     		case '?':
+
     			xil_printf("--------------------------\r\n");
     			xil_printf("	count Q  = %x\r\n",Xil_In16(countQReg));
-    			xil_printf("	isr count= %x\r\n",isrCount);
+    			xil_printf("	isr count = %x\r\n",isrCount);
+    			xil_printf("	roll = %x\r\n",Xil_In8(countFlagReg));
     			xil_printf("--------------------------\r\n");
     			xil_printf("?: help menu\r\n");
     			xil_printf("o: k\r\n");
     			xil_printf("c: COUNTER	count up LEDs (by 9)\r\n");
-    			xil_printf("s: start COUNTER counting up\r\n");
+    			xil_printf("s/S: start/Stop COUNTER counting up\r\n");
     			xil_printf("l: COUNTER	load counter\r\n");
     			xil_printf("r: COUNTER	reset counter\r\n");
+    			xil_printf("i: Clear ISR counter\r\n");
     			xil_printf("f: flush terminal\r\n");
     			break;
 
@@ -81,10 +90,17 @@ int main(void) {
     			break;
 
         	//-------------------------------------------------
-        	// Tell the counter to count up
+        	// Start the counter to count up
         	//-------------------------------------------------
         	case 's':
         		Xil_Out8(countCrtlReg,count_COUNT);
+        		break;
+
+        	//-------------------------------------------------
+        	// Stop the counter from counting
+        	//-------------------------------------------------
+        	case 'S':
+        		Xil_Out8(countCrtlReg,count_HOLD);
         		break;
 
         	//-------------------------------------------------
@@ -105,6 +121,13 @@ int main(void) {
             	Xil_Out8(countCrtlReg,count_RESET);				// reset command
             	break;
 
+			//-------------------------------------------------
+			// Clear the ISR counter
+			//-------------------------------------------------
+			case 'i':
+				isrCount = 0;				// clear ISR Count
+				break;
+
             //-------------------------------------------------
             // Clear the terminal window
             //-------------------------------------------------
@@ -119,6 +142,7 @@ int main(void) {
     			xil_printf("unrecognized character: %c\r\n",c);
     			break;
     	} // end case
+
     } // end while 1
     return 0;
 } // end main
@@ -126,17 +150,6 @@ int main(void) {
 
 void myISR(void) {
 	isrCount = isrCount + 1;
+	Xil_Out8(countClearReg, 0x01);					// Clear the flag and then you MUST
+	Xil_Out8(countClearReg, 0x00);					// allow the flag to be reset later
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
