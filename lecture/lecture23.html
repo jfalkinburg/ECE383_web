@@ -34,6 +34,7 @@
 <tr><td>File:</td>	<td><a href="./code/DDS.xlsx">DDS</a></td></tr>
 <tr><td>Status:         <td bgcolor = #FFD0D0>In Progress <!--<td bgcolor = #FFFFF0>Not Started--> <!--<td bgcolor = #D0FFD0>Complete -->
 <tr><td>Handout:        <td>TBD
+<tr><td>Lesson Slides<td><a href="./slides/ECE_383_Lec23.pptx">ECE_383_Lec23.pptx</a>
 </table>
 
 
@@ -109,23 +110,23 @@ The 8 W-bits represent the whole portion of the fraction and the 8 F-bits
 represent the fractional portion.  The resulting 16-bit number can
 be manipulated as a whole with some minor book keeping to keep track
 of the decimal point.  As an exercise determine the representation of 
-35.5 and 45.25  Note, that you should be reminded that there is no 
+23.5 and 45.25  Note, that you should be reminded that there is no 
 implicit meaning in the set of 16 bits used to represent this pair of
 numbers; bits have no meaning. Now, consider the problem of adding to
 fixed point angles (23.5 and 45.25) stored in the format above
 
 <font size=2><PRE>  
-        000010111 1000000  (23.5)
-      + 000101101 0100000  (45.25)
+        00010111 10000000  (23.5)
+      + 00101101 01000000  (45.25)
      ---------------------
-        001000100 1100000  (68.75)</PRE></FONT>
+        01000100 11000000  (68.75)</PRE></FONT>
 
 You can see that the addition is carried off without concern for the
 decimal point.  Multiplication is very much the same but now you need
 to keep track of the pesky decimal point and make sure to put it back
 where it belongs.  In the abbreviate example below we will assume that 
 23 have a 4-bit representation where the decimal point resides in the
-middle of the number.  We will multiply 3.25 and 1.25.
+middle of the number.  We will multiply 3.75 and 1.25.
 
 <font size=2><PRE>
           1111 (3.75)
