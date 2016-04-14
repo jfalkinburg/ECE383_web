@@ -31,7 +31,7 @@
 <table class="table table-striped table-bordered table-condensed">
 <tr><td>Date:</td>	<td>April 14</td></tr>
 <tr><td>Lecture:</td>	<td>30</td></tr>
-<tr><td>Status:</td>    <td bgcolor = #FFFFF0>Not Started </td><!--<td bgcolor = #FFD0D0>In Progress </td>--> <!--<td bgcolor = #D0FFD0>Complete </td>--></tr>
+<tr><td>Status:</td>    <td bgcolor = #FFD0D0>In Progress </td><!--<td bgcolor = #FFFFF0>Not Started </td>--> <!--<td bgcolor = #D0FFD0>Complete </td>--></tr>
 </table>
 
 
@@ -90,11 +90,12 @@ Xilinx has done.  To understand how, keep reading.
 Our Spartan 6 has a total of 6,822 logic blocks.  There are three
 different "flavors" of logic blocks, SLICEM, SLICEL, and SLICEX
 composing 25%, 25% and 50% of the logic blocks respectively. We
-will examine the most 
+will examine the one with the most features SLICEM.
 
 <img src="./img/lecture30-1.gif"><br>
 Credit for this figure is given to Xilinx Corp. This is Figure 3 from 
-page 9 of the "Spartan-6 FPGA Configurable Logic Block User's Guide"
+page 9 of the 
+<a href="http://www.xilinx.com/support/documentation/user_guides/ug384.pdf">"Spartan-6 FPGA Configurable Logic Block User's Guide"</a>.
 <br><br>
 
 Each of the 6,000 logic blocks (like that shown above) is connected to
@@ -105,7 +106,7 @@ major subsystems that we will discuss.
 <h3>Look-up tables</h3>
 Each logic block contains four 64x1 RAMs which are used to 
 realize 5 or 6-variable functions; the truth table for the function is 
-stored in the RAM and the inputs are used as the addressed.  Lets take
+stored in the RAM and the inputs are used as the addresses.  Lets take
 an example, how to realize a full adder using a RAM.   In class we
 will derrive the truth table for sum and carry and show how they
 can be inserted into a LUT.  Its important for the further development
@@ -116,7 +117,7 @@ pretty nutty, but very useful as we will see in a moment.
 
 <h3>Flip Flops</h3>
 There are 8 flip flops in each logic slice. Answer the following questions:
-<ul>	<li>Where does the data input from from?
+<ul>	<li>Where does the data input come from?
 	<li>How are they clocked?
 	<li>How are they initialized?
 	<li>Where are their outputs sent?
@@ -124,7 +125,7 @@ There are 8 flip flops in each logic slice. Answer the following questions:
 
 <h3>Fast Carry Logic</h3>
 The fast carry logic is designed explicitly to realize a variation
-of a carry look-ahead adderd.  Consider the construction of a 4-bit
+of a carry look-ahead adder.  Consider the construction of a 4-bit
 adder with inputs A=a3,a2,a1,a0 B=b3,b2,b1,b0 and a carry in c0. 
 Each slice of the adder can either generate a carry bit or 
 propagate its carry in to the carry out.
@@ -132,7 +133,7 @@ propagate its carry in to the carry out.
 <UL>
 <LI>Propagate -- pi is equal to 1 when the inputs to a bit slice are such
 	 that any carry in will be propagated. 
-<LI>Generate  -- gI is equal to 1 when the inputs to a bit slice are
+<LI>Generate  -- gi is equal to 1 when the inputs to a bit slice are
 	 such that a cay will be generated. 
 </UL>
 
@@ -142,12 +143,12 @@ the logic slice.
 
 <h2>Interconnect</h2>
 <img src="./img/lecture30-3.gif"><br>
-Taken from "Spartan-6 FPGA Configurable Logic Block User Guide", 
+Taken from the <a href="http://www.xilinx.com/support/documentation/user_guides/ug384.pdf">"Spartan-6 FPGA Configurable Logic Block User's Guide"</a>, 
 page 37, Figure 29.<br><br>
 
 <h2>DSP block</h2>
 <img src="./img/lecture30-4.gif"><br>
-Taken from "Spartan-6 FPGA DSP48A1 Slice User Guide", page 14, Figure 1-3.
+Taken from <a href="http://www.xilinx.com/support/documentation/user_guides/ug389.pdf">"Spartan-6 FPGA DSP48A1 Slice User Guide"</a>, page 14, Figure 1-3.
 
 </body>
 </html>
