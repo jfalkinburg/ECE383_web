@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------
--- Name:	Capt Jeff Falkinburg
--- Date:	Spring 2016
+-- Name:	Maj Jeff Falkinburg
+-- Date:	Spring 2017
 -- Course: 	ECE 383
 -- File: 	lec01_tb.vhd
 -- HW:		Lecture 1
