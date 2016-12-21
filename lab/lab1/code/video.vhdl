@@ -63,7 +63,7 @@ begin
 	------------------------------------------------------------------------------
 	-- The digital clock manager is a built-in function on the Spartan 6 chip.
 	-- Consequently you will need to include UNISIM.VComponents.all; at the top.
-	-- This clock divider creates a 12.5Mhz pixel clock from 100MHz clock. 
+	-- This clock divider creates a 25Mhz pixel clock from 100MHz clock. 
 	------------------------------------------------------------------------------
 	inst_DCM_pixel: DCM
 	generic map(	CLKFX_MULTIPLY => 2,
