@@ -25,7 +25,7 @@
             </div>
 
 <table class="table table-striped table-bordered table-condensed">
-<tr><td>Date:</td>	<td>January  7</td></tr>
+<tr><td>Date:</td>	<td>January  4/5</td></tr>
 <tr><td>Lecture:</td>	<td>1</td></tr>
 <tr><td>Next lecture	<td><a href="../hw/hw1.html">HW#1</a>
 <tr><td>Status          <td bgcolor = #FFD0D0>In Progress<!--<td bgcolor = #D0FFD0>Complete -->
@@ -33,7 +33,8 @@
 						<a href="./code/lec01.ucf">lec01.ucf</a> (used for ISE)<br>
 						<a href="./code/lec01_tb.vhdl">lec01_tb.vhdl</a><br>
 						<a href="./code/lec01.xdc">lec01.xdc</a> (used for Vivado)
-<tr><td>Software Installation Instructions<td><a href="../install.docx">Software Installation Instructions</a>
+<tr><td>Vivado Installation Instructions<td><a href="../ECE_383_Vivado_Install.pptx">Vivado Installation Instructions</a>
+<!--<tr><td>Software Installation Instructions<td><a href="../install.docx">Software Installation Instructions</a>-->
 <tr><td>Lesson Slides<td><a href="./slides/ECE_383_Lec1.pptx">ECE_383_Lec1.pptx</a>
 </table>
 
@@ -182,7 +183,7 @@ and synthesize hardware specified.
 When a design is simulated you have
 complete control of time and the values of all the signals (wires) in 
 the design.  This greatly aides debugging because the entire design is
-transparent.  We will use a program called Xilinx ISim to perform our 
+transparent.  We will use a program called Xilinx Vivado to perform our 
 VHDL simulations.  
 
 <h3>Synthesis</h3>
@@ -190,7 +191,7 @@ Synthesis means make the VHDL description "real".  Real in the sense
 that a (reconfigurable) circuit will have the same I/O and behavior
 as the VHDL description.  Synthesis implicitly implies that there is
 a target piece of hardware to accept the synthesized VHDL description.
-In our class we will use the Xilinx Spartan XC6SLX45 chip as our target.
+In our class we will use the Xilinx Artix-7 XC7A200T-1SBG484C chip as our target.
 This chip contains components (CLBs) which can be reconfigured using
 a special file called a bit file.  The Xilinx software performs the
 translation between VHDL and the chip will be called the Xilinx.<br><br>
