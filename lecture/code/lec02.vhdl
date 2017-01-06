@@ -1,5 +1,5 @@
 --------------------------------------------------------------------
--- Name:	Capt Jeff Falkinburg
+-- Name:	Maj Jeff Falkinburg
 -- Date:	Dec 22, 2015
 -- File:	majority.tb.vhdl
 -- HW:		Lecture 2
