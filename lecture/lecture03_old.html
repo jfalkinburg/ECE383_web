@@ -29,7 +29,7 @@
 <tr><td>Date:</td>	<td>January  13</td></tr>
 <tr><td>Lecture:</td>	<td>3</td></tr>
 <tr><td>Next lecture	<td><a href="../hw/hw3.html">HW#3</a>
-<tr><td>Status		<td bgcolor = #FFD0D0>In Progress <!--<td bgcolor = #FFFFF0>Not Started --> <!--<td bgcolor = #D0FFD0>Complete -->
+<tr><td>Status		<td bgcolor = #D0FFD0>Complete <!--<td bgcolor = #FFFFF0>Not Started --> <!--<td bgcolor = #FFD0D0>In Progress -->
 <tr><td>Code 		<td><a href="./code/lec03.vhdl">lec03.vhdl</a>
 <tr><td>Handout		<td><a href="../hand/hand03.docx">hand03.docx</a>
 <tr><td>Lesson Slides<td><a href="./slides/ECE_383_Lec3.pptx">ECE_383_Lec3.pptx</a>
@@ -39,13 +39,13 @@
 Lets consider how we could synthesize the majority circuit.  The essential
 observation is that we need to create an association between the entity
 specification of the majority circuit and the pin-out of the Xilinx chip.
-Our Xilinx chip is an Artix-7 FPGA (Xilinx part number XC7A200T-1SBG484C), 484 pinn, SGB484 Package and can be found  
-<a href="https://www.xilinx.com/support/documentation/user_guides/ug475_7Series_Pkg_Pinout.pdf">here</a>
-on page 80.  
+Our Xilinx chip is an LX45 FPGA, 324 pins BGA Package and can be found  
+<a href="http://www.xilinx.com/support/documentation/user_guides/ug385.pdf">here</a>
+on page 384.  
 
-The designers of the Nexys Video board decided to connect some of these
+The designers of the Atlys board decided to connect some of these
 pins to specific hardware modules.  These connections are described in the 
-<a href="../.datasheets/nexysvideo_rm.pdf">Nexys Video Board Reference Manual</a>.
+<a href="../.datasheets/atlys_rm.pdf">Atyls Board Reference Manual</a>.
 Of interest are the connections described on pages 19, highlighting the switches
 and LEDs on the board.
 <br><br>
@@ -54,20 +54,20 @@ We would like the input to our majority to come from the DIP switches and the ou
 to go to an LED.  Making some arbitrary choices, let make the associations shown
 in the following picture.
 
-<br><img src="./img/lecture03.png"><br><br>
+<br><img src="./img/lecture03-2.gif"><br><br>
 
-This is accomplished by inserting the following code into a constraints file called 
-majority.xdc (formerly called .ucf files with ISE) and adding it to your project (with an implementation association).
+This is accomplished by inserting the following code into a file called 
+majority.ucf and adding it to your project (with an implementation association).
 
 <pre>
 # This is slide switch SW0
-set_property -dict { PACKAGE_PIN E22  IOSTANDARD LVCMOS12 } [get_ports { a }]; #IO_L22P_T3_16 Sch=sw[0]
+NET "a" LOC = A10;
 # This is slide switch SW1
-set_property -dict { PACKAGE_PIN F21  IOSTANDARD LVCMOS12 } [get_ports { b }]; #IO_25_16 Sch=sw[1]
+NET "b" LOC = D14;
 # This is slide switch SW2
-set_property -dict { PACKAGE_PIN G21  IOSTANDARD LVCMOS12 } [get_ports { c }]; #IO_L24P_T3_16 Sch=sw[2]
-# This is LED Led(0)
-set_property -dict { PACKAGE_PIN T14   IOSTANDARD LVCMOS25 } [get_ports { f }]; #IO_L15P_T2_DQS_13 Sch=led[0]
+NET "c" LOC = C14;
+# This is LED LD0
+NET "f" LOC = U18;
 </pre>
 
 
