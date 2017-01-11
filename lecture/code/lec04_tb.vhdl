@@ -33,7 +33,7 @@ ARCHITECTURE behavior OF lec4_tb IS
     PORT(
          clk : IN  std_logic;
          reset : IN  std_logic;
-			crtl: in std_logic_vector(1 downto 0);
+			ctrl: in std_logic_vector(1 downto 0);
          D : IN  unsigned(3 downto 0);
          Q : OUT  unsigned(3 downto 0)
         );
@@ -43,7 +43,7 @@ ARCHITECTURE behavior OF lec4_tb IS
    --Inputs
    signal clk : std_logic := '0';
    signal reset : std_logic := '0';
-	signal crtl : std_logic_vector(1 downto 0) := (others => '0');
+	signal ctrl : std_logic_vector(1 downto 0) := (others => '0');
    signal D : unsigned(3 downto 0) := (others => '0');
 
  	--Outputs
@@ -58,7 +58,7 @@ BEGIN
    uut: lec4 PORT MAP (
           clk => clk,
           reset => reset,
-			 crtl => crtl,
+			 ctrl => ctrl,
           D => D,
           Q => Q
         );
@@ -73,13 +73,13 @@ BEGIN
    end process;
  
  	-----------------------------------------------------------------------------
-	--		crtl
+	--		ctrl
 	--		00			hold
 	--		01			count up mod 10
 	--		10			load D
 	--		11			synch reset
 	-----------------------------------------------------------------------------
-	crtl <= "01", "10" after 15us, "01" after 16us, "11" after 17us, "01" after 18us, "00" after 19us, "01" after 20us;
+	ctrl <= "01", "10" after 15us, "01" after 16us, "11" after 17us, "01" after 18us, "00" after 19us, "01" after 20us;
 	D <= "1110";
 	reset <= '0', '1' after 1us;
 

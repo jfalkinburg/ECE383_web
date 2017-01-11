@@ -206,14 +206,14 @@ synthesized. It may be helpful to refer to them in the future.
 		the process.
 </ul>
 
-<h3>Adding signals in Isim</h3>
+<h3>Adding signals in Vivado Simulator</h3>
 In order to fully understand the behavior of the counter being
 instantiated inside the testbench, it is sometimes necessary to 
 transcend the design hierarchy and examine signals inside modules
-not directly visible at the top layer. As an example, lets say
+not directly visible at the top layer. As an example, let's say
 you wanted to monitor the control signal into the lab4 counter
 while running the testbench.  This is accomplished in 
-Isim using the following four steps (illustrated in the figure
+Isim (which has the same functionality as Vivado Simulator) using the following four steps (illustrated in the figure
 below).
 <ol>	<li>In the Instances and Process subwindow, reveal the 
 	instances inside the lec4_tb by clicking on the arrow
@@ -230,5 +230,16 @@ below).
 </ol>
 
 <br><img src="./img/lecture04-3.gif"><br>
+
+<h3>More Vivado Simulator Tips</h3>
+In the Image below, 4 things are pointed out.
+<ol>	<li> This is where simulations are run from in Vivado. You shouldn't have to mess with the default simulation settings for most projects, but you can set the default simulation time here (normally 1000ns).
+	<li> This is the unit under test, shown as number 2 in the picture above.
+	<li> These two arrows are extremely useful in simulations. The left arrow resets all your signals, while the right signal runs the simulation for the amount of time specified next to the arrow. Since 1000ns would only capture 
+	2 clock cycles of a 500ns clock, you are going to need to run your simulation for more time to see the ctrl signal actually change.
+	<li> Whenever you rerun your simulation, it is best to use 'fit to window' to see your whole signal chain. From there, you can zoom in and out.
+</ol>
+
+<br><img src="./img/lecture04-4.gif"><br>
 
 </html>

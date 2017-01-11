@@ -24,7 +24,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity lec4 is
 	Port(	clk: in  STD_LOGIC;
 			reset : in  STD_LOGIC;
-			crtl: in std_logic_vector(1 downto 0);
+			ctrl: in std_logic_vector(1 downto 0);
 			D: in unsigned (3 downto 0);
 			Q: out unsigned (3 downto 0));
 end lec4;
@@ -38,7 +38,7 @@ begin
 	
 	
 	-----------------------------------------------------------------------------
-	--		crtl
+	--		ctrl
 	--		00			hold
 	--		01			count up mod 10
 	--		10			load D
@@ -50,15 +50,15 @@ begin
 			if (reset = '0') then
 				processQ <= (others => '0');
 				rollSynch <= '0';
-			elsif ((processQ < 9) and (crtl = "01")) then
+			elsif ((processQ < 9) and (ctrl = "01")) then
 				processQ <= processQ + 1;
 				rollSynch <= '0';
-			elsif ((processQ = 9) and (crtl = "01")) then
+			elsif ((processQ = 9) and (ctrl = "01")) then
 				processQ <= (others => '0');
 				rollSynch <= '1';
-			elsif (crtl = "10") then
+			elsif (ctrl = "10") then
 				processQ <= unsigned(D);
-			elsif (crtl = "11") then
+			elsif (ctrl = "11") then
 				processQ <= (others => '0');
 			end if;
 		end if;
