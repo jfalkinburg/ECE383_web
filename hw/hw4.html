@@ -61,7 +61,7 @@ You should have one counter that operates according to the
 following truth table.
 
 <table class="table table-striped table-bordered table-condensed">
-<tr><td>clk		<td>reset	<td>crtl	<td>Q+		
+<tr><td>clk		<td>reset	<td>ctrl	<td>Q+		
 <tr><td>0,1,falling	<td>x		<td>x		<td>Q		
 <tr><td>rising		<td>0		<td>x		<td>0		
 <tr><td>rising		<td>1		<td>0		<td>Q		
@@ -80,13 +80,13 @@ a combinational logic statement along side the two counter instances.
 <br><img src="./hw4.gif"><br><br>
 
 The top level entity description should look like the following.  When
-crtl = '1', the counters are enabled to count up as a cascade pair, and
-when crtl = '0', the counter should hold their value.
+ctrl = '1', the counters are enabled to count up as a cascade pair, and
+when ctrl = '0', the counter should hold their value.
 
 <pre>
 entity hw4 is
         port(	clk, reset: in std_logic; 
-		crtl: in std_logic;
+		ctrl: in std_logic;
 		Q1, Q0: out unsigned(2 downto 0));
 end hw4;
 </pre>
@@ -96,10 +96,10 @@ end hw4;
 	<li>Neatly draw the Circuit Diagram for your cascade counter.
 	<li>A testbench exercising the cascade pair.  It must:
 	<ul>	<li>Hold the least significant counter at 4 for one
-		clock cycle (using crtl='0').
+		clock cycle (using ctrl='0').
 		<li>Roll over the least significant counter once.
 		<li>Show clk, reset, Q1, Q0, (least significant) roll 
-			signal, and the crtl input to the most significant 
+			signal, and the ctrl input to the most significant 
 			counter.
 		<li>Remove all junk signals.
 		<li>Fit waveform on one page.
@@ -112,7 +112,7 @@ test sequence to the control signal.  The following VHDL code in your
 testbench will help achieve this.  This is CSA version of the process
 structure given in section 2.2.4 of the textbook.
 <pre>
-crtl <= '1', '0' after 15us, '1' after 16us, '0' after 17us, '1' after 18us;
+ctrl <= '1', '0' after 15us, '1' after 16us, '0' after 17us, '1' after 18us;
 </pre>
 
 Check out the testbench linked at the top of lecture 4 for more details.
