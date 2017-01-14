@@ -1,14 +1,14 @@
 --------------------------------------------------------------------
--- Name:	Chris Coulston
--- Date:	Jan 15, 2015
--- File:	hw5.vhdl
--- HW:	Lecture 5
---	Crs:	ECE 383
+-- Name:	Maj Jeff Falkinburg
+-- Date:	Jan 12, 2017
+-- File:	lec5.vhdl
+-- HW:  	Lecture 5
+-- Crs:	    ECE 383
 --
 -- Purp:	This demonstrates some basic I/O as well as gated and ungated
 --			outputs.
 --
--- Documentation:	No help, we made a plan for lecture 5 and here it is.
+-- Documentation:	No help, I based this off the class notes and readings.
 --
 -- Academic Integrity Statement: I certify that, while others may have 
 -- assisted me in brain storming, debugging and validating this program, 
@@ -21,24 +21,25 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity lec5 is
-	Port(	clk: in  STD_LOGIC;
-			reset : in  STD_LOGIC;
-			btn: in STD_LOGIC_VECTOR(4 downto 0);
-			JB: out STD_LOGIC_VECTOR(7 downto 0));
-end lec5;
+entity Lec5 is
+    Port ( clk : in STD_LOGIC;
+           reset : in STD_LOGIC;
+           btn : in STD_LOGIC_VECTOR (4 downto 0);
+           JB : out STD_LOGIC_VECTOR (7 downto 0));
+end Lec5;
 
+architecture Behavioral of Lec5 is
 
-architecture behavior of lec5 is
-		signal processQ:	unsigned (7 downto 0);	
-		constant L0: unsigned(7 downto 0) := "00101111";
-		constant L1: unsigned(7 downto 0) := "01011111";
-		constant L2: unsigned(7 downto 0) := "10111111";
-		
+    signal processQ:	unsigned (7 downto 0);	
+    constant L0: unsigned(7 downto 0) := "00101111";
+    constant L1: unsigned(7 downto 0) := "01011111";
+    constant L2: unsigned(7 downto 0) := "10111111";
+
 begin
+
 	------------------------------------------------------------------------------
 	-- The buttons are all nominally 0 and equal to 1 when pressed.
-	-- 	btn(3) = '1'			Right
+	--      btn(3) = '1'			Right
 	--		btn(1) = '1'			Left
 	--		btn(2) = '1'			Down
 	--		btn(0) = '1'			Up
@@ -56,7 +57,7 @@ begin
 	end process;
 	
 	------------------------------------------------------------------------------------
-	-- The upper nyble of JB will tell us about the range of processQ using combo logic
+	-- The upper nibble of JB will tell us about the range of processQ using combo logic
 	------------------------------------------------------------------------------------
 	process(clk)
 	begin
@@ -78,11 +79,11 @@ begin
 	JB(7) <= clk;
 	
 	------------------------------------------------------------------------------------
-	-- The lower nyble of JB will tell us about the range of processQ using gated logic
+	-- The lower nibble of JB will tell us about the range of processQ using gated logic
 	------------------------------------------------------------------------------------
 	JB(3 downto 0) <= "0001" when ((processQ >= 0) and (processQ < L0)) else
 							"0010" when ((processQ >= L0) and (processQ < L1)) else
 							"0100" when ((processQ >= L1) and (processQ < L2)) else
 							"1000";
 
-end behavior;
+end Behavioral;
