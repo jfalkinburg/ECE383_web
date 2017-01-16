@@ -13,7 +13,7 @@ ARCHITECTURE behavior OF lab1_tb IS
  
     COMPONENT vga
 	Port(	clk: in  STD_LOGIC;
-			reset : in  STD_LOGIC;
+			reset_n : in  STD_LOGIC;
 			h_sync : out  STD_LOGIC;
 			v_sync : out  STD_LOGIC; 
 			blank : out  STD_LOGIC;
@@ -33,7 +33,7 @@ ARCHITECTURE behavior OF lab1_tb IS
 
    --Inputs
    signal clk : std_logic := '0';
-   signal reset : std_logic := '0';
+   signal reset_n : std_logic := '0';
    signal trigger_volt : unsigned(9 downto 0) := (others => '0');
    signal trigger_time : unsigned(9 downto 0) := (others => '0');
    signal row : unsigned(9 downto 0) := (others => '0');
@@ -57,7 +57,7 @@ BEGIN
 	-- Instantiate the Unit Under Test (UUT)
    uut: vga PORT MAP (
           clk => clk,
-          reset => reset,
+          reset_n => reset_n,
           h_sync => h_sync,
           v_sync => v_sync,
           blank => blank,
@@ -83,7 +83,7 @@ BEGIN
 		wait for clk_period/2;
    end process;
  
-	reset <= '0', '1' after 30nS;
+	reset_n <= '0', '1' after 30nS;
 
 
 END;

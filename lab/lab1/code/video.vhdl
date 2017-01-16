@@ -9,7 +9,7 @@ use UNISIM.VComponents.all;
 
 entity video is
     Port ( clk : in  STD_LOGIC;
-           reset : in  STD_LOGIC;
+           reset_n : in  STD_LOGIC;
            tmds : out  STD_LOGIC_VECTOR (3 downto 0);
            tmdsb : out  STD_LOGIC_VECTOR (3 downto 0);
 			  trigger_time: in unsigned(9 downto 0);
@@ -26,12 +26,12 @@ architecture structure of video is
 
 	signal red, green, blue: STD_LOGIC_VECTOR(7 downto 0);
 	signal pixel_clk, serialize_clk, serialize_clk_n, blank, h_sync, v_sync: STD_LOGIC;
-	signal n_reset, clock_s, red_s, green_s, blue_s: STD_LOGIC;
+	signal clock_s, red_s, green_s, blue_s: STD_LOGIC;
 	signal h_synch, v_synch: STD_LOGIC;
 
 	component vga is
 	Port(	clk: in  STD_LOGIC;
-			reset : in  STD_LOGIC;
+			reset_n : in  STD_LOGIC;
 			h_sync : out  STD_LOGIC;
 			v_sync : out  STD_LOGIC; 
 			blank : out  STD_LOGIC;
@@ -47,51 +47,39 @@ architecture structure of video is
 			ch2: in std_logic;
 			ch2_enb: in std_logic);
 	end component;
+    --------------------------------------------------------------------------
+    -- Clock Wizard Component Instantiation Using Xilinx Vivado 
+    --------------------------------------------------------------------------
+    component clk_wiz_0 is
+    Port (
+        clk_in1 : in STD_LOGIC;
+        clk_out1 : out STD_LOGIC;
+        clk_out2 : out STD_LOGIC;
+        clk_out3 : out STD_LOGIC;
+        resetn : in STD_LOGIC);
+     end component;   
 
 begin
 
-
-	------------------------------------------------------------------------------
-	-- The reset for the digital clock manager is active high (see page 7) here:
-	-- http://www.xilinx.com/support/documentation/application_notes/xapp462.pdf
-	-- However, the logical choice for a reset on the Digilent Atlys board is the 
-	-- red button labeledl "RESET" connected to pin T15, is nominally logic 1 and 
-	-- pulled logic 0 when is pressed. 	Hence, we need to invert the reset.
-	------------------------------------------------------------------------------
-	n_reset <= not reset;
-
-	------------------------------------------------------------------------------
-	-- The digital clock manager is a built-in function on the Spartan 6 chip.
-	-- Consequently you will need to include UNISIM.VComponents.all; at the top.
-	-- This clock divider creates a 25Mhz pixel clock from 100MHz clock. 
-	------------------------------------------------------------------------------
-	inst_DCM_pixel: DCM
-	generic map(	CLKFX_MULTIPLY => 2,
-						CLKFX_DIVIDE   => 8,
-						CLK_FEEDBACK   => "1X")
-	port map(		clkin => clk,
-						rst   => n_reset,
-						clkfx => pixel_clk,
-						clkfx180 => open);
-
-	------------------------------------------------------------------------------
-	-- This clock divider creates HDMI serial output clock
-	------------------------------------------------------------------------------
-    inst_DCM_serialize: DCM
-    generic map(	CLKFX_MULTIPLY => 10, -- 5x speed of pixel clock
-						CLKFX_DIVIDE   => 8,
-						CLK_FEEDBACK   => "1X")
-    port map(		clkin => clk,
-						rst   => n_reset,
-						clkfx => serialize_clk,
-						clkfx180 => serialize_clk_n);
+	--------------------------------------------------------------------------
+	-- Digital Clocking Wizard using Xilinx Vivado creates 25Mhz pixel clock and 
+	-- 125MHz HDMI serial output clocks from 100MHz system clock. The Digital 
+    -- Clocking Wizard is in the Vivado IP Catalog.
+	--------------------------------------------------------------------------
+	mmcm_adv_inst_display_clocks: clk_wiz_0
+		Port Map (
+			clk_in1 => clk,
+			clk_out1 => pixel_clk, -- 25Mhz pixel clock
+			clk_out2 => serialize_clk, -- 125Mhz HDMI serial output clock
+			clk_out3 => serialize_clk_n, -- 125Mhz HDMI serial output clock 180 degrees out of phase
+			resetn => reset_n);  -- active low reset for Nexys Video
 
 	------------------------------------------------------------------------------
 	-- H and V synch are used to interface to the DVID module
 	------------------------------------------------------------------------------
 	Inst_vga: vga
 		PORT MAP(	clk => pixel_clk,
-						reset => reset,
+						reset_n => reset_n,
 						h_sync => h_sync,
 						v_sync => v_sync,
 						blank => blank,

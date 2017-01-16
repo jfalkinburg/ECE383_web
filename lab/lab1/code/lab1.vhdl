@@ -8,7 +8,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity lab1 is
     Port ( clk : in  STD_LOGIC;
-           reset : in  STD_LOGIC;
+           reset_n : in  STD_LOGIC;
 			  btn: in	STD_LOGIC_VECTOR(4 downto 0);
            tmds : out  STD_LOGIC_VECTOR (3 downto 0);
            tmdsb : out  STD_LOGIC_VECTOR (3 downto 0));
@@ -22,7 +22,7 @@ architecture structure of lab1 is
 	
 	component video is
     Port ( clk : in  STD_LOGIC;
-           reset : in  STD_LOGIC;
+           reset_n : in  STD_LOGIC;
            tmds : out  STD_LOGIC_VECTOR (3 downto 0);
            tmdsb : out  STD_LOGIC_VECTOR (3 downto 0);
 			  trigger_time: in unsigned(9 downto 0);
@@ -53,7 +53,7 @@ begin
 	------------------------------------------------------------------------------
 	video_inst: video port map( 
 		clk => clk,
-		reset => reset,
+		reset_n => reset_n,
 		tmds => tmds,
 		tmdsb => tmdsb,
 		trigger_time => trigger_time,
