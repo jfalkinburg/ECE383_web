@@ -277,11 +277,21 @@ display and generates the R,G,B values at that screen coordinate. For example,
 if row,column = 20,20 then the R,G,B output should be 0xFF,0xFF,0xFF (white)
 because the upper left corner of the O'scope grid display is white.  Note,
 you can get the RGB values for common colors at 
-<a href="http://www.w3schools.com/htmL/html_colornames.asp">this</a> web site.
+<a href="http://www.w3schools.com/colors/colors_names.asp">this</a> web site.
 </table>
 
+<h2>Connecting</h2>
+Your Digilent board will have a lot of connections required to make
+this lab work.  The image below shows how I made these connections to
+get the lab to work.
+<br><img src="./img/board.jpg"><br><br>
+
 <h2>Required Functionality</h2>
-Your code must generate the white oscilloscope grid pattern shown 
+There are 2 gate checks associated with this lab, each worth 5 points - see the rubric below.
+<br>By COB Lesson 6, you  must have finished setting up the VGA counters to generate the proper rows and columns on the waveform.<br>
+<br>By COB Lesson 7, you must have setup the appropriate v_synch, v_blank, h_synch, and h_blank signals on the waveform and created the scopeFace module to draw at least one line on the display.
+
+<br>Your code must generate the white oscilloscope grid pattern shown 
 in the Figure above and draw the two channels of traces.  
 To test this draw:
 the channel 1 trace (yellow) along a diagonal where (row = column).
@@ -367,6 +377,24 @@ or the lectures leading up to this lab.</li>
 <tbody>
 
 <tr>
+<td align="center" colspan="1">Gate Check 1</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">5</td>
+<td align="center" colspan="1"></td>
+<td>COB L8 </td>
+</tr>
+
+<tr>
+<td align="center" colspan="1">Gate Check 2</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">5</td>
+<td align="center" colspan="1"></td>
+<td>COB L8 </td>
+</tr>
+
+<tr>
 <td align="center" colspan="1">Required Functionality</td>
 <td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
 <td align="center" colspan="1"></td>
@@ -417,12 +445,6 @@ or the lectures leading up to this lab.</li>
 </tr>
 </tbody>
 </table>
-
-<h2>Connecting</h2>
-Your Digilent board will have a lot of connections required to make
-this lab work.  The image below shows how I made these connections to
-get the lab to work.
-<br><img src="./img/board.jpg"><br><br>
 
         </div>
     </body>
