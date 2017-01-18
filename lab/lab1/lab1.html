@@ -297,17 +297,23 @@ rows and columns on the waveform.  This can be shown with waveform screenshots f
 showing the h count rolling over causing the v count to increment.  Be sure to also show both max counts.
 <h3>Gate Check 2</h3>
 By COB Lesson 7, you must have setup the appropriate v_synch, v_blank, h_synch, and h_blank 
-signals on the waveform and created the scopeFace module to draw at least one line on the display. 
-This can be shown with waveform 
+signals on the waveform and created the scopeFace module to draw at least one line on the display. Include 
+picture of the line on the display and associated .bit file for the scopeFace module proof.  Additionally, 
+include screenshots of waveforms showing:
+<ul>
+	<li>Show the h_synch going high, low, and high in relation to h count.
+	<li>Show the v_synch going high, low, and high in relation to v count.
+	<li>Show the blank signals going high, low, and high in relation to v count and h count.
+</ul> 
 <h2>Required Functionality</h2>
 For Required Functionality your code must generate the white oscilloscope grid pattern shown 
 in the Figure above and draw the two channels of traces.  
 To test this draw:
 <ul>
-<li>The channel 1 trace (yellow) along a diagonal where (row = column).
-<li>The channel 2 trace (green) should be drawn along a diagonal where
+	<li>The channel 1 trace (yellow) along a diagonal where (row = column).
+	<li>The channel 2 trace (green) should be drawn along a diagonal where
 (row = 440-column).  
-<li>This test code should be placed in the Lab1 entity.
+	<li>This test code should be placed in the Lab1 entity.
 </ul>
 
 
@@ -360,10 +366,12 @@ in a folder called "code".</li>
 to verify system functionality.  Show at least three excerpts from your 
 testbench for the VGA module (as screen shots):
 <ul type="a">
-<li>Show the h_synch going high, low, high, and related h count.  
-<li>Show the h count rolling over causing the v count to increment and 
+	<li>Show the h_synch going high, low, and high in relation to h count.  
+	<li>Show the v_synch going high, low, and high in relation to v count.  
+	<li>Show the blank signals going high, low, and high in relation to v count and h count.
+	<li>Show the h count rolling over causing the v count to increment and 
 max counts for both counters.
-<li>Show the v_synch going high, low, high, and related v count.  
+
 </ul>
 
 List the major problems you encountered and how you fixed them.  
