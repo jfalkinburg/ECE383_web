@@ -25,7 +25,7 @@
 <tr><td>Start date:</td>	<td>January  19/20</td></tr>
 <tr><td>End date:</td>		<td>January  27/28</td></tr>
 <tr><td>Lab:</td>		<td>1</td></tr>
-<tr><td>Status			<td bgcolor = #D0FFD0>Complete <!--<td bgcolor = #FFFFF0>Not Started --> <!--<td bgcolor = #FFD0D0>In Progress -->
+<tr><td>Status			<td bgcolor = #FFD0D0>In Progress <!--<td bgcolor = #FFFFF0>Not Started --> <!--<td bgcolor = #D0FFD0>Complete -->
 <tr><td>Lab 1 Cutsheet<td><a href="./ECE_383_Lab1_Cutsheet.pdf">ECE_383_Lab1_Cutsheet.pdf</a>
 <tr><td>Lab 1 Supplemental PowerPoint<td><a href="./ECE383_Lab1Supplement.pptx">Lab 1 Supplement and Clock Tutorial.pptx</a>
 <tr><td>Lab 1 Editable Block Diagram<td><a href="./ECE383_Lab1_Block_Diagram.pptx">ECE383_Lab1_Block_Diagram.pptx</a>
@@ -291,16 +291,25 @@ get the lab to work.
 
 <h2>Required Functionality</h2>
 There are 2 gate checks associated with this lab, each worth 5 points - see the rubric below.
-<br>By COB Lesson 6, you  must have finished setting up the VGA counters to generate the proper rows and columns on the waveform.<br>
-<br>By COB Lesson 7, you must have setup the appropriate v_synch, v_blank, h_synch, and h_blank signals on the waveform and created the scopeFace module to draw at least one line on the display.
+<h3>Gate Check 1</h3>
+<br>By COB Lesson 6, you  must have finished setting up the VGA counters to generate the proper 
+rows and columns on the waveform.  This can be shown with waveform screenshots from the VGA testbench 
+showing the h count rolling over causing the v count to increment.  Be sure to also show both max counts.
+<h3>Gate Check 2</h3>
+<br>By COB Lesson 7, you must have setup the appropriate v_synch, v_blank, h_synch, and h_blank 
+signals on the waveform and created the scopeFace module to draw at least one line on the display. 
+This can be shown with waveform 
 
-<br>Your code must generate the white oscilloscope grid pattern shown 
+<br>For Required Functionality your code must generate the white oscilloscope grid pattern shown 
 in the Figure above and draw the two channels of traces.  
 To test this draw:
-the channel 1 trace (yellow) along a diagonal where (row = column).
-The channel 2 trace (green) should be drawn along a diagonal where
-(row = 440-column).  This test code should be placed in the Lab1
-entity.
+<ul>
+<li>The channel 1 trace (yellow) along a diagonal where (row = column).
+<li>The channel 2 trace (green) should be drawn along a diagonal where
+(row = 440-column).  
+<li>This test code should be placed in the Lab1 entity.
+</ul>
+
 
 
 <h2>A-level functionality</h2>
@@ -340,8 +349,9 @@ problem.</li>
 
 <li><strong>Implementation</strong> - Provide block-diagram of your 
 solution using the <strong>signal names in your code</strong>.  The
-block diagram given above is somewhat incomplete, make sure to include
-corrections to this diagram.  For each module that you built, explain
+block diagram given above is somewhat incomplete, <strong>make sure to include
+corrections to this diagram</strong>.  An editable block diagram PPT is provided 
+at the top of the page.  For each module that you built, explain
 its overall purpose, inputs, outputs, and behavior.  Include all your
 vhdl files (code and testbench), wcfg file, and bit files.  Put these
 in a folder called "code".</li>
@@ -351,7 +361,8 @@ to verify system functionality.  Show at least three excerpts from your
 testbench for the VGA module (as screen shots):
 <ul type="a">
 <li>Show the h_synch going high, low, high, and related h count.  
-<li>Show the h count rolling over causing the v count to increment
+<li>Show the h count rolling over causing the v count to increment and 
+max counts for both counters.
 <li>Show the v_synch going high, low, high, and related v count.  
 </ul>
 
