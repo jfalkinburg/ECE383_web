@@ -37,71 +37,71 @@
 
 
 <h2>The D flip flop</h2>
-Since D flip flops will be a major part of this lecture, its worth
-spending a few minutes reviewing their operation.  So complete the following
-timing diagram for the output of the negative-edge triggered D flip flop with
+Since D flip flops will be a major part of this lecture, it's worth
+spending a few minutes reviewing their operation. Complete the following
+timing diagram for the output of the negative-edge triggered D flip-flop with
 an asynchronous active low reset line.
 
 <br><img src="./img/lecture09-7.gif"><br><br>
 
 
-Setup time, denoted Tsu, is the amount of time before the rising edge
-of the clock when the data inputs must be stable.
-Hold time, denoted Th, is the amount of time after the rising
-edge of the clock when the data input must be stable. Finally, propagation
-delay, denoted Tp, is the amount of time after the rising edge of the clock
-required for the new Q value to become valid.
+Setup time, denoted t<sub>su</sub>, is the amount of time before the rising edge
+of the clock in which the data inputs must be stable.
+Hold time, denoted t<sub>h</sub>, is the amount of time after the rising
+edge of the clock during which the data input must be stable. Finally, propagation
+delay, denoted t<sub>p</sub>, is the amount of time after the rising edge of the clock
+required for the new Q value to become valid. It is also known as t<sub>CQ</sub>, for "time clock to Q", or t<sub>FF</sub>. These
+time values are illustrated in the picture below.
+
+<br><img src="./img/lecture09-0.gif"><br><br>
 
 <h2>Finite State Machines</h2>
 
-A finite state machine (FSM) is the most general form of a sequential circuit,
-a circuit whose output is a function of the input and an internal state.  In
-terms of the Figure below, this statement is reinterpreted as
+A Finite State Machine (FSM) is the most general form of a sequential circuit, or
+a circuit whose output is a function of its input and its internal state.  This is illustrated
+in the figure below.
 
 
 <br><img src="./img/lecture09-1.gif"><br><br>
 
-Each of the signals X, Y,Q,Z is a vector, consisting of zero or more bits.
+The signals X, Y,Q,Z are all vectors consisting of zero or more bits.
 The X signal is the input to the FSM from the system being controlled -
 also referred to as the <b>status</b> of the system.
-The Z signal is the output from the FSM to the system being controlled -
+The Z signal is the output from the FSM into the system being controlled -
 also referred to as the <b>control</b> to the system.
 The combinational logic circuit generating Z is called the output equations
 (OE). 
-
+<br>
 The state of the FSM is carried on the Q lines. Each bit of Q is
 the output of a D flip flop. Thus, if Q is six bits wide, then the FSM has
 six D flip flops. The Y signals are called the memory inputs; they are the
 data inputs to the D flip flops. The combinational logic circuit generating
-the Y signals is called the memory input equations (MIEs). In order to
-improve the readability of circuit diagrams, from now on, the clock signal
-will not be shown. 
+the Y signals is called the memory input equations (MIEs), or "combo logic". In order to
+improve the readability of circuit diagrams, the clock signal
+will normally not be shown. 
 <br><br>
 
-Lets take a moment to reinterpret the statement <i>The output of a finite 
-state machine is a function of the input and the internal state</i> in terms
-of this figure.  You should arrive at the assignment Z = F(Q), and Q+ = G(Q,X).
+Lets take a moment to reinterpret the statement <i>"The output of a finite 
+state machine is a function of its input and its internal state"</i>. In this diagram, you can see that
+Z = F(Q), and Q+ = G(Q,X).
 While the output does not directly depend on the input, it does depend on
 the state, which in turn does depend on the input.
 <br><br>
-With respect to this Figure, the design of a FSM requires
-three questions be answered: 
-<ol>	<li>What are the MIEs; 
-	<li>What are the OEs; and
+With respect to this figure, three questions must be answered:
+<ol>	<li>What are the MIEs?
+	<li>What are the OEs?
 	<li>How many D flip flops are required? 
 </ol>
 
 These questions are answered by first understanding how to convert a word 
-statement into a state diagram.  So without further ado, lets bring in the
-cows.
+statement into a state diagram. Before doing that, though, let's go over timing some more.
 
 <h2>FSM Timing</h2>
 The events occurring in the FSM are referenced to the clock input of
 the D flip flops inside the FSM.  The timing diagram below lists events
 (numberd in circles) with respect to the clock signal being applied to
-the Figure above.  The following list explains what happens at each of
-the points in time in the Figure below with respect to the circuit at the
-top of the page.
+the figure above.  The following list explains what happens at each of
+these points in time, using the circuit previously discussed.
 
 <dl>
 <dt>Event 1</dt>
@@ -113,25 +113,25 @@ timing analysis.
 <dt>Event 2</dt>
 <dd>The propagation delay of
 the flip flops means a small delay occurs between the clock edge and the flip
-flop outputs, Q, becoming valid.  This is the called the propagation delay of
-the flip flop and denoted T_ff in the diagram below.
+flop output, Q, becoming valid.  This is the called the propagation delay of
+the flip flop and is denoted T<sub>FF</sub> in the diagram below.
 </dd>
 
 <dt>Event 3</dt>
 <dd>In order to maximize the clocking
-frequency of the FSM, the new inputs, X, to the FSM should be applied at
+frequency of the FSM, the new inputs X to the FSM should be applied at
 the same moment that the flip flop outputs become valid. 
 
 <dt>Event 4</dt>
-<dd>According to Figure above, changing Q and X causes the memory inputs 
+<dd>According to figure above, changing Q and X causes the memory inputs 
 to change (the Y signal above). The delay
 between the application of the new inputs to the MIE logic and Y becoming valid
-is the propagation delay of the combination logic, denoted Tcombo.
+is the propagation delay of the combination logic, denoted T<sub>combo</sub>.
 </dd>
 
 <dt>Event 5</dt>
 When the Y values are valid, a small delay occurs while the flip flops 
-register their new inputs, denoted Tsu. After this setup time, the FSM 
+register their new inputs, denoted T<sub>su</sub>. After this setup time, the FSM 
 is ready for another clock edge.
 </dl>
 
@@ -140,14 +140,14 @@ is ready for another clock edge.
 
 <h2>The DAISY system</h2>
 
-Since you should have some familiarity with FSM from previous course work,
-we will jump right into a moderately complex example that will server as
+Since you should have some familiarity with FSM's from previous course work,
+we will jump right into a moderately complex example that will serve as
 an important stepping-stone to an important concept covered in Lectures
 10-13.  Your task in this example is to design a high-tech cow-tracking 
 system for a local dairy. The system is called the Dairy Automated 
 Information SYstem, or DAISY for short. <br><br>
 
-<b>Word Statement</b> Cows have a RFID tag attached to their collars. When
+<b>Word Statement</b><br> Cows have an RFID tag attached to their collars. When
 the cow passes through the cattle chute on their way into the barn, a RFID
 reader reads the unique ID stored on the RFID tag and logs the cow into
 the barn. The RFID system outputs a single bit: a 1 means the system has
@@ -159,14 +159,14 @@ In order to ensure each cow is scanned, the flow of cows into the barn is
 controlled by two gates at either end of the chute. Each gate is controlled by
 a single bit. To lift a gate, this input must be held at logic 1; to lower a gate,
 the input must be held at a logic 0. The sequence of raising and lowering
-the gates in order to control the flow of cows is illustrated in Figure 8.8.
+the gates in order to control the flow of cows is illustrated in the figure below.
 
 <br><img src="./img/lecture09-2.gif"><br><br>
 
 
 <dl>
 <dt>Step 1</dt>
-<dd>Gate1 is lifted allowing cow A to enter the chute.</dd>
+<dd>Gate1 is lifted, allowing cow A to enter the chute.</dd>
 
 <dt>Step 2</dt>
 <dd>The DAISY system has detected cow A is in the chute and closes gate1.<dd>
@@ -185,7 +185,7 @@ is closed and the system transitions back to Step 1.
 </dl>
 
 In order to make all this happen, the DAISY is provided with inputs and
-it sends outputs to mechanical actuators as shown in the figure below.
+sends the outputs to mechanical actuators, as shown in the figure below.
 
 <br><img src="./img/lecture09-3.gif"><br><br>
 
@@ -207,7 +207,7 @@ FSM.
 </table>
 
 <h3>Outputs from  DAISY</h3>
-The word statement infers the existence of four, separate outputs. The
+The word statement infers the existence of four separate outputs. The
 gates in the DAISY system are controlled by a single bit each. Assume a
 logic 1 must be continuously applied to a gate in order to keep it raised.
 In order to give DAISY an accurate sense of time, the system is provided
