@@ -1,13 +1,13 @@
 --------------------------------------------------------------------
--- Name:	Chris Coulston
--- Date:	Feb 5, 2015
+-- Name:	Maj Jeff Falkinburg
+-- Date:	Jan 29, 2017
 -- File:	lec12_tb.vhdl
 -- HW:	Lecture 12
 --	Crs:	ECE 383
 --
 -- Purp: The testbench for lec12.vhdl datapath and control example
 --
--- Documentation:	No help, though I used an example from my Digital
+-- Documentation:	No help, though I used an example from the Digital
 --						Design text book.
 --
 -- Academic Integrity Statement: I certify that, while others may have 
@@ -35,12 +35,12 @@ ARCHITECTURE behavior OF lec12_tb IS
 
 	COMPONENT lec12Dual_dp
 	Port(	clk: in  STD_LOGIC;
-			reset : in  STD_LOGIC;
+			n_reset : in  STD_LOGIC;
 			cw: std_logic_vector(5 downto 0));
 	END COMPONENT;
 
 	SIGNAL clk :  std_logic;
-	SIGNAL reset :  std_logic;
+	SIGNAL n_reset :  std_logic;
 	SIGNAL cw : std_logic_vector(5 downto 0);
    -- Clock period definitions
    constant clk_period : time := 500 ns;
@@ -50,7 +50,7 @@ BEGIN
 
 	uut: lec12Dual_dp PORT MAP(
 		clk => clk,
-		reset => reset,
+		n_reset => n_reset,
 		cw => cw);
 	
   -- Clock process definitions
@@ -62,7 +62,7 @@ BEGIN
 		wait for clk_period/2;
    end process;
  
-	reset <= '0', '1' after 1 us;
+	n_reset <= '0', '1' after 1 us;
 	
 	-------------------------------------------------------------------------
 	-- READ ENABLE
