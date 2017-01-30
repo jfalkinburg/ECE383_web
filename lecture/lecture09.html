@@ -383,7 +383,7 @@ control word table - a table listing, for each state, its output.
 <tr><td>WaitEnter <td>1 	<td>0		<td>00		<td>0
 <tr><td>WaitRead  <td>0		<td>0		<td>00		<td>0
 <tr><td>Set30	  <td>0		<td>1		<td>01		<td>0
-<tr><td>WaitLeave <td>0		<td>1		<td>00		<td>0
+<tr><td>WaitLeave <td>0		<td>1		<td>11		<td>0
 <tr><td>Set3	  <td>0		<td>1		<td>10		<td>0
 <tr><td>Goose	  <td>0		<td>1		<td>11		<td>1
 </table>
@@ -398,15 +398,15 @@ below.
 <pre>
 Z_Gate1 <= Q_WaitEnter;
 Z_Gate2 <= Q_Set30 + Q_WaitLeave + Q_Set3 + Q_Goose
-Z_Timer_1 <= Q_Set3 + Q+Goose
-Z_Timer_0 <= Q_Set30 + Q_Goose
+Z_Timer_1 <= Q_Set3 + Q_WaitLeave + Q_Goose
+Z_Timer_0 <= Q_Set30 + Q_WaitLeave + Q_Goose
 Z_Air = Q_Goose
 </pre>
 
 
 <h3>VHDL</h3>
 
-<br><img src="./img/lecture09-8.gif"><br><br>
+<br><img src="./img/lecture09-8.jpg"><br><br>
 
 
 </html>
