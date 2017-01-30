@@ -29,7 +29,7 @@
 <tr><td>Handout		<td><a href="../hand/hand12.docx">hand12.docx</a></td></tr>
 <tr><td>Status		<td bgcolor = #D0FFD0>Complete <!--<td bgcolor = #FFFFF0>Not Started<td bgcolor = #FFD0D0>In Progress --> <!--<td bgcolor = #FFD0D0>In Progress -->
 <tr><td>Code 		<td>	<a href="./code/lec12_dp.vhdl">lec12_dp.vhdl<br>
-				<a href="./code/lec12_tb.vhdl">lec12_tb.vhdl</a>
+				<a href="./code/lec12_tb.vhdl">lec12_tb.vhdl</a><br>
 				<a href="./code/lec12.wcfg">lec12.wcfg</a>
 <tr><td>Lesson Slides<td><a href="./slides/ECE_383_Lec12.pptx">ECE_383_Lec12.pptx</a>
 </table>
@@ -80,9 +80,9 @@ is actually mapping directly onto a pre-defined BRAM inside the Artix 7 chip.
 
 <pre>
     ----------------------------------------------------------------------------	
-	-- Reference:	Vivado Design Suite 7 Series FPGA Libraries Guide 
-	--              UG953 (v 2012.4) July 25, 2012
-	--              
+    -- Reference:	Vivado Design Suite 7 Series FPGA Libraries Guide 
+    --              UG953 (v 2012.4) July 25, 2012
+    --              
     -- Page:	10
     -----------------------------------------------------------------------------	
     sampleMemory: BRAM_SDP_MACRO
@@ -96,7 +96,7 @@ is actually mapping directly onto a pre-defined BRAM inside the Artix 7 chip.
 		READ_WIDTH => 18, 				-- Valid values are 1-72 (37-72 only valid when BRAM_SIZE="36Kb")
 		SIM_COLLISION_CHECK => "NONE", 			-- Collision check enable "ALL", "WARNING_ONLY", "GENERATE_X_ONLY" or "NONE"
 		SRVAL => X"000000000000000000")	-- Set/Reset value for port output
-    port map (
+	port map (
 		DO => readOutput,				-- Output read data port, width defined by READ_WIDTH parameter
 		RDADDR => vecAddrRead,			-- Input address, width defined by port depth
 		RDCLK => clk,	 				-- 1-bit input clock
