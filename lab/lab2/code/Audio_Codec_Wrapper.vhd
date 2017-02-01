@@ -126,21 +126,6 @@ begin
             end if;
         end if;
     end process;
-    --------------------------------------------------------------------------
-    -- Audio Codec loopback process
-    --------------------------------------------------------------------------
---    process (clk)
---    begin
---        if (rising_edge(clk)) then
---            if reset = '0' then
---                L_bus_in_sig <= (others => '0');
---                R_bus_in_sig <= (others => '0');                
---            elsif(ready_sig = '1') then
---                L_bus_in_sig <= L_bus_out_sig;
---                R_bus_in_sig <= R_bus_out_sig;
---            end if;
---        end if;
---    end process;
 
     reset <= not reset_n;                -- active high reset
 
