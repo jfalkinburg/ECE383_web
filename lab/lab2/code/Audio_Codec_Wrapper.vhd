@@ -167,9 +167,5 @@ begin
     R_bus_out_sig <= R_bus_in(17 downto 0) & "000000";  -- Add six bits of zero
     L_bus_out <= L_bus_in_sig(23 downto 6);  -- remove lower six bits 
     R_bus_out <= R_bus_in_sig(23 downto 6);  -- remove lower six bits 
---    L_bus_out_sig <= "000000" & L_bus_in(17 downto 0);  -- Add six bits of zero
---    R_bus_out_sig <= "000000" & R_bus_in(17 downto 0);  -- Add six bits of zero
---    L_bus_out <= L_bus_in_sig(17 downto 0);  -- remove upper six bits 
---    R_bus_out <= R_bus_in_sig(17 downto 0);  -- remove upper six bits 
     
 end Behavioral;
