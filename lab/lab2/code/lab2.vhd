@@ -8,15 +8,17 @@ use work.lab2Parts.all;
 
 entity lab2 is
     Port ( clk : in  STD_LOGIC;
-           reset : in  STD_LOGIC;
-			  SDATA_IN : in STD_LOGIC;
-			  BIT_CLK : in STD_LOGIC;
-			  SYNC : out STD_LOGIC;
-			  SDATA_OUT : out STD_LOGIC;
-			  AC97_n_RESET : out STD_LOGIC;
-  			  tmds : out  STD_LOGIC_VECTOR (3 downto 0);
+           reset_n : in  STD_LOGIC;
+		   ac_mclk : out STD_LOGIC;
+		   ac_adc_sdata : in STD_LOGIC;
+		   ac_dac_sdata : out STD_LOGIC;
+		   ac_bclk : out STD_LOGIC;
+		   ac_lrclk : out STD_LOGIC;
+           scl : inout STD_LOGIC;
+           sda : inout STD_LOGIC;
+		   tmds : out  STD_LOGIC_VECTOR (3 downto 0);
            tmdsb : out  STD_LOGIC_VECTOR (3 downto 0);
-			  btn: in	STD_LOGIC_VECTOR(4 downto 0));
+		   btn: in	STD_LOGIC_VECTOR(4 downto 0));
 end lab2;
 
 architecture behavior of lab2 is
@@ -31,12 +33,14 @@ begin
 	
 	datapath: lab2_datapath port map(
 		clk => clk,
-		reset => reset,
-		SDATA_IN => SDATA_IN,
-		BIT_CLK => BIT_CLK,
-		SYNC => SYNC,
-		SDATA_OUT => SDATA_OUT,
-		AC97_n_RESET => AC97_n_RESET,
+		reset_n => reset_n,
+		ac_mclk => ac_mclk,
+		ac_adc_sdata => ac_adc_sdata,
+		ac_dac_sdata => ac_dac_sdata,
+		ac_bclk => ac_bclk,
+		ac_lrclk => ac_lrclk,
+        scl => scl,
+        sda => sda,
 		tmds => tmds,
 		tmdsb => tmdsb,
 		sw => sw,
@@ -55,7 +59,7 @@ begin
 			  
 	control: lab2_fsm port  map( 
 		clk => clk,
-		reset => reset,
+		reset_n => reset_n,
 		sw => sw,
 		cw => cw);
 

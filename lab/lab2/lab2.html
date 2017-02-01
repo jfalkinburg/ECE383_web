@@ -23,8 +23,8 @@
             </div>
 
 <table class="table table-striped table-bordered table-condensed">
-<tr><td>Start date:</td>	<td>February 17</td></tr>
-<tr><td>End date:</td>		<td>February 23</td></tr>
+<tr><td>Start date:</td>	<td>February 7/8</td></tr>
+<tr><td>End date:</td>		<td>February 15/16</td></tr>
 <tr><td>Lab:</td>		<td>2</td></tr>
 <tr><td>Status			<td bgcolor = #D0FFD0>Complete <!--<td bgcolor = #FFFFF0>Not Started --> <!--<td bgcolor = #FFD0D0>In Progress -->
 <tr><td>Lab 2 Cutsheet<td><a href="./ECE_383_Lab2_Cutsheet.pdf">ECE_383_Lab2_Cutsheet.pdf</a>
@@ -41,7 +41,7 @@ in Lab 1 with the audio codec on the ATLYS board to build a basic
 output similar to the following picture.
 <table width="1100" border="0" cellpadding="5">
 <tr>	<td><img width="600" src="./img/complete.jpg"></td> 
-	<td><img width="700" src="./img/lab2Connections.jpg"></td>
+	<td><img width="700" src="./img/lab2Connections_v2.jpg"></td>
 </tr></table>
 
 <h2>Architecture</h2>
@@ -58,17 +58,17 @@ order that this lab may smoothly integrate with Lab 3 and 4
 
 The main flow of data through this systems proceeds from left
 to right.  You will provide audio input to the circuit through the 
-blue line-in jack.   This audio jack is connected to a National
-Semiconductor LM4550 AC'97 multi-channel audio codec.  The LM4450 samples
+blue line-in jack.   This audio jack is connected to a Analog Devices 
+ADAU1761 SigmaDSP Audio Codec.  The ADAU1761 samples
 the audio input at 48kHz into separate 18-bit 2's complement left
-and right channels.  The LM4550 then transfers this data to our Spartan6
-chip over a serial bus through the 5 signals on the left side of the Lab2 
+and right channels.  The ADAU1761 then transfers this data to our Artix 7
+chip over a serial bus through the 7 signals on the left side of the Lab2 
 component.  The serial protocol is quite complex - you will be given the
-AC97_wrapper component to deal with this complexity.  Your circuit will
+Audio Codec Wrapper component to deal with this complexity.  Your circuit will
 be notified of new converted data when the ready signal goes high for
 a single clock cycle.  Your circuit will then do two things with the
 incoming L_bus_out and R_bus_out.  First it will loop both these back
-to the output so that you can verify (by listening on the HP_OUT jack)
+to the output so that you can verify (by listening on the green line-out jack)
 that the AC97 hardware and firmware are operating correctly.  This is
 accomplished with the following VHDL code.
 
@@ -76,7 +76,7 @@ accomplished with the following VHDL code.
     process (clk)
     begin
 	if (rising_edge(clk)) then
-	    if reset = '0' then
+	    if reset_n = '0' then
 		L_bus_in <= (others => '0');
 		R_bus_in <= (others => '0');				
 	    elsif(ready = '1') then
@@ -125,12 +125,14 @@ given below.
 entity lab2_datapath is
     Port(
 	clk : in  STD_LOGIC;
-	reset : in  STD_LOGIC;
-	SDATA_IN : in STD_LOGIC;
-	BIT_CLK : in STD_LOGIC;
-	SYNC : out STD_LOGIC;
-	SDATA_OUT : out STD_LOGIC;
-	AC97_n_RESET : out STD_LOGIC;
+	reset_n : in  STD_LOGIC;
+	ac_mclk : out STD_LOGIC;
+	ac_adc_sdata : in STD_LOGIC;
+	ac_dac_sdata : out STD_LOGIC;
+	ac_bclk : out STD_LOGIC;
+	ac_lrclk : out STD_LOGIC;
+	scl : inout STD_LOGIC;
+	sda : inout STD_LOGIC;	
 	tmds : out  STD_LOGIC_VECTOR (3 downto 0);
 	tmdsb : out  STD_LOGIC_VECTOR (3 downto 0);
 	sw: out std_logic_vector(2 downto 0);
@@ -174,7 +176,7 @@ Build the device to have the following entity declaration:
 entity flagRegister is
 	Generic (N: integer := 8);
 	Port(	clk: in  STD_LOGIC;
-			reset : in  STD_LOGIC;
+			reset_n : in  STD_LOGIC;
 			set, clear: in std_logic_vector(N-1 downto 0);
 			Q: out std_logic_vector(N-1 downto 0));
 end flagRegister
@@ -183,17 +185,23 @@ end flagRegister
 The set lines should be connected to the following signals.  For the
 time being you can leave the Q outputs to open.
 <ul>	<li>ready
-	<li>v_synch'
+	<li>v_synch
 	<li>write_cnt compare output
 </ul>
 
 
 <h2>VHDL Code</h2>
-<ul>	<li><a href="./code/ac97.vhd">ac97.vhd</a>
+<ul>	
+	<li><a href="./code/ac97.vhd">Audio_Codec_Wrapper.vhd (Audio Codec Wraper for Xilinx Vivado)</a>
+	<li><a href="./code/ac97.vhd">i2s_ctl.vhd (I2S Transmitter portion of Audio Codec Wraper for Xilinx Vivado)</a>
+	<li><a href="./code/ac97.vhd">audio_init.v (Audio Initializer portion of Audio Codec Wraper for Xilinx Vivado)</a>
+	<li><a href="./code/ac97.vhd">TWICtl.vhd (TWI Controller portion of Audio Codec Wraper for Xilinx Vivado)</a>
+	<li><a href="./code/lab2.ucf">lab2.xdc </a>
 	<li><a href="./code/lab2.vhd">lab2.vhd</a>
-	<li><a href="./code/lab2.ucf">lab2.ucf</a>
 	<li><a href="./code/lab2_pack.vhdl">lab2_pack.vhdl</a>
 	<li><a href="./code/Lab2_datapath_tb.vhd">Lab2_datapath_tb.vhd</a>
+	<!--<li><a href="./code/ac97.vhd">ac97.vhd (for Xilinx ISE)</a>-->
+	<!--<li><a href="./code/lab2.ucf">lab2.ucf (for Xilinx ISE)</a>-->
 </ul>
 
 <h2>Generating Audio Waveforms</h2>
@@ -202,6 +210,31 @@ Function Generator</a> app on my Android phone to produce
 audio waveforms into my circuit.  The learning curve is a bit steep
 with this function generator, but it has a ton of capability which
 you may find useful in your lab.
+
+<h2>Gate Checks for Required Functionality</h2>
+There are 2 gate checks associated with this lab, each worth 5 points - see the rubric below.
+
+<h3>Gate Check 1</h3>
+By COB Lesson 13, you must have started a Lab 2 project and downloaded the template files.  
+Additionally, you will need to have implemented another Clocking Wizard and the Audio Codec 
+Wrapper inside the Datapath entity to get your Audio Codec to begin functioning.  Once you 
+fully implement the Audio Codec Wrapper you will drop in the Loopback process and make 
+connections to loopback the serial ADC input back out to the DAC output.   Once you implement 
+the design on the board you can verify functionality by applying an audio signal to the audio 
+line in jack (blue) and listening to it on the audio line out jack (Green). 
+
+<h3>Gate Check 2</h3>
+By BOC Lesson 15, you must have implemented and connected the left channel BRAM and BRAM 
+Address Counter to write Audio Codec data to BRAM.  Once implemented you can verify this 
+functionality by using the given datapath testbench and watching the BRAM write address 
+incrementing and data being written/read from the BRAM.  Additionally, you must then implement 
+Video entity (from Lab 1) to take the left channel output from BRAM and send it to the Channel 1 
+waveform to be displayed when the readL value equals the row value.  Once implemented this 
+can be verified first with the given datapath testbench to verify the channel 1 values are 
+being updated properly when readL equals the row value.  Additionally you may try to implement 
+this on the hardware and verify that your scopeface is still present and some values are being 
+displayed for Channel 1 (at this point the waveform will be scrolling across the display or 
+may be scaled wrong).  
 
 <h2>Required Functionality</h2>
 Get a single channel of the oscilliscpe to display with
@@ -313,10 +346,28 @@ or the lectures leading up to this lab.</li>
 <tbody>
 
 <tr>
+<td align="center" colspan="1">Gate Check 1</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">5</td>
+<td align="center" colspan="1"></td>
+<td>COB L13 </td>
+</tr>
+
+<tr>
+<td align="center" colspan="1">Gate Check 2</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">5</td>
+<td align="center" colspan="1"></td>
+<td>BOC L15 </td>
+</tr>
+
+<tr>
 <td align="center" colspan="1">Required Functionality</td>
 <td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
 <td align="center" colspan="1"></td>
-<td align="center" colspan="1">40</td>
+<td align="center" colspan="1">30</td>
 <td align="center" colspan="1"></td>
 <td>COB L16 </td>
 </tr>
