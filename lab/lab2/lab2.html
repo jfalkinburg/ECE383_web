@@ -155,7 +155,7 @@ way to transfer information between the two systems a technique similar to a
 called a flag register.
 
 <table class="table table-striped table-bordered table-condensed">
-<tr><td>reset	<td>clk		<td>set	<td>clear	<td>Q+
+<tr><td>reset_n	<td>clk		<td>set	<td>clear	<td>Q+
 <tr><td>0	<td>X		<td>X	<td>X		<td>0
 <tr><td>1	<td>0,1,falling	<td>X	<td>X		<td>Q
 <tr><td>1	<td>rising 	<td>0	<td>0		<td>Q
@@ -192,10 +192,10 @@ time being you can leave the Q outputs to open.
 
 <h2>VHDL Code</h2>
 <ul>	
-	<li><a href="./code/ac97.vhd">Audio_Codec_Wrapper.vhd (Audio Codec Wraper for Xilinx Vivado)</a>
-	<li><a href="./code/ac97.vhd">i2s_ctl.vhd (I2S Transmitter portion of Audio Codec Wraper for Xilinx Vivado)</a>
-	<li><a href="./code/ac97.vhd">audio_init.v (Audio Initializer portion of Audio Codec Wraper for Xilinx Vivado)</a>
-	<li><a href="./code/ac97.vhd">TWICtl.vhd (TWI Controller portion of Audio Codec Wraper for Xilinx Vivado)</a>
+	<li><a href="./code/Audio_Codec_Wrapper.vhd">Audio_Codec_Wrapper.vhd (Audio Codec Wraper for Xilinx Vivado)</a>
+	<li><a href="./code/i2s_ctl.vhd">i2s_ctl.vhd (I2S Transmitter portion of Audio Codec Wraper for Xilinx Vivado)</a>
+	<li><a href="./code/audio_init.v">audio_init.v (Audio Initializer portion of Audio Codec Wraper for Xilinx Vivado)</a>
+	<li><a href="./code/TWICtl.vhd">TWICtl.vhd (TWI Controller portion of Audio Codec Wraper for Xilinx Vivado)</a>
 	<li><a href="./code/lab2.ucf">lab2.xdc </a>
 	<li><a href="./code/lab2.vhd">lab2.vhd</a>
 	<li><a href="./code/lab2_pack.vhdl">lab2_pack.vhdl</a>
