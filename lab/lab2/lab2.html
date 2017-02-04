@@ -28,6 +28,7 @@
 <tr><td>Lab:</td>		<td>2</td></tr>
 <tr><td>Status			<td bgcolor = #D0FFD0>Complete <!--<td bgcolor = #FFFFF0>Not Started --> <!--<td bgcolor = #FFD0D0>In Progress -->
 <tr><td>Lab 2 Cutsheet<td><a href="./ECE_383_Lab2_Cutsheet.pdf">ECE_383_Lab2_Cutsheet.pdf</a>
+<tr><td>Lab 1 Editable Block Diagram<td><a href="./ECE383_Lab2_Block_Diagram.pptx">ECE383_Lab2_Block_Diagram.pptx</a>
 </table>
 
 
@@ -35,42 +36,41 @@
 <h1>Lab 2 - Data Acquisition, Storage and Display</h1>
 
 <h2>Lab Overview</h2>
-In this lab we will integrate the video display controller developed
+In this lab, we will integrate the video display controller developed
 in Lab 1 with the audio codec on the ATLYS board to build a basic
-2-channel oscilloscope.  When complete, your lab should generate 
-output similar to the following picture.
+2-channel oscilloscope.  When complete, your lab should generate an
+output similar to the picture below.
 <table width="1100" border="0" cellpadding="5">
 <tr>	<td><img width="600" src="./img/complete.jpg"></td> 
-	<td><img width="700" src="./img/lab2Connections_v2.jpg"></td>
 </tr></table>
 
 <h2>Architecture</h2>
-Just like with the design of Lab 1, Lab 2 is broken down into 
-a bunch of separate modules shown in the block diagram below.
+Just like the design of Lab 1, Lab 2 is broken down into 
+a bunch of separate modules, shown in the block diagram below.
 Some of the components in the block diagram will be given to
-you and some you have already created.  Its important to note
+you and some you created in Lab 1.  It is important to note
 that some of the components and signals associated with this
-lab will not strictly be needed, but have been included in
-order that this lab may smoothly integrate with Lab 3 and 4
-(keep your fingers crossed).
+diagram will not be needed for Lab 2, but have been included because you will need them in Labs 3 and 4.
 
 <br><img src="./img/lab2Arch.gif"><br><br>
 
-The main flow of data through this systems proceeds from left
-to right.  You will provide audio input to the circuit through the 
-blue line-in jack.   This audio jack is connected to a Analog Devices 
+Consider the data in the diagram as flowing from left
+to right.  You will provide an input signal to the Nexys board via a 3.5mm cable connected to the
+blue line-in jack. This signal then passes through an Analog Devices 
 ADAU1761 SigmaDSP Audio Codec.  The ADAU1761 samples
 the audio input at 48kHz into separate 18-bit 2's complement left
-and right channels.  The ADAU1761 then transfers this data to our Artix 7
+and right channels. The ADAU1761 then transfers this data to our Artix 7
 chip over a serial bus through the 7 signals on the left side of the Lab2 
-component.  The serial protocol is quite complex - you will be given the
-Audio Codec Wrapper component to deal with this complexity.  Your circuit will
-be notified of new converted data when the ready signal goes high for
-a single clock cycle.  Your circuit will then do two things with the
-incoming L_bus_out and R_bus_out.  First it will loop both these back
-to the output so that you can verify (by listening on the green line-out jack)
+component. You can read more about the audio codec on page 27 of the Nexys Video manual<a href = "https://reference.digilentinc.com/_media/nexys-video/nexysvideo_rm.pdf"> (here)</a>.
+<br><br>
+
+The serial protocol coming from the audio codec is quite complex, so you will be given the
+Audio Codec Wrapper component as an interface to extract the incoming signal (AC97 in the Figure above). Whenever new converted data is ready from
+the AC97, the ready signal will go high for a single clock cycle. Your circuit will then do two things with the
+incoming L_bus_out and R_bus_out signals: First, it will loop both of these signals back
+into the AC97 so that you can verify (by listening on the green line-out jack)
 that the AC97 hardware and firmware are operating correctly.  This is
-accomplished with the following VHDL code.
+accomplished using the VHDL code below.<br>
 
 <pre>
     process (clk)
@@ -87,11 +87,10 @@ accomplished with the following VHDL code.
     end process;
 </pre>
 
-The second thing you circuit will need to do with the L_bus_out signal is
-to send it, in an unsigned format, to be stored in the block ram (BRAM). 
-Converting the 2's complement values into unsigned is technically easy,
-but may be a little difficult to wrap you head around - lets try.  The
-smallest 2's complement number in 18-bits
+Second, your circuit will need to send the L_bus_out and R_bus_out signals in an unsigned format to be stored in the block ram (BRAM).
+To do this, you will need to convert the 2's  complement values to unsigned.
+Performing this conversion is technically easy,
+but may be a little difficult to wrap your head around, so let's do some examples. Consider the table below.<br>
 
 
 <table class="table table-striped table-bordered table-condensed">
@@ -104,23 +103,26 @@ smallest 2's complement number in 18-bits
 <tr><td>011...111	<td>131071	<td>111...111	<td>262143
 </table>
 
-The values in the left 2 columns represent the input value, in this case
-L_bus_out.  The right 2 columns represent the output of the box labeled
-"sign2unsign" in the block diagram.  What we are looking to do is to shift
-the unsigned values up so that they all fall into a positive range.  You will
-need to puzzle over the transformation that accomplishment this - its really simple. 
+The values in the left 2 columns represent the 2's complement number coming out of the Audio Codec, in this case
+L_bus_out, while the right 2 columns represent the output of the box labeled
+"sign2unsign" in the block diagram.  What we are essentially doing is shifting
+the unsigned values up by 131072 (the value which will make all 18-bit numbers positive) so that they all fall into a positive range.
 <br><br>
 
-The mux circuitry attached to the write address of the RAM will be used in Lab3,
-allowing the microBlaze processor to take over write duties for the RAM.
+Here are a couple more pieces of info to help you understand the block diagram above.
+Consider the mux with its input going to the WRADDR input of the "BRAM_SDP" block in the block diagram.
+This mux circuitry attached to the write address of the BRAM will be used in Lab3,
+allowing the microBlaze processor to take over write duties for the RAM (as opposed to an external signal from the Audio Codec).
 Independent of the write circuitry, the read circuit pulls data from the RAM,
 and draws the waveform.  Unlike for the write circuitry, the read circuitry
-needs no FSM control.<br><br>
-
-Since its a very complex piece of circuitry, the entity for the datapath is
-given below.
+requires no FSM control.<br><br>
 
 <h2>Datapath</h2>
+
+Since its a very complex piece of circuitry, the entity for the datapath (LAB2_DP in the block diagram) is
+given below.
+<br>
+
 <pre>
 entity lab2_datapath is
     Port(
@@ -148,11 +150,12 @@ end lab2_datapath;
 </pre>
 
 <h2>Flag Register</h2>
-In Lab3 we will be integrating most of the components from this lab with the
-MicroBlaze processor.  In order to make this happen smoothly, we will need a
+In Lab 3, we will be integrating most of the components from this lab with the
+MicroBlaze processor (a processor we program onto our FPGA).  In order to make this smooth, we will need a
 way to transfer information between the two systems a technique similar to a
 2-line handshake.  To make this possible, you will need to build a component
-called a flag register.
+called a flag register. The behavior of the flag register is shown in the table below.
+<br>
 
 <table class="table table-striped table-bordered table-condensed">
 <tr><td>reset_n	<td>clk		<td>set	<td>clear	<td>Q+
@@ -164,13 +167,13 @@ called a flag register.
 <tr><td>1	<td>rising 	<td>1	<td>1		<td>X
 </table>
 
-This component will interface our lab2 component with a microBlaze
-as follows.  The lab2 component will produce some piece, put it on a data
-line to microBlaze and then set one of the bits of the flag register.  The
-microBlaze will at some point get around to looking at this bit. When it
-sees that its set, it will grab the data and then clear that flag bit.
-Yes, these are supposed to be just like the flag bits in the MSP 430.
-Build the device to have the following entity declaration:
+The flag register will interface our lab2 component with a MicroBlaze
+as follows: The LAB2 component will produce some data, put it on a data
+line to the MicroBlaze, and then set one of the bits of the flag register. Then, the
+MicroBlaze will, at some point, look at the flag register bit. When it
+sees that the 'set' bit is 1, the MicroBlaze will grab the data from the register and clear the set bit.
+These are just like the flag bits on the MSP 430.
+Use the following entity declaration for the flag register:
 
 <pre>
 entity flagRegister is
@@ -182,15 +185,18 @@ entity flagRegister is
 end flagRegister
 </pre>
 
-The set lines should be connected to the following signals.  For the
-time being you can leave the Q outputs to open.
+The set lines should be connected to the signals below.  For the
+time being, you can leave the Q outputs to open.
 <ul>	<li>ready
 	<li>v_synch
 	<li>write_cnt compare output
 </ul>
 
+<h2>BRAM</h2>
+The BRAM works as follows:
 
 <h2>VHDL Code</h2>
+The files below will give you a place to start on Lab 2.
 <ul>	
 	<li><a href="./code/Audio_Codec_Wrapper.vhd">Audio_Codec_Wrapper.vhd (Audio Codec Wraper for Xilinx Vivado)</a>
 	<li><a href="./code/i2s_ctl.vhd">i2s_ctl.vhd (I2S Transmitter portion of Audio Codec Wraper for Xilinx Vivado)</a>
@@ -204,44 +210,45 @@ time being you can leave the Q outputs to open.
 	<!--<li><a href="./code/lab2.ucf">lab2.ucf (for Xilinx ISE)</a>-->
 </ul>
 
+<h2>Connections</h2>
+	<td><img width="700" src="./img/lab2Connections_v2.jpg"></td>
+
 <h2>Generating Audio Waveforms</h2>
-I used the <a href="http://keuwl.com/FunctionGenerator">Keuwl Dual Channel 
-Function Generator</a> app on my Android phone to produce
-audio waveforms into my circuit.  The learning curve is a bit steep
-with this function generator, but it has a ton of capability which
-you may find useful in your lab.
+Since you need to use a 3.5mm jack to input signals to the Nexys board, your phone's audio output works quite well.
+However, make sure you get an app where you can control both the left and right audio channels individually (i.e. the green and yellow signals in the figure above).
+The <a href="http://keuwl.com/FunctionGenerator">Keuwl Dual Channel 
+Function Generator</a> (available on Google Play) works well for Android Phones, and is easy to use once you get the hang of it.
 
 <h2>Gate Checks for Required Functionality</h2>
 There are 2 gate checks associated with this lab, each worth 5 points - see the rubric below.
 
 <h3>Gate Check 1</h3>
-By COB Lesson 13, you must have started a Lab 2 project and downloaded the template files.  
+By COB Lesson 13, you must have started a Lab 2 Vivado project and downloaded the template files.  
 Additionally, you will need to have implemented another Clocking Wizard and the Audio Codec 
 Wrapper inside the Datapath entity to get your Audio Codec to begin functioning.  Once you 
-fully implement the Audio Codec Wrapper you will drop in the Loopback process and make 
-connections to loopback the serial ADC input back out to the DAC output.   Once you implement 
-the design on the board you can verify functionality by applying an audio signal to the audio 
-line in jack (blue) and listening to it on the audio line out jack (Green). 
+fully implement the Audio Codec Wrapper, you will drop in the Loopback process and make 
+connections to loopback the serial ADC input back out to the DAC output (i.e. send the signal back into the Codec). Once you implement 
+the design on the board, you can verify functionality by applying an audio signal to the audio 
+line in jack (blue) and listening to it on the audio line out jack (Green) using a standard oscilliscope. 
 
 <h3>Gate Check 2</h3>
-By BOC Lesson 15, you must have implemented and connected the left channel BRAM and BRAM 
-Address Counter to write Audio Codec data to BRAM.  Once implemented you can verify this 
-functionality by using the given datapath testbench and watching the BRAM write address 
-incrementing and data being written/read from the BRAM.  Additionally, you must then implement 
-Video entity (from Lab 1) to take the left channel output from BRAM and send it to the Channel 1 
-waveform to be displayed when the readL value equals the row value.  Once implemented this 
+NOTE: THIS IS THE HARDEST PART! By BOC Lesson 15, you must have implemented and connected the left channel BRAM and BRAM 
+Address Counter to write Audio Codec data to BRAM.  Once implemented, you can verify your BRAM works 
+by using the given datapath testbench and watching the BRAM write address 
+increment and data be written/read from the BRAM.<br>
+Once this is working, you must implement Video entity (from Lab 1) to take the left channel output from BRAM and send it to the Channel 1 
+waveform to be displayed when the readL value equals the row value.  Once implemented, this functionality
 can be verified first with the given datapath testbench to verify the channel 1 values are 
-being updated properly when readL equals the row value.  Additionally you may try to implement 
+being updated properly when readL equals the row value. Additionally, you may try to implement 
 this on the hardware and verify that your scopeface is still present and some values are being 
 displayed for Channel 1 (at this point the waveform will be scrolling across the display or 
-may be scaled wrong).  
+may be scaled wrong).
 
 <h2>Required Functionality</h2>
-Get a single channel of the oscilliscpe to display with
+Get a single channel of the oscilliscope to display with
 reliable triggering that holds the waveform at a single
 point on the left edge of the display.  A 220Hz waveform
-should display something similar to that shown in the screen
-shot at the top of this page.
+should display something similar to what is shown in the screenshot at the top of this page. Additionally, you must have the following done:
 
 <ul>	<li>Use a package file to contain all your component declarations.
 	<li>Use  seperate datapath and control unit.
@@ -263,17 +270,19 @@ shot at the top of this page.
 </ul>
 
 <h2>B-level functionality</h2>
-Meet all the requirements of required functionality.
-Add a second channel (in green).  Integrate the button debouncing
-stratigy in HW #7 to debounce the buttons controlling the trigger
-time and trigger volage.  Move the cursors on the screen.
+<ul>
+	<li>Meet all the requirements of required functionality
+	<li>Add a second channel (in green).
+	<li>Integrate the button debouncing strategy in HW #7 to debounce the buttons controlling the trigger time and trigger volage.
+	<li>Move the cursors on the screen.
+</ul>
 
 <h2>A-level functionality</h2>
-Meet all the requirements of B-level functionality.
-Use the trigger voltage marker to establish the actual trigger
-voltage used to capture the waveform.  As the trigger is moved
-up and down you should see the point at which the waveform
-intersects the left side of the screen change.
+<ul>
+	<li>Meet all the requirements of B-level functionality.
+	<li>Use the trigger voltage marker to establish the actual trigger voltage used to capture the waveform.  As the trigger is moved up and down, you should see the point at which the waveform
+	intersects the left side of the screen change.
+</ul>
 
 
 <h2>Turn In</h2>
@@ -287,9 +296,9 @@ problem.</li>
 
 <li><strong>Implementation</strong> - Provide block-diagram of your 
 solution using the <strong>signal names in your code</strong>.  The
-block diagram given above is somewhat incomplete, make sure to include
-corrections to this diagram.  For each module that you built, explain
-its overall purpose, inputs, outputs, and behavior.  Include all your
+block diagram given above is somewhat incomplete, so make sure to include corrections to it.
+For each module that you built, explain
+its overall purpose, inputs, outputs, and behavior. Include all your
 vhdl files (code and testbench), wcfg file, and bit files.  Put these
 in a folder called "code".</li>
 
