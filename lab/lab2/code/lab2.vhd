@@ -57,7 +57,7 @@ begin
 		flagClear => "00000000");
 		
 			  
-	control: lab2_fsm port  map( 
+	control: lab2_fsm port map( 
 		clk => clk,
 		reset_n => reset_n,
 		sw => sw,
