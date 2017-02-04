@@ -39,7 +39,7 @@
 In this lab, we will integrate the video display controller developed
 in Lab 1 with the audio codec on the ATLYS board to build a basic
 2-channel oscilloscope.  When complete, your lab should generate an
-output similar to the picture below.
+output similar to the picture below.<br>
 <td><img src="./img/complete.jpg"></td> 
 
 <h2>Architecture</h2>
@@ -63,11 +63,11 @@ component. You can read more about the audio codec on page 27 of the Nexys Video
 <br><br>
 
 The serial protocol coming from the audio codec is quite complex, so you will be given the
-Audio Codec Wrapper component as an interface to extract the incoming signal (AC97 in the Figure above). Whenever new converted data is ready from
-the AC97, the ready signal will go high for a single clock cycle. Your circuit will then do two things with the
+Audio Codec Wrapper component as an interface to extract the incoming signal (Audio Codec Wrapper in the Figure above). Whenever new converted data is ready from
+the Audio Codec, the ready signal will go high for a single clock cycle. Your circuit will then do two things with the
 incoming L_bus_out and R_bus_out signals: First, it will loop both of these signals back
-into the AC97 so that you can verify (by listening on the green line-out jack)
-that the AC97 hardware and firmware are operating correctly.  This is
+into the Audio Codec so that you can verify (by listening on the green line-out jack)
+that the Audio Codec hardware and firmware are operating correctly.  This is
 accomplished using the VHDL code below.<br>
 
 <pre>
@@ -205,7 +205,7 @@ The files below will give you a start on Lab 2.
 	<li>Overall Lab 2 File: <a href="./code/lab2.vhd">lab2.vhd</a>
 		<ul>
 		<li>Lab 2 Datapath: <a href="./code/Lab2_datapath_tb.vhd">Lab2_datapath_tb.vhd</a>
-			<li>AC97: <a href="./code/Audio_Codec_Wrapper.vhd">Audio_Codec_Wrapper.vhd (Audio Codec Wraper for Xilinx Vivado)</a>
+			<li>Audio Codec Wrapper: <a href="./code/Audio_Codec_Wrapper.vhd">Audio_Codec_Wrapper.vhd (Audio Codec Wraper for Xilinx Vivado)</a>
 				<ul>
 				<li><a href="./code/i2s_ctl.vhd">i2s_ctl.vhd (I2S Transmitter portion of Audio Codec Wraper for Xilinx Vivado)</a>
 				<li><a href="./code/audio_init.v">audio_init.v (Audio Initializer portion of Audio Codec Wraper for Xilinx Vivado)</a>
