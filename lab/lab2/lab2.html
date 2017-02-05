@@ -211,9 +211,9 @@ The files below will give you a start on Lab 2.
 				<li><a href="./code/i2s_ctl.vhd">i2s_ctl.vhd (I2S Transmitter portion of Audio Codec Wraper for Xilinx Vivado)</a>
 				<li><a href="./code/audio_init.v">audio_init.v (Audio Initializer portion of Audio Codec Wraper for Xilinx Vivado)</a>
 				<li><a href="./code/TWICtl.vhd">TWICtl.vhd (TWI Controller portion of Audio Codec Wraper for Xilinx Vivado)</a>
-				<li>You need to add a clock for the Audio Codec and set the output frequencies to what is required (see comments in the Audio Codec Wrapper file).
+				<li>You need to add a clocking wizard for the Audio Codec and set the output frequencies to what is required (see comments in the Audio Codec Wrapper file).
 				</ul>
-			<li>lab2_fsm (you need to create this).
+			<li>lab2_cu (you need to create this).
 		</ul>
 	<li>Constraint file: <a href="./code/Lab2.xdc">Lab2.xdc </a>
 	<!--<li><a href="./code/ac97.vhd">ac97.vhd (for Xilinx ISE)</a>-->
@@ -239,7 +239,7 @@ Wrapper inside the Datapath entity to get your Audio Codec to begin functioning.
 fully implement the Audio Codec Wrapper, you will drop in the Loopback process and make 
 connections to loopback the serial ADC input back out to the DAC output (i.e. send the signal back into the Codec). Once you implement 
 the design on the board, you can verify functionality by applying an audio signal to the audio 
-line in jack (blue) and listening to it on the audio line out jack (Green) using a standard oscilliscope. 
+line in jack (blue) and listening to it on the audio line out jack (Green) using a standard oscilloscope. 
 
 <h3>Gate Check 2</h3>
 NOTE: THIS IS THE HARDEST PART! By BOC Lesson 15, you must have implemented and connected the left channel BRAM and BRAM 
@@ -255,13 +255,13 @@ displayed for Channel 1 (at this point the waveform will be scrolling across the
 may be scaled wrong).
 
 <h2>Required Functionality</h2>
-Get a single channel of the oscilliscope to display with
+Get a single channel of the oscilloscope to display with
 reliable triggering that holds the waveform at a single
 point on the left edge of the display.  A 220Hz waveform
 should display something similar to what is shown in the screenshot at the top of this page. Additionally, you must have the following done:
 
 <ul>	<li>Use a package file to contain all your component declarations.
-	<li>Use  seperate datapath and control unit.
+	<li>Use separate datapath and control unit.
 	<li>Your datapath must use processes which are similar
 	to our basic building block (counter, register, mux, etc.).
 	I do not want to see one massive process that attempts
@@ -269,7 +269,7 @@ should display something similar to what is shown in the screenshot at the top o
 	<li>Testbench for the flagRegister.
 	<li>Testbench for the control unit.
 	<li>Testbench for the datapath unit showing data (different value than 
-	what is given in the testbench) coming out of the AC'97 audio codec and being 
+	what is given in the testbench) coming out of the audio codec and being 
 	converted from signed to unsigned and then to std_logic_vector to go into your BRAM.
 	Include calculations to back up what the waveform shows.
 	<li>For Bonus Points:  Testbench for the datapath unit showing that same data coming out of the BRAM.  
@@ -283,7 +283,7 @@ should display something similar to what is shown in the screenshot at the top o
 <ul>
 	<li>Meet all the requirements of required functionality
 	<li>Add a second channel (in green).
-	<li>Integrate the button debouncing strategy in HW #7 to debounce the buttons controlling the trigger time and trigger volage.
+	<li>Integrate the button debouncing strategy in HW #7 to debounce the buttons controlling the trigger time and trigger voltage.
 	<li>Move the cursors on the screen.
 </ul>
 
