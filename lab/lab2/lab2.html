@@ -28,8 +28,9 @@
 <tr><td>Lab:</td>		<td>2</td></tr>
 <tr><td>Status			<td bgcolor = #D0FFD0>Complete <!--<td bgcolor = #FFFFF0>Not Started --> <!--<td bgcolor = #FFD0D0>In Progress -->
 <tr><td>Lab 2 Cutsheet<td><a href="./ECE_383_Lab2_Cutsheet.pdf">ECE_383_Lab2_Cutsheet.pdf</a>
-<tr><td>Lab 1 Editable Block Diagram<td><a href="./ECE383_Lab2_Block_Diagram.pptx">ECE383_Lab2_Block_Diagram.pptx</a><br>
+<tr><td>Lab 2 Editable Block Diagram<td><a href="./ECE383_Lab2_Block_Diagram.pptx">ECE383_Lab2_Block_Diagram.pptx</a><br>
 										<a href="./lab2_block_diagram.vsdx">lab2_block_diagram.vsdx (Visio file)</a>
+<tr><td>Lab 2 Supplemental PowerPoint<td><a href="./ECE_383_Lab2.pptx">ECE_383_Lab2.pptx</a>
 </table>
 
 
@@ -213,7 +214,7 @@ The files below will give you a start on Lab 2.
 				<li><a href="./code/TWICtl.vhd">TWICtl.vhd (TWI Controller portion of Audio Codec Wraper for Xilinx Vivado)</a>
 				<li>You need to add a clocking wizard for the Audio Codec and set the output frequencies to what is required (see comments in the Audio Codec Wrapper file).
 				</ul>
-			<li>lab2_cu (you need to create this).
+			<li>lab2_fsm (you need to create this).
 		</ul>
 	<li>Constraint file: <a href="./code/Lab2.xdc">Lab2.xdc </a>
 	<!--<li><a href="./code/ac97.vhd">ac97.vhd (for Xilinx ISE)</a>-->
@@ -233,13 +234,22 @@ Function Generator</a> (available on Google Play) works well for Android Phones,
 There are 2 gate checks associated with this lab, each worth 5 points - see the rubric below.
 
 <h3>Gate Check 1</h3>
-By COB Lesson 13, you must have started a Lab 2 Vivado project and downloaded the template files.  
-Additionally, you will need to have implemented another Clocking Wizard and the Audio Codec 
-Wrapper inside the Datapath entity to get your Audio Codec to begin functioning.  Once you 
-fully implement the Audio Codec Wrapper, you will drop in the Loopback process and make 
-connections to loopback the serial ADC input back out to the DAC output (i.e. send the signal back into the Codec). Once you implement 
-the design on the board, you can verify functionality by applying an audio signal to the audio 
-line in jack (blue) and listening to it on the audio line out jack (Green) using a standard oscilloscope. 
+By COB Lesson 13, you must have started a Lab 2 Vivado project and downloaded the template files 
+and drop in your Video, VGA, Scopeface, dvid, and tdms files from Lab 1 into your Lab 2 project 
+in order to test your Lab 1 Scopeface works when you implement you Audio Code Wrapper.  Notice 
+from the block diagram…you will copy your Video instantiation and button processes from Lab 1 
+into your Lab 2 Datapath.  You will also have to re-implement the Lab 1 Clocking Wizard in you 
+Lab 2 project.  Doing this will eliminate a lot of errors from un-driven output signals on lab 2 top. <br>
+
+Next, you will need to have implement another Clocking Wizard and the Audio Codec Wrapper inside 
+the Datapath entity to get your Audio Codec to begin functioning. Once you fully implement the 
+Audio Codec Wrapper, you will drop in the Loopback process and make connections to loopback the 
+serial ADC input back out to the DAC output (i.e. send the signal back into the Codec). Once you 
+implement the design on the board, you can verify functionality by applying an audio signal to the 
+audio line in jack (blue) and listening to it on the audio line out jack (Green) using a standard 
+oscilloscope. Additionally your Scopeface and Button inputs from Lab 1 should be functional as well.
+
+
 
 <h3>Gate Check 2</h3>
 NOTE: THIS IS THE HARDEST PART! By BOC Lesson 15, you must have implemented and connected the left channel BRAM and BRAM 
