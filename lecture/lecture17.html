@@ -37,16 +37,16 @@
 
 <h2>microBlaze</h2>
 The goal of today's class is to bring you up to speed on how to
-instantiate a microBlaze processor on our Spartan 6, integrate
+instantiate a microBlaze processor on our Artix 7, integrate
 a custom piece of VHDL code to the processor, and then to write
-some C-code to run on the microBlaze to control the custom 
-VHDL module.  A few words about the microBlaze are in order here:
+some C code to run on the microBlaze to control the custom 
+VHDL module.  Here are some specifications on the microBlaze processor:
 
 <ul>
-<li> Thirty-two 32-bit general purpose registers
-<li> 32-bit instruction word with three operands and two addressing modes
-<li> 32-bit address bus
-<li> Single issue (3 or 5)-stage pipeline
+<li> It has thirty-two 32-bit general purpose registers.
+<li> It uses a 32-bit instruction word with three operands, and has two addressing modes.
+<li> It has a 32-bit address bus.
+<li> It uses a single issue (3 or 5)-stage pipeline.
 </ul>
 
 The following image was copied from the "MicroBlaze Processor Reference Guide"
@@ -54,13 +54,32 @@ and summarizes the major features of the processor.
 
 <br><img src="./img/lecture17-4.gif"><br><br>
 
-The rest of the class will be devoted to getting two simple microBlaze 
-designs operations.
+The rest of the class will be devoted to getting the microBlaze to work.
 
 
 <h2>Tutorial Overview</h2>
-<p>In this tutorial, you will be introduced to the tool flow for simple MicroBlaze designs.  Specifically, you will create a design that continuously reads the input from UART and writes that value to the LEDs.</p>
+<p>In this tutorial, you will be introduced to the tool flow for simple MicroBlaze designs.
+Specifically, you will create a design that continuously reads the input from UART and writes that value to the LEDs.
+The UART will be connected from the FPGA to your computer via a micro USB cable.</p>
+
+You will follow the tutorial <a href = https://reference.digilentinc.com/learn/programmable-logic/tutorials/nexys-video-getting-started-with-microblaze/start>here</a> step  by step.
+<h2>Deviations from the Tutorial</h2>
+<ul>
+	<li>Call your project "L17" or "Lesson17".</li>
+	<li>Keep in mind that you can zoom in and out on your block diagram.</li>
+	<li>The AXI bus is the bus the Microblaze uses, similar to a PCI bus in normal PC's.</li>
+	<li>What does the UART actually do? Although you learned about it in ECE382, you can read more about UART's <here> for a referesher. </li>
+	<li>UART Controller?</li>
+	<li>Ignore step 6.3 completely. When you do step 6.2, just check the "reset" box in the automatic connections dialogue under clock wizard.
+	You do not need to make the connection manually.</li>
+	<li>The Memory Interface Generator (MIG) is used essentially add BRAM (it is SDRAM in this case).</li>
+	<li>Although you didn't need to make the first conneciton manually, you do need to make the 2nd connection manually (with the RAM).</li>
+	
+	
+</ul>
+
 <h2>System Requirements</h2>
+<p>If you installed the Vivado software correctly at the beginning of the semester, you will not need to install anything new.</p>
 <p>You must complete the following installation items before you can follow the steps of this tutorial:</p>
 <ul>
 <li>Install Xilinx ISE 14.X System Edition.  This includes ISE Project Navigator, PlanAhead, Software Development Kit, and Platform Studio.</li>
