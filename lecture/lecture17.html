@@ -27,15 +27,15 @@
 <tr><td>Date:</td>	<td>February 29</td></tr>
 <tr><td>Lecture:</td>	<td>17</td></tr>
 <tr><td>Homework	<td><a href="../hw/hw9.html">HW #9</a></td></tr>
-<tr><td>Status		<td bgcolor = #D0FFD0>Complete <!--<td bgcolor = #FFFFF0>Not Started--> <!--<td bgcolor = #FFD0D0>In Progress -->
-<tr><td>MicroBlaze Tutorial	<td><a href="../hand/hand17.docx">hand17.docx</a></td></tr>
-<tr><td>Code 		<td>	<a href="./code/lec17.vhdl">lec17.vhdl<br>
-				<a href="./code/lec17.c">lec17.c</a>
+<tr><td>Status		<td bgcolor = #FFD0D0>In Progress <!--<td bgcolor = #FFFFF0>Not Started--> <!--<td bgcolor = #D0FFD0>Complete  -->
+<tr><td>MicroBlaze Tutorial	<td><a href="https://reference.digilentinc.com/learn/programmable-logic/tutorials/nexys-video-getting-started-with-microblaze/start">MicroBlaze</a></td></tr>
+<tr><td>Code 		<td>	<a href="./code/lec17.c">Lec17.c (Initial Hello World)<br>
+				<a href="./code/Lec17_v2.c">Lec17_v2.c (Example code to interface with GPIO LEDs</a>
 </table>
 
 
 
-<h2>microBlaze</h2>
+<h2>MicroBlaze</h2>
 The goal of today's class is to bring you up to speed on how to
 instantiate a microBlaze processor on our Artix 7, integrate
 a custom piece of VHDL code to the processor, and then to write
@@ -77,7 +77,50 @@ You will follow the tutorial <a href = https://reference.digilentinc.com/learn/p
 	
 	
 </ul>
+<h2>After Completing the Tutorial Hello World</h2>
+<p>Once you complete the MicroBlaze Tutoral and get Hello World to display on your terminal.    
+This will allow you to echo values received on the UART</p>
+<li>Confirm that you want to import the new bitfile and design to your SDK project.</li>
+<li>Add the <code>lec17.c</code> code at the top of the page to your <code>main.c</code> in your SDK project.</li>
+</ul>
+<li>Program the FPGA with your new bitfile and elf file and run the configuration.</li>
+<li>Run your favorite terminal program to verify that the FPGA is echoing your characters to your terminal and the LEDs.</li>
+<li>Note: look through the headers and the <code>xuartlite_l.h</code> file to see the different options you have to read from and write to the UART.  
+These are just simple macros that provide you shortcuts to perform memory operations.  All of this should be review from when we first introduced you to the C programming language.</li>
 
+
+<h2>Update Hardware/Software for LED GPIO</h2>
+<p>Finally, you will write software that reads in a value from UART, echoes that value to the UART and LEDs.</p>
+<ul>
+<li>Confirm that you want to import the new bitfile and design to your SDK project.</li>
+<li>Add the code found in the <code>lec17_v2.c</code> file to your <code>main.c</code>, where you deem appropriate:</li>
+</ul>
+<li>Program the FPGA with your new bitfile and elf file and run the configuration.</li>
+<li>Run your favorite terminal program to verify that the FPGA is echoing your characters to your terminal and the LEDs.</li>
+<li>Note: look through the <code>xgpio.h</code> file to see the different options you have to read from and write to GPIOs.  
+These are just simple macros that provide you shortcuts to perform memory operations. </li>
+</ul>
+
+<h2>Conclusion</h2>
+<p>We have covered quite a lot of ground in this tutorial.  It is critical that you understand each step of this development process, as this is critical to your next lab and the final 
+project.  Be sure you ask your instructor if you are unsure about anything we covered in this tutorial.  Specifically, you should understand the following:</p>
+<ul>
+<li>Create an embedded MicroBlaze hardware platform with Xilinx Vivado</li>
+<li>Add a standard GPIO component:<ul>
+<li>Connect it to the MicroBlaze AXI bus</li>
+<li>Configure its memory-mapped address</li>
+<li>Connect input/output ports to FPGA pins</li>
+</ul>
+</li>
+<li>On Lesson 18 we will reaccomplish the tutorial in a new project and then create and add a custom peripheral:<ul>
+<li>Make individual read/write registers available from software</li>
+<li>Structurally add additional VHDL modules in separate files</li>
+</ul>
+</li>
+<li>Write software to interface with any given MicroBlaze peripheral.  In particular, you should be able to write to and read from the peripheral software registers.</li>
+<li>Test and debug your software/hardware on the FPGA.</li>
+</ul>
+<!--
 <h2>System Requirements</h2>
 <p>If you installed the Vivado software correctly at the beginning of the semester, you will not need to install anything new.</p>
 <p>You must complete the following installation items before you can follow the steps of this tutorial:</p>
@@ -389,6 +432,7 @@ Xil_Out8(0x83000000, c);</code></pre>
 </ul>
 
         </div>
+-->
     </body>
 </html>
 
