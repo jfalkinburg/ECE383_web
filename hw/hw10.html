@@ -77,20 +77,20 @@ make: *** [lec18.elf] Error 1
 </pre>
 <br><br>
 
-Look at the MicroBlaze Print Size output and you will find that the value 
+Look at the MicroBlaze Print Size address editor and you will find that the value 
 under dec (size of your program (instructions + data) in decimal bytes) 
-is larger than you 
-allocated in EDK for the microblaze memory.  The solution is to 
-increase the size of the instruction and data memory in EDK and 
+is the 32k you allocated in Vivado for the microblaze memory.  You should be good but
+potentially you may have to increase the size of the instruction and data memory in Vivado and 
 recompile (see figure below). As you will see in the Print Size output
 above, I ran into this problem when my program JUST exceeded the 16K 
-I had allocated for it in EDK.
+I had allocated for it in Vivado.
 
-<br><img src="./hw10-1.gif"><br><br>
+<br><img src="./hw10-1.png"><br><br>
 
 After you make this change, you will need to increase the stack and heap
-space inside SDK.  To do this, open the linker script (lscript.ld) and then
-increase the size of your memory to reflect the size entered in EDK.  Finally
+space inside SDK.  Since you already started with 32K you may only have to 
+increase the stack and heap in SDK.  To do this, open the linker script (lscript.ld) and then
+increase the size of your memory to reflect the size entered in Vivado.  Finally
 you can increase the stack and heap sizes to cover that needed in the error
 message.
 
