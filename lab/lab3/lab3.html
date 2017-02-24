@@ -36,7 +36,7 @@
 <h2>Lab Overview</h2>
 In this lab we will integrate the video display controller developed
 in Lab 2 with the MicroBlaze processor built using the fabric of the 
-FPGA.  In the preceding lecture we have learned about the EDK and
+FPGA.  In the preceding lecture we have learned about the Vivado and
 SDK tool chains, now its time to put that knowledge to the test by building
 a software controlled datapath.  Lab 2 revealed some shortcomings of our 
 oscilloscope that this lab intends on correcting.
@@ -61,7 +61,7 @@ As described in the block diagram below.  Lets walk through these steps.
 
 <b>Note:</b>
 In your program, you may want to check if the users has hit the
-key on the keyboard without having to actualy read the key.  For
+key on the keyboard without having to actually read the key.  For
 these cases the following command  will prove useful.  Note that
 "uartRegAddr" is a constant, the address of the uart.<br>
 <pre>
@@ -96,7 +96,7 @@ in <a href="../lab2/lab2.html">lab 2</a>.
 </table>
 
 Your first step will be to create a component for your lab2 component in
-your EDK repository.  This will require you to think about what signals
+your vivado repository.  This will require you to think about what signals
 are routed to the MicroBlaze and those going outside the Artix 7 chip.
 The following table should help.
 
