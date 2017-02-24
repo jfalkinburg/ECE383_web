@@ -35,7 +35,7 @@
 
 <h2>Lab Overview</h2>
 In this lab we will integrate the video display controller developed
-in Lab 2 with the microBlaze processor built using the fabric of the 
+in Lab 2 with the MicroBlaze processor built using the fabric of the 
 FPGA.  In the preceding lecture we have learned about the EDK and
 SDK tool chains, now its time to put that knowledge to the test by building
 a software controlled datapath.  Lab 2 revealed some shortcomings of our 
@@ -54,17 +54,18 @@ is increasing through that voltage at that time.
 <br><img src="./img/lab3-1.gif"><br><br>
 
 In order to accomplish this you will need to  make some minor changes to the
-lab2 component, create a new piece of IP, and then program it.  Lets walk 
-through these steps.
-<br><br>
+lab2 component, create a new piece of IP, and then program it via the MicroBlaze. 
+As described in the block diagram below.  Lets walk through these steps.
+<br>
+<br><img src="./img/lab3-2.jpg"><br><br>
 
 <b>Note:</b>
 In your program, you may want to check if the users has hit the
 key on the keyboard without having to actualy read the key.  For
 these cases the following command  will prove useful.  Note that
-"uartRecReg" is a constant, the address of the uart.<br>
+"uartRegAddr" is a constant, the address of the uart.<br>
 <pre>
-XUartLite_IsReceiveEmpty(uartRecReg);
+XUartLite_IsReceiveEmpty(uartRegAddr);
 </pre>
 <br><br>
 
@@ -96,21 +97,23 @@ in <a href="../lab2/lab2.html">lab 2</a>.
 
 Your first step will be to create a component for your lab2 component in
 your EDK repository.  This will require you to think about what signals
-are routed to the microBlaze and those going outside the Spartan 6 chip.
+are routed to the MicroBlaze and those going outside the Artix 7 chip.
 The following table should help.
 
 <table class="table table-striped table-bordered table-condensed">
 
-<tr><td>To/From microBlaze	<td>Outside Spartan 6
-<tr><td>exWrAddr	<td>clk 
-<tr><td>exWen		<td>reset 
-<tr><td>exSel		<td>SDATA_IN 
-<tr><td>L_bus_out, R_bus_out		<td>BIT_CLK 
-<tr><td>exLbus, exRbus	<td>SYNC 
-<tr><td>flagQ		<td>SDATA_OUT 
-<tr><td>flagClear	<td>AC97_n_RESET 
-<tr><td>triggerTime	<td>tmds 
-<tr><td>triggerVolt	<td>tmdsb 
+<tr><td>To/From MicroBlaze	<td>Outside Artix 7
+<tr><td>exWrAddr			<td>clk 
+<tr><td>exWen				<td>reset 
+<tr><td>exSel				<td>ac_mclk  
+<tr><td>L_bus_out, R_bus_out	<td>ac_adc_sdata  
+<tr><td>exLbus, exRbus		<td>ac_dac_sdata  
+<tr><td>flagQ				<td>ac_bclk  
+<tr><td>flagClear			<td>ac_lrclk  
+<tr><td>triggerTime			<td>sda 
+<tr><td>triggerVolt			<td>scl 
+<tr><td>ready 				<td>tmds 
+<tr><td>					<td>tmdsb 
 </table>
 
 <h2>Software</h2>
@@ -126,10 +129,10 @@ as #define's with a name ending in "Reg".
 <h2>Required Functionality</h2>
 In order to make required functionality you will need to properly trigger
 the oscilloscope on channel 1 using a positive edge trigger.  Control of
-this process is to be performed using the microBlaze.  The main tasks of
-the microBlaze will include:
+this process is to be performed using the MicroBlaze.  The main tasks of
+the MicroBlaze will include:
 <ul>	<li>Moving audio samples into a pair of circular buffer.  These circular
-	buffers will be maintained in the address space of the microBlaze.  That
+	buffers will be maintained in the address space of the MicroBlaze.  That
 	is you should have two big arrays defined in your program.
 	Use polling of the ready bit of the flag register.
 	<li>Examining the samples looking for a trigger event.
@@ -159,7 +162,10 @@ Achieve B-level functionality.
 <h2>Using one bit from a vector to trigger an interrupt</h2>
 In order to achieve A functionality, this assignment requires you to use a 
 single bit of Q (the std_logic_vector output from the flag register) as the
-interrupt signal.  This will require some syntax changes as 
+interrupt signal.  This may require you to extract the one bit Q as a separate 
+signal to connect to the MicroBlaze in your block design. 
+
+<!--This will require some syntax changes as 
 documented below.
 
 <ul>
@@ -188,7 +194,7 @@ block.
 
 </ul>
 
-<br><img src="./img/hw11-1.gif"><br><br>
+<br><img src="./img/hw11-1.gif"><br><br> -->
 <!--<br><img src="./img/EDKscreenShot.gif"><br><br>-->
 
 <h2>Grading</h2>
