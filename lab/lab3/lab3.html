@@ -39,11 +39,11 @@ in Lab 2 with the MicroBlaze processor built using the fabric of the Artix-7 FPG
 In the preceding lectures, we learned about the Vivado and
 SDK tool chains, now its time to put that knowledge to the test by building
 a software controlled datapath.  Lab 2 revealed some shortcomings of our 
-oscilloscope that this lab intends on correcting.
-<ul>	<li>Horizontal trigger point
-	<li>Ability to enable and disable channels to display
-	<li>Ability to trigger off channel 2
-	<li>Ability to change the slope direction for the trigger.
+oscilloscope that this lab intends on correcting. Specifically, we will add:
+<ul>	<li>A horizontal trigger point
+	<li>The ability to enable and disable which channels are being displayed
+	<li>The ability to trigger off of channel 2
+	<li>The ability to change the slope direction of the trigger
 </ul>
 
 The following figure shows required functionality - your program should allow
@@ -53,16 +53,17 @@ is increasing through that voltage at that time.
 
 <br><img src="./img/lab3-1.gif"><br><br>
 
-In order to accomplish this you will need to  make some minor changes to the
-lab2 component, create a new piece of IP, and then program it via the MicroBlaze. 
-As described in the block diagram below.  Lets walk through these steps.
+In order to accomplish this, you will need to  make some minor changes to the
+lab2 component, create a new piece of IP, and then program that IP using the MicroBlaze, as described in the block diagram below.
+We will walk through these steps below.
 <br>
 <br><img src="./img/lab3-2.jpg"><br><br>
 
 <b>Note:</b>
-In your program, you may want to check if the users has hit the
+In your program, you will provide a user menu (through the terminal), allowing the user
+to adjust the trigger voltage and trigger time. Therefore, you may want to check if the users has hit the
 key on the keyboard without having to actually read the key.  For
-these cases the following command  will prove useful.  Note that
+these cases, the following command  will prove useful.  Note that
 "uartRegAddr" is a constant, the address of the uart.<br>
 <pre>
 XUartLite_IsReceiveEmpty(uartRegAddr);
@@ -72,10 +73,10 @@ XUartLite_IsReceiveEmpty(uartRegAddr);
 
 
 <h2>Hardware</h2>
-With the expectation of the following engineering change orders (ECO) in 
+With the exception of the following Engineering Change Orders (ECO) in 
 the table below, the hardware you developed in lab2 will be unchanged.
 For the following ECO, please refer to the high-level architecture
-in <a href="../lab2/lab2.html">lab 2</a>.
+in <a href="../lab2/lab2.html">Lab 2</a>.
 
 <table class="table table-striped table-bordered table-condensed">
 <tr><td>Name:	<td>Trigger Voltage, Trigger Time</td></tr>
@@ -96,13 +97,13 @@ in <a href="../lab2/lab2.html">lab 2</a>.
 </table>
 
 Your first step will be to create a component for your lab2 component in
-your vivado repository.  This will require you to think about what signals
+your Vivado repository.  This will require you to think about what signals
 are routed to the MicroBlaze and those going outside the Artix 7 chip.
 The following table should help.
 
 <table class="table table-striped table-bordered table-condensed">
 
-<tr><td>To/From MicroBlaze	<td>Outside Artix 7
+<tr><td><b>Signals To/From MicroBlaze</b>	<td><b>Signals Going Outside Artix 7</b>
 <tr><td>exWrAddr			<td>clk 
 <tr><td>exWen				<td>reset 
 <tr><td>exSel				<td>ac_mclk  
@@ -127,15 +128,15 @@ as #define's with a name ending in "Reg".
 </ul>
 
 <h2>Required Functionality</h2>
-In order to make required functionality you will need to properly trigger
+In order to make required functionality, you will need to properly trigger
 the oscilloscope on channel 1 using a positive edge trigger.  Control of
 this process is to be performed using the MicroBlaze.  The main tasks of
 the MicroBlaze will include:
-<ul>	<li>Moving audio samples into a pair of circular buffer.  These circular
-	buffers will be maintained in the address space of the MicroBlaze.  That
-	is you should have two big arrays defined in your program.
+<ul>	<li>Move audio samples into a pair of circular buffers.  These circular
+	buffers will be maintained in the address space of the MicroBlaze. That
+	is, you should have two big arrays defined in your program.
 	Use polling of the ready bit of the flag register.
-	<li>Examining the samples looking for a trigger event.
+	<li>Examine the samples, looking for a trigger event.
 	<li>Fill the remaining sample slots in memory.
 	<li>Move the appropriate buffer values into the display memory of
 	the oscilloscope (lab2) component.
@@ -144,18 +145,20 @@ the MicroBlaze will include:
 </ul>
 
 <h2>B-level Functionality</h2>
-Achieve required functionality.
-<ul>	<li>Use the ready bit of the flag register to trigger an interrupt.
+<ul>
+	<li>Achieve required functionality.
+	<li>Use the ready bit of the flag register to trigger an interrupt.
 	The ISR should store the samples (left and right), look for a triggering
-	even, and signal when the stored samples should be transfered to the
+	event, and signal when the stored samples should be transfered to the
 	BRAM in the oscilloscope component.
 </ul>
 
 <h2>A-level Functionality</h2>
-Achieve B-level functionality.  
-<ul>	<li>Ability to enable and disable channels to display
+<ul>
+	<li>Achieve B-level functionality.  
+	<li>Ability to enable and disable channels to display
 	<li>Ability to trigger off channel 2
-	<li>Ability to change the slope direction for the trigger.
+	<li>Ability to change the slope direction of the trigger.
 </ul>
 
 
