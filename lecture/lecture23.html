@@ -42,7 +42,7 @@
 Direct Digital Synthesis (DDS) is a technique to create periodic
 waveforms with very precise frequency control using a system with
 a fixed clock frequency.  The periodic function is stored in a look-up 
-table like the following for a sin wave.
+table like the following for a sine wave.
 
 <pre>
 int8 sin[64] = {128,141,153,165,177,189,200,210,219,227,235,241,246,250,253,255,
@@ -51,31 +51,34 @@ int8 sin[64] = {128,141,153,165,177,189,200,210,219,227,235,241,246,250,253,255,
   		 1,  3,  6, 10, 15, 21, 29, 37, 46, 56, 67, 79, 91,103,115,128};
 </pre>
 
-Being Computer Engineers, lets use a table which has length 2^N, this will 
+Being Computer Engineers, let's use a table which has length 2^N, this will 
 prove to be a good choice later on.  Our goal is to reproduce this function
-for any choice of frequency <b>F</b> which should be adjustable on-the-fly.
+for any choice of frequency <b>F</b>, which should be adjustable on-the-fly.
 
-<h3>Fixed Point</h3>
-Lets generalize our notion of regular binary coded number to the right
-of the decimal point. If you are told that 10010 is a binary coded number
-how do you (formally) determine what decimal value it represents? You
-need the equation: 
+<h3>Fixed Point Numbers</h3>
+Let's review decimal points and binary. If you are told that 10010 is a binary number,
+you can easily determine which decimal value it represents by using this equation: 
+<pre>
 <CENTER>value = sum(b<SUB>i</SUB>*2<SUP>i</SUP>)</CENTER>
-
-Where the sum ranges over all the bit positions i. Remember that the
-LSB (the one closest to the decimal point) is ALWAYS index 0. Hence
-our number in question could be written as:
+</pre>
+where i is the index of the bit you are currently looking at (starting at i=0 for the lsb).
+Using this formula, 10010 can easily be converted to decimal:
+<pre>
 1*2<SUP>4</SUP> + 0*2<SUP>3</SUP> + 0*2<SUP>2</SUP> + 1*2<SUP>1</SUP> + 
 	0*2<SUP>0</SUP> = 16 + 2 = 18
-Well now generalize this idea to the right of the decimal point and take
-a stab at what 1.11 means? Well for this number you would have indices
-that are negative (to the right of the decimal point). 
+</pre>
+<br>
+We'll now use this same method to convert 1.11 to binary. Important to note is that to represent
+values less than 1 (to the right of the decimal point), negative indicies need to be used:
+<pre>
 1*2<SUP>0</SUP> + 1*2<SUP>-1</SUP> + 1*2<SUP>-2</SUP> =
 	 1 + 0.5 + 0.25 = 1.75
-Lets now convert 1.53125 into binary. This is done by using the tried
+</pre>
+<br>
+Now, let's convert 1.53125 to binary. This is done by using the tried
 and true technique of finding the largest power of 2 that will fit into
-the number, subtracting it and then continuing the conversion with the
-difference. This process stops when you get down to zero. To illustrate: 
+the number, subtracting it, and then continuing the conversion with the
+difference. This process stops when you reach zero or run out of bits. To illustrate:
 
 <UL>
 <LI>The largest power of two that fits into 1.53125 is 2<SUP>0</SUP> = 1.0
@@ -83,37 +86,34 @@ difference. This process stops when you get down to zero. To illustrate:
 <LI>The largest power of two that fits into 0.03125 is 2<SUP>-5</SUP> = 0.03125
 </UL>
 
-Thus the binary representation of 1.53125 is 1.10001 Interestingly
-enough, some rational real numbers do not have an rational binary 
-representation, that is a real number that can be represented as the
-ratio of two whole numbers (terminating decimal number) may have a binary
-representation that repeats endlessly. For example the decimal number
-0.1 cannot be represented as a finite binary string of 0's and 1's 
-(give it a try). 
+Thus the binary representation of 1.53125 is 1.10001.
+<br>
+As you can imagine, some rational real numbers do not have a rational binary 
+representation. For example, the decimal number
+0.1 cannot be represented as a finite binary string of 0's and 1's - it would repeat endlessly.
+You can give the conversion a try if you want to prove this yourself.
 
 
-<H3>Fixed point arithmetic</H3>
-When the need arises to represent numbers with fractions
-in a situation where hardware resources are limited or where you would
-like to keep the complexity to a minimum then you might want to consider
-the use of fixed point numbers.  For example, assume that you are
-working on a circuit which requires you to represent an angle and you
-need a keep track of the fraction.  This can be done quite nicely
-using a representation.
+<H3>Fixed Point Arithmetic</H3>
+Fixed point numbers, as compared to floating point, are great when the need arises to represent numbers with fractions
+in a situation where hardware resources are limited or you would
+like to keep complexity to a minimum. For example, assume that you are
+working on a circuit which requires you to represent an angle which is not a whole number.  This can be done quite nicely
+using the following representation:
 
 <br><br>
 W7 W6 W5 W4 W3 W2 W1 W0 . F7 F6 F5 F4 F3 F2 F1
 <BR><br>
 
 
-The 8 W-bits represent the whole portion of the fraction and the 8 F-bits 
-represent the fractional portion.  The resulting 16-bit number can
-be manipulated as a whole with some minor book keeping to keep track
-of the decimal point.  As an exercise determine the representation of 
-23.5 and 45.25  Note, that you should be reminded that there is no 
-implicit meaning in the set of 16 bits used to represent this pair of
-numbers; bits have no meaning. Now, consider the problem of adding to
-fixed point angles (23.5 and 45.25) stored in the format above
+The 8 W-bits represent the whole portion of the number and the 8 F-bits 
+represent the fractional portion.  This 16-bit number can
+be treated as a whole number with some minor book-keeping to keep track
+of the decimal point.
+<br>
+As an exercise, convert 23.5 and 45.25 to binary using this 16-bit format.
+<br>
+Now, consider the problem of adding the fixed point angles 23.5 and 45.25:
 
 <font size=2><PRE>  
         00010111 10000000  (23.5)
@@ -121,12 +121,15 @@ fixed point angles (23.5 and 45.25) stored in the format above
      ---------------------
         01000100 11000000  (68.75)</PRE></FONT>
 
-You can see that the addition is carried off without concern for the
-decimal point.  Multiplication is very much the same but now you need
-to keep track of the pesky decimal point and make sure to put it back
-where it belongs.  In the abbreviate example below we will assume that 
-23 have a 4-bit representation where the decimal point resides in the
-middle of the number.  We will multiply 3.75 and 1.25.
+You can see that the addition is completed without concern for the
+decimal point - it is almost like the decimal point doesn't exist. 
+<br>
+It is only when we do multiplication or division that we need to do the "bookkeeping" mentioned above;
+you need to keep track of the decimal point and put it where it belongs.
+In the abbreviated example below, we will assume that 
+we have a 4-bit representation where the decimal point resides in the
+middle of the number (after the 2-bit). The result will be 8 bits (4 bits + 4 bits).
+The multiplication of 3.75 and 1.25 is shown below.
 
 <font size=2><PRE>
           1111 (3.75)
@@ -141,17 +144,16 @@ middle of the number.  We will multiply 3.75 and 1.25.
 </PRE></font>
 
 A more interesting case arises when you have to use a multiplier that
-is not the right size.  Lets consider the multiplication
-of two 16-bit fixed point numbers (representing angles) WA:FA and WB:FB.  
-From our discussion above the product requires 32-bits to represent.  
-According to the rules for multiplication for numbers the decimal point
-will have to be placed after the 16-bit.  Unfortunately you only have
-an 8-bit multiplier on hand to use.  This means that you have a piece
-of hardware that can take in 2 8-bit numbers and generate a 16-bit
+is not the right size. Let's consider the multiplication
+of two 16-bit fixed point numbers representing angles, WA.FA and WB.FB.  
+From our discussion above, the product requires 32 bits to represent.  
+According to the rules of multiplication, the decimal point
+will have to be placed after the 16-bit.  Unfortunately, you only have
+an 8-bit multiplier on hand that can take in two 8-bit numbers and generate a 16-bit
 result. The figure below shows how the operands are split naturally into
 8-bit chunks and how the partial product is naturally composed of 4
 chunks.  You would then have to make sure that you had hardware to perform
-the adds of the 16-bit quantities. 
+the adds of the four resulting 16-bit quantities. 
 
 <P align=center><IMG src="./img/lecture23-1.jpg"></P>
 
