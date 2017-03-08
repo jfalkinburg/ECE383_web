@@ -29,17 +29,17 @@
             </div>
 
 <table class="table table-striped table-bordered table-condensed">
-<tr><td>Date:</td>	<td>March 17</td></tr>
+<tr><td>Date:</td>	<td>March 9/13</td></tr>
 <tr><td>Lecture:</td>	<td>23</td></tr>
-<tr><td>File:</td>	<td><a href="./code/DDS.xlsx">DDS</a></td></tr>
-<tr><td>Status:         <td bgcolor = #D0FFD0>Complete <!--<td bgcolor = #FFFFF0>Not Started--> <!--<td bgcolor = #FFD0D0>In Progress -->
+<tr><td>File:</td>	<td><a href="./code/DDS.xlsx">DDS Spreadsheet</a></td></tr>
+<tr><td>Status:         <td bgcolor = #FFD0D0>In Progress <!--<td bgcolor = #FFFFF0>Not Started--> <!--<td bgcolor = #D0FFD0>Complete -->
 <tr><td>Handout:        <td>TBD
 <tr><td>Lesson Slides<td><a href="./slides/ECE_383_Lec23.pptx">ECE_383_Lec23.pptx</a>
 </table>
 
 
 <h3>Fixed Point Numbers</h3>
-Let's review decimal points and binary. If you are told that 10010 is a binary number,
+Let's review binary points and binary. If you are told that 10010 is a binary number,
 you can easily determine which decimal value it represents by using this equation: 
 <CENTER>value = sum(b<SUB>i</SUB>*2<SUP>i</SUP>)</CENTER>
 where i is the index of the bit you are currently looking at (starting at i=0 for the lsb).
@@ -49,7 +49,7 @@ Using this formula, 10010 can easily be converted to decimal:
 </pre>
 <br>
 We'll now use this same method to convert 1.11 to binary. Important to note is that to represent
-values less than 1 (to the right of the decimal point), negative indicies need to be used:
+values less than 1 (to the right of the decimal point), negative indices need to be used:
 <pre>
 1*2<SUP>0</SUP> + 1*2<SUP>-1</SUP> + 1*2<SUP>-2</SUP> = 1 + 0.5 + 0.25 = 1.75
 </pre>
@@ -88,7 +88,7 @@ W7 W6 W5 W4 W3 W2 W1 W0 . F7 F6 F5 F4 F3 F2 F1
 The 8 W-bits represent the whole portion of the number and the 8 F-bits 
 represent the fractional portion.  This 16-bit number can
 be treated as a whole number with some minor book-keeping to keep track
-of the decimal point.
+of the binary point.
 <br>
 As an exercise, convert 23.5 and 45.25 to binary using this 16-bit format.
 <br>
@@ -101,12 +101,12 @@ Now, consider the problem of adding the fixed point angles 23.5 and 45.25:
         01000100 11000000  (68.75)</PRE></FONT>
 
 You can see that the addition is completed without concern for the
-decimal point - it is almost like the decimal point doesn't exist. 
+binary point - it is almost like the binary point doesn't exist. 
 <br>
 It is only when we do multiplication or division that we need to do the "bookkeeping" mentioned above;
-you need to keep track of the decimal point and put it where it belongs.
+you need to keep track of the binary point and put it where it belongs.
 In the abbreviated example below, we will assume that 
-we have a 4-bit representation where the decimal point resides in the
+we have a 4-bit representation where the binary point resides in the
 middle of the number (after the 2-bit). The result will be 8 bits (4 bits + 4 bits).
 The multiplication of 3.75 and 1.25 is shown below.
 
@@ -126,7 +126,7 @@ A more interesting case arises when you have to use a multiplier that
 is not the right size. Let's consider the multiplication
 of two 16-bit fixed point numbers representing angles, WA.FA and WB.FB.  
 From our discussion above, the product requires 32 bits to represent.  
-According to the rules of multiplication, the decimal point
+According to the rules of multiplication, the binary point
 will have to be placed after the 16-bit.  Unfortunately, you only have
 an 8-bit multiplier on hand that can take in two 8-bit numbers and generate a 16-bit
 result. The figure below shows how the operands are split naturally into
