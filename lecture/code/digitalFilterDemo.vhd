@@ -7,7 +7,7 @@ use work.digitalFilterParts.all;
 
 entity digitalFilterDemo is
     Port ( clk : in  STD_LOGIC;
-           reset : in  STD_LOGIC;
+           reset_n : in  STD_LOGIC;
 			  SDATA_IN : in STD_LOGIC;
 			  BIT_CLK : in STD_LOGIC;
 			  SYNC : out STD_LOGIC;
@@ -24,20 +24,21 @@ architecture struct of digitalFilterDemo is
 
 begin
 
-	ac97: ac97_wrapper
-	port map (
-		reset => reset,
-		clk => clk,
-		ac97_sdata_out => SDATA_OUT,
-		ac97_sdata_in  => SDATA_IN,
-		ac97_sync  => SYNC,
-		ac97_bitclk   => BIT_CLK,
-		ac97_n_reset  => AC97_n_RESET,
-		ac97_ready_sig => ready,
-		L_out => LdacValue ,				-- This port is input which sends data that eventualls becomes the codec OUTPUT 
-		R_out => RdacValue,
-		L_in => LadcValue,				-- This port is output which gets data that was from the codec audio INPUT 
-		R_in => RadcValue);
+Audio_Codec : Audio_Codec_Wrapper
+    Port map ( clk => clk,
+        reset_n => reset_n, 
+        ac_mclk => ac_mclk,
+        ac_adc_sdata => ac_adc_sdata,
+        ac_dac_sdata => ac_dac_sdata,
+        ac_bclk => ac_bclk,
+        ac_lrclk => ac_lrclk,
+        ready => ready,
+        L_bus_in => LdacValue, -- left channel input to DAC
+        R_bus_in => RdacValue, -- right channel input to DAC
+        L_bus_out => LadcValue, -- left channel output from ADC
+        R_bus_out => RadcValue, -- right channel output from ADC
+        scl => scl,
+        sda => sda);
 	
 
 	left_filter_lpf1000: entity work.IIR_Biquad(arch)
@@ -50,7 +51,7 @@ begin
 							Coef_a2 => B"00_11_0101_0010_1111_0011_0010_0001_0001")		-- +0.831005589
 			
 		port map (clk => clk, 
-			n_reset => reset, 
+			n_reset => reset_n, 
 			sample_trig => ready, 
 			X_in => LadcValue, 
 			filter_done => OPEN, 
@@ -64,7 +65,7 @@ begin
 							Coef_a2 => B"00_11_0101_0010_1111_0011_0010_0001_0001")		-- +0.831005589	
 		port map (
 			clk => clk, 
-			n_reset => reset, 
+			n_reset => reset_n, 
 			sample_trig => ready, 
 			X_in => RadcValue,
 			filter_done => OPEN,
@@ -75,7 +76,7 @@ begin
 	process (clk)
 	begin
 		if (rising_edge(clk)) then
-			if reset = '0' then
+			if reset_n = '0' then
 				LdacValue <= (others => '0');
 				RdacValue <= (others => '0');
 			elsif(ready = '1') then
