@@ -7,13 +7,15 @@ use work.digitalFilterParts.all;
 
 entity digitalFilterDemo is
     Port ( clk : in  STD_LOGIC;
-           reset_n : in  STD_LOGIC;
-			  SDATA_IN : in STD_LOGIC;
-			  BIT_CLK : in STD_LOGIC;
-			  SYNC : out STD_LOGIC;
-			  SDATA_OUT : out STD_LOGIC;
-			  AC97_n_RESET : out STD_LOGIC;
-			  filter_switch: in STD_LOGIC_VECTOR(1 downto 0));
+			reset_n : in  STD_LOGIC;
+			ac_mclk : out STD_LOGIC;
+			ac_adc_sdata : in STD_LOGIC;
+			ac_dac_sdata : out STD_LOGIC;
+			ac_bclk : out STD_LOGIC;
+			ac_lrclk : out STD_LOGIC;
+			scl : inout STD_LOGIC;
+			sda : inout STD_LOGIC;
+			filter_switch: in STD_LOGIC_VECTOR(1 downto 0));
 end digitalFilterDemo;
 
 architecture struct of digitalFilterDemo is
