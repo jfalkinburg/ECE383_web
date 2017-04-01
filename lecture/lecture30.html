@@ -36,15 +36,13 @@
 
 
 <H1>Xilinx Artix-7 architecture</H1>
-The Artix-7 consists of Logic Blocks, Block RAM, DSP blocks,
+The Artix-7 FPGA consists of Logic Blocks, Block RAM, DSP blocks,
 and a global routing network.  We will spend most of our time
-discussing the Logic Blocks.  But before we do, a note about
-the Xilinx design paradigm.  Modern reconfigurable logic exists
-because logic designs can easily be expressed in terms of medium
-scale logic building blocks, such as registers, shift registers,
+discussing the Logic Blocks.  But before we do, realize that modern
+reconfigurable logic exists because logic designs can easily be expressed in terms of medium
+scale logic building blocks such as registers, shift registers,
 multiplexers, counters, adders, subtractors, and comparators.  Consider
-the following output from during the synthesis of Lab 4 
-(via Xilinx ISE and Spartan-6 FPGA).
+the following output from the Xilinx ISE during the synthesis of Lab 4 on the Spartan-6 FPGA.
 
 <pre>
 =================================================================
@@ -78,46 +76,43 @@ Macro Statistics
 =================================================================
 </pre>
 
-The Xilinx software decomposed my design into the basic building
-blocks mentioned above.  This is one reason that I insisted on certain coding
-practices - they increase the likelihood that your designs will
-be efficiently mapped into these basic building blocks.  Now, consider
-the question: "What should be included in the FPGA fabric to create these basic building
-blocks?" Clearly, logic elements that can efficiently
-realize these basic building blocks should be included.  And that is precisely what 
-Xilinx has done with its software.  How they do it is explained below.
+ISE decomposed my VHDL design into basic building
+blocks.  This is one reason we insisted on certain coding
+practices throughout the semester - they increase the likelihood that our design will
+be efficiently mapped into these basic building blocks.  However, consider how the actual FPGA 
+can be configured to realize these basic building blocks. This complicated process is what the Xilinx software does. 
+How it does it is explained below.
 
 <h2>Logic Blocks</h2>
-Note: Everything in this section and the following sections is derived from the
-<a href=https://www.xilinx.com/support/documentation/user_guides/ug474_7Series_CLB.pdf>Xilinx 7-Series FPGAs Configurable Logic Block (CLB) User Guide</a>.
-<br>
+<b>Note: Everything in this section and the following section is derived from the
+<a href=https://www.xilinx.com/support/documentation/user_guides/ug474_7Series_CLB.pdf>Xilinx 7-Series Configurable Logic Block (CLB) User Guide</a>.</b>
+<br><br>
 A configurable logic block (CLB) is a basic block used to implement the logic behind the VHDL designs we have been working on all
 semester. In FPGAs, hundreds or thousands of CLBs are laid out in an array (commonly a switch matrix) known as the
 global routing network. All of the CLBs on the FPGA are connected to each other. On the Artix-7 (and other Xilinx 7-series boards), 
-each CLB contains two Logic Slices (which are covered in the following section). The logical layout of a CLB can be seen in the Figure below.
+each CLB contains two Logic Slices (discussed in the following section). The logical layout of a CLB can be seen in the Figure below.
 <img src="./img/lecture30-1.gif"><br>
 
 <h2>Logic Slices</h2>
-The Artix-7 on our board (the Artix-7 7A200T) has a total of 33,650 logic slices (16,825 CLBs).
+The Artix-7 on our board (Artix-7 7A200T) has a total of 33,650 logic slices (16,825 CLBs).
 Each logic slice contains four 6-input LUTs and eight flip-flops. This corresponds to 
 134,600 total 6-input LUTs.<br>
 There are three possible types of logic slices: SLICEM, SLICEL, and SLICEX. However, in the Artix-7,
 SLICEX slices are unused; of the 33,650 logic slices, 22,100 are SLICEL and 11,550 are SLICEM.
 In the subsequent sections, we will examine the slice with the most features: SLICEM.
-A diagram of a SLICEM block is shown below.
+A diagram of a SLICEM slice is shown below.
 
 <img src="./img/lecture30-2.gif"><br><br>
 
-In the diagram of the SLICEM block, three major subystems can be seen: 1. the four 6-input LUTs 2. the eight flip-flops and 3. the fast carry logic.
+In the diagram above, three major SLICEM subystems can be seen: 1. the four 6-input LUTs, 2. the eight flip-flops, and 3. the fast carry logic.
 These subsystems will be discussed in the subsequent sections.
-The inputs to and outputs from this slice are denoted with I/O flags (i.e. A6:A1, AQ).
 
 <h3>1. Look-up tables</h3>
-If you need a refresher on how a hardware LUT works, see <a href="https://en.wikipedia.org/wiki/Lookup_table#Hardware_LUTs">this link</a>.
+If you need a refresher on how a hardware LUT works, see <a href="https://en.wikipedia.org/wiki/Lookup_table#Hardware_LUTs">this link</a>.<br>
 In a SLICEM, there are four 64x1 RAMs which are used to 
 realize 5 or 6-variable functions; the truth table for the function is 
 stored in the RAM and the inputs are used as the input addresses. As an example,
-let's try to realize a full adder using a RAM.   In class, we
+let's try to realize a full adder using RAM.   In class, we
 will derive the truth table for sum and carry and show how they
 can be inserted into a LUT.  It is important for the further development
 of the lecture to point out that sum = a xor b xor c and that you can
@@ -154,14 +149,14 @@ each logic slice.
 <h2>Interconnect</h2>
 A logical figure of how the CLBs on the Artix-7 are interconnected to each other can be seen in the Figure below (taken from Spartan-6 documentation).
 <img src="./img/lecture30-3.gif"><br>
-Taken from the <a href="http://www.xilinx.com/support/documentation/user_guides/ug384.pdf">"Spartan-6 FPGA Configurable Logic Block User's Guide"</a>, 
-page 37, Figure 29.<br><br>
+Source: <a href="http://www.xilinx.com/support/documentation/user_guides/ug384.pdf">"Spartan-6 FPGA Configurable Logic Block User's Guide"</a>, 
+page 37, Figure 29<br><br>
 
 <h2>DSP Slice</h2>
-Apart from the slices which make up the CLBs discussed above, each FPGA also contains DSP slices. The Artix-7 we are using, for example, contains 700 DSP48E1 slices.
-Each DSP slice contains a pre-adder, a 25 x 18 multiplier, an adder, and an accumulator. A picture of a DSP slice can be seen in the Figure below.
+Apart from the slices which make up the CLBs discussed above, the Artix-7 also contains DSP slices. The Artix-7 we are using contains 700 DSP48E1 slices.
+Each DSP48E1 slice contains a pre-adder, a 25 x 18 multiplier, an adder, and an accumulator. A picture of a DSP slice can be seen in the Figure below.
 <img src="./img/lecture30-4.gif"><br>
-Taken from <a href="https://www.xilinx.com/support/documentation/user_guides/ug479_7Series_DSP48E1.pdf">Xilinx 7 Series DSP48E1 Slice User Guide</a>.
-
+Source: <a href="https://www.xilinx.com/support/documentation/user_guides/ug479_7Series_DSP48E1.pdf">Xilinx 7 Series DSP48E1 Slice User Guide</a>
+<br><br><br>
 </body>
 </html>
