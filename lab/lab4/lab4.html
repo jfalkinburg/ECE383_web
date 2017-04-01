@@ -38,13 +38,12 @@ of accuracy in both its period and frequency.
 You are to use Direct Digital Synthesis to reproduce your audio waveform.
 You may choose any waveform so long as its not
 <a href="http://en.wikipedia.org/wiki/Piecewise_linear_function">Piecewise Linear</a>.
-A few interesting examples would be sinusoids, sinc, exponentially damped
-sinusoids, waveform from a musical instrument (guitar, piano, clarinet).  Its 
+A few interesting examples would be sinusoids, the sinc function, exponentially damped
+sinusoids, or a waveform from a musical instrument (guitar, piano, or clarinet).  It is  
 your responsibility to get the samples for this waveform.  I would suggest
-either deriving the waveform using a program like Python, a spreadsheet, or
-digitizing the samples using your Lab3.  Once you have your data, it should
-be hardwired into the BRAM using the "init" statements.  Please consult
-the handout associated with 
+either deriving the waveform using a program like Python, using a spreadsheet, or
+digitizing the samples using Lab 3.  Once you have your data, hardwired it 
+into BRAM using "init" statements.  Consult the handout associated with 
 <a href="../../lecture/lecture24.html">lesson 24</a> for more details 
 on how to accomplish this.
 
@@ -62,20 +61,20 @@ fit, your system must meet the following requirements:
 You will have to generate the block diagram for this assignment and 
 present it at the beginning of the second lab session for review by 
 your professor.  Your design must be segregated into a datapath and 
-control unit - your design must show the blocks in the datapath and 
-the states in the FSM, the control word and the status word joining 
-the two.  
+control unit. Your design must show the blocks in the datapath,
+the states in the FSM, the control word, and the status word joining 
+the datapath and control unit.
 
 <h2>Required Functionality</h2>
 Use the slide switches and push buttons to manipulate the phase angle and the 
-amplitude of the waveform.  The 
+amplitude of the waveform as follows:
 <ul>
 <li>Pressing the left button should decrease the frequency of the waveform
 	by the amount set on the slide switches.
 <li>Pressing the right button should increase the frequency of the waveform 
 	by the amount set on the slide switches.
 </ul>
-The waveform should be played back through the Audio Codec interface - remember to
+The waveform should be played back through the Audio Codec interface. Remember to
 wait for the ready signal.
 
 <h2>B-level Functionality</h2>
@@ -88,23 +87,23 @@ wait for the ready signal.
 </ul>
 
 <h2>A-level Functionality</h2>
-Use the microBlaze to manipulate the amplitude and frequency.  The user
-will enter in a integer frequency and you are to produce a waveform 
-at that frequency. 
+Use the microBlaze to capture a keyboard input to manipulate the amplitude and frequency.  The user
+will enter in an integer frequency and you are to produce a waveform 
+with that frequency. 
 
 <h2>Bonus Functionality</h2>
 Connect your A-level Function Generator hardware to your Lab 3 functionality 
-to enable display of your generated signals on your Lab 3 O'scope display. 
+to enable the display of your generated signals on your Lab 3 O'scope display. 
 
 <h2>Milestone 1</h2>
 At the end of the first lab session, you should have a completed
 hardware diagram drawn in paint or another image editing software 
-and be able to be readiable when printed onto an 8.5x11 sheet of
+that is readable and can be printed onto an 8.5x11 sheet of
 paper.  Provide me with a hardcopy of your schematic at the end of
-class.  This diagram must contain the following.
+class.  This diagram must contain the following:
 <ul>
 <li>A border defining the top-level entity.  Borders for each of the 
-	components instantiated with-in the top-level entity.
+	components instantiated within the top-level entity.
 <li>All components must be named in the upper left corner.
 <li>All signals entering and exiting components must have their 
 	port name defined just inside the border.
@@ -113,14 +112,14 @@ class.  This diagram must contain the following.
 </ul>
 
 <h2>Milestone 2</h2>
-At the end of the second lab period you should have a working testbench.
+At the end of the second lab period, you should have a working testbench.
 When simulating your design, have the testbench supply a mock ready signal
-in place of the ready signal generated Audio_Codec_Wrapper (when put in a testbench,
+in place of the ready signal generated the Audio_Codec_Wrapper (when put in a testbench,
 the Audio_Codec_Wrapper is not able to generate a ready signal without a lot of 
-extra work.
+extra work).
 <br><br>
 
-When complete, I expect your timing diagram to look like the following 
+When complete, I expect your timing diagram to look like the image below 
 and contain at least:
 <ul>	<li>clk
 	<li>reset
@@ -136,8 +135,8 @@ and contain at least:
 </ul>
 
 Your simulation needs to simulate a button press (and release) to 
-change the phase increment and follow-up showing that the BRAM
-address is being incremented by this new value.
+change the phase increment. After that is done, you need to show that the BRAM
+address is being incremented by your new phase increment value.
 
 <br><img src="./lab4-1.gif"><br><br>
 
