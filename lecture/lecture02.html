@@ -37,25 +37,27 @@
 
 
 <h1>VHDL</h1>
-As I am wont to say, there is more than one way to skin a cat.  This
+When doing digital design, there is more than one way to skin a cat.  This
 expression should make you happy regardless of your feelings towards
 cats because it means that your personality can be expressed through
-the code that you write.  In lecture 1 we examined a structural
+the code that you write.  In Lecture 1, we examined a structural
 method of describing a circuit; we transformed the circuit diagram
-into a textual description.  Today we will examine another method of
-VHDL coding; behavioral.
+into a textual description.  Today, we will examine another method of
+VHDL coding: behavioral.
 
 <h2>Structural</h2>
 <ul>
-	<li>In structural view, a circuit is constructed by smaller parts.
-	<li>Structural description specifies the types of parts and connections.
-	<li>Essentially a textual description of a schematic
-	<li>Done by using "component" in VHDL
+	<li>Using the paradigm of the Structural view, a circuit is constructed by using smaller parts.
+	<li>A Structural description, therefore, specifies the types of parts and connections.
+	<li>Essentially, a structural description is a textual description of a schematic.
+	<li>Structural descriptions are done by using the "component" keyword in VHDL. Components are:
 	<ol>
-			<li>First declared (make known)
+			<li>First declared (made known)
 			<li>Then instantiated (used)
 	</ol>
 </ul>
+The majority circuit, using components, can be seen coded in VHDL below.
+<br>
 
 <pre>
 ------------------------------------------
@@ -115,7 +117,7 @@ end structure;
 <h2>Behavioral</h2>
 A behavioral description of a component describes what the circuit
 does rather than how it is done.  For example, we will consider the
-majority circuit from lecture 1.
+majority circuit from lecture 1 in the code below.
 
 <pre>
 ------------------------------------------
@@ -147,13 +149,13 @@ begin
 end behavior;
 </pre>
 
-It is important to note that the single statement in the architecture
-is a concurrent signal assignment statements.  This means that its
-just another hardware statement that could be mixed together with
-some ANDs and some component instantiation statements.  Granted its a 
-complex statement.<br><br>
+It is important to note that the single (very long) statement in the architecture
+is a concurrent signal assignment (CSA) statement.  This means that this statement is
+simply another hardware statement and can be mixed together with
+some ANDs and some component instantiation statements.
+<br><br>
 
-This coding style, while much more intuitive than the combinational
+Coding using the behavioral architecture, while much more intuitive than the combinational
 logic description that was presented in lecture 1, still has some
 room for improvement.  We could take advantage of the concatenation
 operator to make the code more readable.  The idea is to replace
@@ -161,7 +163,7 @@ the (a='0' and b='0' and c='0') statement with something like
 (temp = "000").  This can be done by creating a local variable
 (a signal) which is just the concatenation of the three input
 variables.  This temporary variable will then be used in the
-when statement.  The new streamlined architecture for the majority
+"when" statement.  The new streamlined architecture for the majority
 circuit is shown below.<br><br>
 
 <pre>
@@ -182,34 +184,35 @@ begin
 		
 end behavior;
 </pre>
+<br>
 
 
 <h2>A note on literals</h2>
 Notice that individual bits are surrounded with single quotes
 and that std_logic_vectors are surrounded with double quotes.
-<u>Any multi-bit literal must be surrounded by double quotes".</u>
-You can specify hexadecimal literals by putting an X in front 
-of the constant.  So for example, X"4E" is a valid VHDL literal.
+<u>Any multi-bit literal must be surrounded by double quotes.</u> Another important note is that
+you can specify hexadecimal literals by putting an x in front 
+of the constant.  So for example, x"4E" is a valid VHDL literal.
 
 
 <h2>Component Instantiation</h2>
-In order for VHDL to be a useful in the design process it must allow
+In order for VHDL to be useful in the design process, it must allow
 hierarchical design - the ability to include a design unit as a component
 in a higher level design component. This is called creating an
 instance of the entity.  Hierarchical design allows us to abstract away
-some of the details of a design and focus on the high level behaviors.
-This is the same concept of writing subroutines in a high level language.
+some of the details of a design and focus on the high level behavior.
+This is the same concept as writing subroutines in a high level language.
 <br><br>
 
-The reason to bring this concept up now, is that we use VHDL modules to
-test our VHDL designs.  In the following discussion we are going to
+The reason to bring this concept up now is because we use VHDL modules to
+test our VHDL designs.  In the following discussion, we are going to
 build a module to test our majority circuit developed above.
 The VHDL module that will do the testing of the majority circuit
-is called a testbench.  Inside of this testbench we will create an
+is called a testbench.  Inside this testbench, we will create an
 instance of the majority circuit and apply signals to the majority
 circuit and check to see if the circuit responds with the correct 
-value.  Its important to state up front that <u>testbenches are
-only created for simulations, they are not intended to be synthesized
+value.  It is important to state up front that <u>testbenches are
+only created for simulations; they are not intended to be synthesized
 onto the fabric of an FPGA.</u>
 <br><Br>
 
@@ -239,11 +242,11 @@ the component (line 12-16 below).
 17. end
 </pre>
 
-Lets discuss these further. The first, declaring the entity description
-of the entity to be instantiated(lines 4-9), is really quite easy.  Just 
+Let's discuss these two steps further. The first, declaring the entity description
+of the entity to be instantiated (lines 4-9), is really quite easy.  Just 
 replace the term "entity" in the description of the majority circuit with the
 term "component".  Note that this is done inside the architecture of the
-testbench.  The second will require some expansion aided by the 
+testbench.  The second will require some more explanation, aided by the 
 following picture.
 
 <br><img src="./img/lecture02-1.gif"><br>
@@ -263,7 +266,7 @@ inside the majority circuit is connected to s1 outside the circuit.
 <br><br>
 
 One final note about line 12, the one that declares the instance of
-the majority circuit.  Each instance of an entity should be given
+the majority circuit: Each instance of an entity should be given
 a distinct name.  This is because we will frequently need to create
 several instances of the same component.  For example, when creating
 a 4-bit adder, we will require 4 instances of a full adder.  This is
@@ -299,12 +302,13 @@ These two arrays are used in the body of the testbench.
 
 I want to take this opportunity to reiterate that test benches are not 
 synthesized onto the Xilinx chip, so consequently, the coding style used
-should not be used on any circuit that you intend to synthesize.  Now for
-the business end of the testbench shown in the following code snippet from
-lab02.vhdl  The main purpose of the loop below is to apply each of the 
+should not be used on any circuit that you intend to synthesize. 
+
+<br>Now, for the business end of the testbench shown in the following code snippet from
+lab02.vhdl, The main purpose of the loop below is to apply each of the 
 8 TEST_INPUT vectors to the majority circuit and check that the output is 
 correct.  Line 2 is where the array is read.  Elsewhere in the body of the
-architecture testVector is broken into individual std_logic bits and 
+architecture, testVector is broken into individual std_logic bits and 
 applied to the instantiated majority circuit.  The delay in line 3 allows 
 the circuit outputs to settle.  Line 4 is a curious artifact only available
 in a simulation; if the output of the majority circuit, f, does not equal
@@ -322,7 +326,7 @@ area of ISim.  Line 6 halts the simulation.
 7.	    end loop;
 </pre>
 
-In class we will experiment with the simulator.  Some things that I would like
+In class, we will experiment with the simulator.  Some things I would like
 to go over are:
 
 <ul>
