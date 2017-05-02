@@ -51,13 +51,13 @@ and LEDs on the board.
 <br><br>
 
 We would like the input to our majority to come from the DIP switches and the output
-to go to an LED.  Making some arbitrary choices, let make the associations shown
+to go to an LED.  Making some arbitrary choices, let's make the associations shown
 in the following picture.
 
 <br><img src="./img/lecture03.png"><br><br>
 
 This is accomplished by inserting the following code into a constraints file called 
-majority.xdc (formerly called .ucf files with ISE) and adding it to your project (with an implementation association).
+majority.xdc (formerly called .ucf files with the old ISE software) and adding it to your project (with an implementation association).
 
 <pre>
 # This is slide switch SW0
@@ -74,9 +74,10 @@ set_property -dict { PACKAGE_PIN T14   IOSTANDARD LVCMOS25 } [get_ports { f }]; 
 
 <h2>Standard Combinational Elements</h2>
 
-A note about a common error that may come up in your designs.  You cannot
-use a variable listed on the entity as an out port, on the right hand
-side of a signal assignment statement.
+There is a common error that may come up in your design: you cannot
+use a variable listed on the entity as an out port on the right hand
+side of a signal assignment statement. As an example, the code below would not work
+because of the statement not_q <= not q;.
 
 <pre>
 entity circuit is
@@ -91,8 +92,9 @@ begin
 end error;
 </pre>
 
-The solution is to assign "some cool logical stuff using clk and data" to 
-a temporary variable and then have 
+The solution is to make a signal called temp and then assign
+"some cool logical stuff using clk and data" to 
+that temporary variable. Then, the code would look like: 
 
 <pre>
     temp <= some cool logical stuff using clk and data;
@@ -101,9 +103,9 @@ a temporary variable and then have
 </pre>
 
 
-<h3>Mux</h3>
-Using the conditional signal assignment statement greatly simplifies the
-design of muxes.  In the example below the signal x, y0, y1, y2, and y3
+<h3>Mux using CSA</h3>
+Using a conditional signal assignment statement greatly simplifies the
+design of muxes.  In the example below, the signals x, y0, y1, y2, and y3
 could be std_logic or std_logic_vector.  The select signal S must be
 defined as std_logic(1 downto 0);
 
@@ -115,25 +117,27 @@ defined as std_logic(1 downto 0);
 </pre>
 
 <h3>STD_LOGIC_1164 and NUMERIC_STD</h3>
-Up to this point we have used STD_LOGIC_1164 library and its associated 9 values
-(see lecture 1), primary sticking with '0' and '1' along with the
-logic operations (AND, OR, NOT).  All this functionality is made 
-available when you put the following two lines at the top of your file.  
+Up to this point, we have used the STD_LOGIC_1164 library and its associated 9 values
+(see the "Important Notes" section of lecture 1), primary sticking with '0' and '1' along with the
+logic operations AND, OR, and NOT.  All this functionality is made 
+available when you put the following two lines at the top of your file:  
 
 <pre>
 library IEEE;		
 use IEEE.STD_LOGIC_1164.all; 
 </pre>
 
-Its worth a few minutes to look at the contents of the STD_LOGIC_1164 library at
+It is worth a few minutes to look at the contents of the STD_LOGIC_1164 library at
 <a href="http://www.csee.umbc.edu/portal/help/VHDL/packages/std_logic_1164.vhd">this</a>
 link.  For all its power, the STD_LOGIC_1164 library does not support numerical
-values and numerical operations like addition, and comparisons.  This is where the
-NUMERIC_STD library comes in.  The NUMERIC_STD library supports two main datatypes
-unsigned and signed as well as a host of operations.
-Its worth a few minutes to look at the contents of the NUMERIC_STD library file at
+values and numerical operations like addition and comparisons. 
+That is, if you wanted to add two STD_LOGIC_VECTOR's together, you wouldn't be able to do it.
+This is where the NUMERIC_STD library comes in.  The NUMERIC_STD library supports two main datatypes:
+unsigned and signed, as well as a host of operations.
+It's worth a few minutes to look at the contents of the NUMERIC_STD library file at
 <a href="http://www.csee.umbc.edu/portal/help/VHDL/packages/numeric_std.vhd">this</a>
-link.  
+link. Example code which uses the NUMERIC_STD library is shown below. Notice how the entity inputs
+and outputs are declared using signed and unsigned datatypes rather than STD_LOGIC_VECTOR.
 <br><br>
 
 <pre>
@@ -167,15 +171,17 @@ begin
 end structure;
 </pre>
 
-
+<br>
+In the simulation below, you can see how the values of the signals 
+are correctly updated based on the operations performed.
 
 
 <br><img src="./img/lecture03-3.gif"><br><br>
 
-From here on out, your program may have two main datatypes, 
-STD_LOGIC_VECTOR and UNSIGNED.  There will be times when you need to convert
-between the two representations.  The following code snippet shows how this is
-accomplished.
+From here on out, your program may only have two main datatypes, 
+STD_LOGIC_VECTOR and UNSIGNED (this is all you will need). However, there will be times when you need to convert
+between these two representations.  The following code snippet shows how this is
+accomplished. The process is similar to typecasting in C or another software-driven language.
 
 <pre>
 	a: std_logic_vector(7 downto 0);
@@ -186,19 +192,21 @@ accomplished.
 	c <= std_logic_vector(b);
 </pre>
 
+Notice that if we tried to set up the assignment b <= a or c <= b without typecasting, we would get an error.
+<br>
 
 
 <h3>Combinations</h3>
 One of the most common logic structures you will encounter is a conditional
-statement in the form of if/then/else.  While this statement can be directly
-implemented using the CSA discussed in lecture 2, its important that you have
+statement in the form of if-then-else.  While this statement can be directly
+implemented using the CSA discussed in lecture 2, it's important that you have
 some appreciation of how this construct is realized so that you can better
 arrange your circuit to reduce the logic required.
-<br>
-All conditional statements consist of three parts, the condition
+<br><br>
+All conditional statements consist of three parts: the condition
 to be checked (the if clause), the statement to be evaluated when the 
 condition is true (the then clause), and the statement to be evaluated when the
-condition is false (the else clause).
+condition is false (the else clause).<br>
 Typically, the condition being evaluated seeks the relative magnitude of
 two unsigned binary numbers, requiring a comparator.  The then and else 
 clauses will typically require some logic or arithmetic operation.
@@ -215,7 +223,7 @@ The following hardware schematic realizes this
 
 <br><img src="./img/lecture03-1.gif"><br><br>
 
-However, this circuit is not minimal, one of the adders can be removed.
+However, this circuit is not minimal; one of the adders can be removed.
 This can be done by realizing that the y input to the adders is constant.
 Therefore, we could have muxed through 3 or 7 into an adder with y on the
 other port.  You will practice this more in the homework.
