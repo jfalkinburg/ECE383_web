@@ -38,54 +38,57 @@
 
 <h2>The D flip flop</h2>
 Since D flip flops will be a major part of this lecture, it's worth
-spending a few minutes reviewing their operation. Complete the following
+spending a few minutes reviewing their operation. To start out, complete the following
 timing diagram for the output of the negative-edge triggered D flip-flop with
 an asynchronous active low reset line.
 
 <br><img src="./img/lecture09-7.gif"><br><br>
 
 
-Setup time, denoted t<sub>su</sub>, is the amount of time before the rising edge
+Setup time, denoted t<sub>setup</sub>, is the amount of time before the rising edge
 of the clock in which the data inputs must be stable.
-Hold time, denoted t<sub>h</sub>, is the amount of time after the rising
+Hold time, denoted t<sub>hold</sub>, is the amount of time after the rising
 edge of the clock during which the data input must be stable. Finally, propagation
 delay, denoted t<sub>p</sub>, is the amount of time after the rising edge of the clock
 required for the new Q value to become valid. It is also known as t<sub>CQ</sub>, for "time clock to Q", or t<sub>FF</sub>. These
-time values are illustrated in the picture below.
+time values are illustrated in the image below. Note that LH is low to high and HL
+is high to low.
 
 <br><img src="./img/lecture09-0.gif"><br><br>
 
 <h2>Finite State Machines</h2>
 
 A Finite State Machine (FSM) is the most general form of a sequential circuit, or
-a circuit whose output is a function of its input and its internal state.  This is illustrated
-in the figure below.
+a circuit whose output is a function of its input and its internal state.  
+The logic behind a FSM is illustrated in the figure below.
 
 
 <br><img src="./img/lecture09-1.gif"><br><br>
 
-The signals X, Y,Q,Z are all vectors consisting of zero or more bits.
+The signals X, Y, Q, and Z are all vectors consisting of zero or more bits.
 The X signal is the input to the FSM from the system being controlled -
-also referred to as the <b>status</b> of the system.
+also referred to as the <b>status bits</b> of the system.
 The Z signal is the output from the FSM into the system being controlled -
-also referred to as the <b>control</b> to the system.
-The combinational logic circuit generating Z is called the output equations
+also referred to as the <b>control bits</b> to the system.
+The combinational logic circuit generating Z are called the output equations
 (OE). 
-<br>
-The state of the FSM is carried on the Q lines. Each bit of Q is
-the output of a D flip flop. Thus, if Q is six bits wide, then the FSM has
-six D flip flops. The Y signals are called the memory inputs; they are the
+<br><br>
+The <b>state</b> of the FSM is carried on the Q lines. Each bit of Q is
+the output of a D flip flop, as shown in the figure above.
+Thus, if Q is six bits wide, then the FSM has
+six D flip flops. The Y signals are called the <b>memory inputs</b>; they are the
 data inputs to the D flip flops. The combinational logic circuit generating
 the Y signals is called the memory input equations (MIEs), or "combo logic". In order to
 improve the readability of circuit diagrams, the clock signal
-will normally not be shown. 
+will normally not be shown.
 <br><br>
 
-Lets take a moment to reinterpret the statement <i>"The output of a finite 
-state machine is a function of its input and its internal state"</i>. In this diagram, you can see that
+Let's take a moment to reinterpret the statement <i>"The output of a finite 
+state machine is a function of its input and its internal state"</i>.
+In the figure above, you can see that
 Z = F(Q), and Q+ = G(Q,X).
-While the output does not directly depend on the input, it does depend on
-the state, which in turn does depend on the input.
+While the output Z does not directly depend on the input X, it does depend on
+the state Q, which in turn depends on the input X.
 <br><br>
 With respect to this figure, three questions must be answered:
 <ol>	<li>What are the MIEs?
@@ -99,7 +102,7 @@ statement into a state diagram. Before doing that, though, let's go over timing 
 <h2>FSM Timing</h2>
 The events occurring in the FSM are referenced to the clock input of
 the D flip flops inside the FSM.  The timing diagram below lists events
-(numberd in circles) with respect to the clock signal being applied to
+(numbered in circles) with respect to the clock signal being applied to
 the figure above.  The following list explains what happens at each of
 these points in time, using the circuit previously discussed.
 
@@ -404,7 +407,9 @@ Z_Air = Q_Goose
 </pre>
 
 
-<h3>VHDL</h3>
+<h3>VHDL Simulation</h3>
+
+The results of the VHDL simulation performed in ISim can be seen below.
 
 <br><img src="./img/lecture09-8.jpg"><br><br>
 
