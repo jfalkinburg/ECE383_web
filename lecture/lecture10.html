@@ -37,13 +37,14 @@
 
 <h2>Generics</h2>
 
-There are times when you will want to parameterize your designs.  A good example is
-the bus width of a component like a counter.  Instead of having multiple VHDL sources
-files for a 5-bit-counter, 16-bit-counter, it would be far easier to have a single 
-definition for an N-bit-counter and specify N somehow when you went to instantiate 
-the counter.  Fortunatly, generics give us this capability.  The files linked above
-are a N-bit counter and its testbench.  This example should give you a pretty good
-idea of how to instantiate them.<br><br>
+There are times when you will want to parameterize your designs (i.e. make them
+like functions).  A good example is when you have a variable bus width 
+of a component like a counter.  Instead of having multiple VHDL sources
+files for a 5-bit-counter, 16-bit-counter, etc., it would be far easier to have a single 
+definition for an N-bit-counter and somehow specify N when you went to instantiate 
+the counter.  Fortunately, generics in VHDL give us this capability.  The files linked above
+are an N-bit counter and its testbench.  This example should give you a pretty good
+idea of how to use generics.<br><br>
 
 <b>Entity Declaration</b>
 <pre>
@@ -81,6 +82,7 @@ Note:
 
 In this case, I made a 5-bit counter.  The testbench linked above runs the counter
 through all four control modes and even shows how it rolls over (around 7.5uS).
+A picture of the run of the testbench can be seen below.
 
 <br><img src="./img/lecture10-7.gif"><br>
 
@@ -88,16 +90,17 @@ through all four control modes and even shows how it rolls over (around 7.5uS).
 
 <h2>Datapath and Control</h2>
 
-The datapath and control design methodology breaks the design of digital
+The design methodology of separating the datapath and control units
+breaks the design of digital
 systems into two components: a datapath and a control unit. The datapath
 is responsible for all the data manipulations and the control unit is 
 responsible for sequencing the actions of the datapath. The datapath is 
-constructed from the basic building blocks.
+constructed from basic building blocks.
 <br><br>
 
 A digital system built using the datapath and control design approach is
 still a digital system whose inputs and outputs can be categorized into
-Data input, Data output, Control and Status. The digital system shown 
+Data Input, Data Output, Control and Status. The digital system shown 
 below consists of two components, a datapath and a control unit.
 
 <figure>
@@ -111,12 +114,12 @@ unit instructs the datapath which transformation to perform using a set
 of control signals called the control word. An often overlooked portion of
 the control word are signals provided by the external world such as the
 acknowledge signal in a two-line handshake. The datapath provides status
-information
+information to both the outside world and the control unit.
 
 
 <h2>Design Process</h2>
 Building digital systems using the datapath and control approach is a three-
-step process.
+step process:<br>
 <ol>
 <li> Write an algorithmic description for the solution to the problem.
 <li> Parse the algorithmic description into datapath building blocks and
@@ -146,7 +149,7 @@ of statements.
 
 The term <b>BODY</b> is a place holder for 0 or more statements. In this
 way, statements can be nested. For example, the body of a for loop may
-contain a for loop, the body of which may contain a while loop, etc... In
+contain a for loop, the body of which may contain a while loop, etc. In
 addition to statements, the mini-C language also requires variables to hold
 the state of the program.<br><br>
 
