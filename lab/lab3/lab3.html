@@ -37,7 +37,7 @@
 In this lab, we will integrate the video display controller developed
 in Lab 2 with the MicroBlaze processor built using the fabric of the Artix-7 FPGA.
 In the preceding lectures, we learned about the Vivado and
-SDK tool chains, now its time to put that knowledge to the test by building
+SDK tool chains, now it's time to put that knowledge to the test by building
 a software controlled datapath.  Lab 2 revealed some shortcomings of our 
 oscilloscope that this lab intends on correcting. Specifically, we will add:
 <ul>	<li>A horizontal trigger point
@@ -61,7 +61,7 @@ We will walk through these steps below.
 
 <b>Note:</b>
 In your program, you will provide a user menu (through the terminal), allowing the user
-to adjust the trigger voltage and trigger time. Therefore, you may want to check if the users has hit the
+to adjust the trigger voltage and trigger time. Therefore, you may want to check if the user has hit the
 key on the keyboard without having to actually read the key.  For
 these cases, the following command  will prove useful.  Note that
 "uartRegAddr" is a constant, the address of the uart.<br>
@@ -98,9 +98,9 @@ in <a href="../lab2/lab2.html">Lab 2</a>.
 
 Your first step will be to create a component for your lab2 component in
 your Vivado repository.  This will require you to think about what signals
-are routed to the MicroBlaze and those going outside the Artix 7 chip.
+are routed to the MicroBlaze and what signals are going outside the Artix 7 chip.
 The following table should help.
-
+<br>
 <table class="table table-striped table-bordered table-condensed">
 
 <tr><td><b>Signals To/From MicroBlaze</b>	<td><b>Signals Going Outside Artix 7</b>
@@ -127,8 +127,21 @@ as #define's with a name ending in "Reg".
 <li>The flagQ and flagClear registers need to be at the same address.
 </ul>
 
+
+<h2>Gate Check 1</h2>
+By the conclusion of lesson 21, you need to have all of your Lab 2 functionality implemented with the Microblaze.
+That is, you need to export your Lab 2 design into the SDK and be able to achieve the same functionality as you did in Lab 2.
+
+
+<h2>Gate Check 2</h2>
+By the conclusion of lesson 22, you need to be able to send USART commands using Tera Term (or another terminal emulator)
+to your FPGA to adjust the trigger on the screen. The trigger on the 
+screen should properly react to moving the trigger either up or down.
+
+
+
 <h2>Required Functionality</h2>
-In order to make required functionality, you will need to properly trigger
+In order to achieve required functionality, you will need to properly trigger
 the oscilloscope on channel 1 using a positive edge trigger.  Control of
 this process is to be performed using the MicroBlaze.  The main tasks of
 the MicroBlaze will include:
@@ -214,13 +227,35 @@ block.
 </thead>
 <tbody>
 
+
+<tr>
+<td align="center" colspan="1">Gate Check 1</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">5</td>
+<td align="center" colspan="1"></td>
+<td>End of Lesson 21 </td>
+</tr>
+
+
+<tr>
+<td align="center" colspan="1">Gate Check 2</td>
+<td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
+<td align="center" colspan="1"></td>
+<td align="center" colspan="1">5</td>
+<td align="center" colspan="1"></td>
+<td>End of Lesson 22 </td>
+</tr>
+
+
+
 <tr>
 <td align="center" colspan="1">Required Functionality</td>
 <td align="center" colspan="1"><strong>On-Time</strong> ------------------------------------------------------------------ <strong>Late:</strong> 1Day ---- 2Days ---- 3Days ---- 4+Days</td>
 <td align="center" colspan="1"></td>
-<td align="center" colspan="1">40</td>
+<td align="center" colspan="1">30</td>
 <td align="center" colspan="1"></td>
-<td>COB L22 </td>
+<td>COB L23 </td>
 </tr>
 
 <tr>
@@ -229,7 +264,7 @@ block.
 <td align="center" colspan="1"></td>
 <td align="center" colspan="1">10</td>
 <td align="center" colspan="1"></td>
-<td>COB L22 </td>
+<td>COB L23 </td>
 </tr>
 
 <tr>
@@ -238,7 +273,7 @@ block.
 <td align="center" colspan="1"></td>
 <td align="center" colspan="1">10</td>
 <td align="center" colspan="1"></td>
-<td>COB L22 </td>
+<td>COB L23 </td>
 </tr>
 <tr>
 <td align="center" colspan="1">Use of Git / Bitbucket</td>
