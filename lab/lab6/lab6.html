@@ -38,8 +38,13 @@ Let's break down what the part number for this SDRAM IC means.
 <br><br>The MT stands for
 Micron Technology, and MT41K is the part number. 
 Next, the 256M16 means the configuration of the chip. 
-In this case, the configuration is 256 Meg x 16. Other possibilities
-are 1G4 or 512M8. After the configuration of the chip is the package - 
+In this case, the configuration is 256 Meg x 16, or 32 Meg x 16
+x 8 banks. Other possibilities
+are 1G4 or 512M8. This means that the SRAM can hold 4GB if all of its
+RAM is used, but in this application, Digilent decided to only use 1 of the 
+8 banks, giving a memory capacity of 512MB.
+<br><br>
+ After the configuration of the chip is the package - 
 HA in this case. HA means a 96-ball 9mm x 14mm FBGA package, shown in the figure
 below.<br>
 
@@ -127,6 +132,100 @@ here</a>.
 Now that some context is given, let's go into how the MT41K in particular works.
 The MT41K uses an 8<i>n</i>-prefetch architecture
 with an interface designed to transfer two data words per clock cycle at the I/O pins.
+<br><br>
+
+There are four important parts to the operation of the SDRAM:
+<ul>
+        <li> The address lines
+        <li> The data lines
+        <li> The command lines
+        <li> The clock
+                <ul>
+                <li> The DDR3 SDRAM operates from a differential clock (CK and CK#). The crossing of CK
+going HIGH and CK# going LOW is referred to as the positive edge of CK
+                </ul>
+</ul>
+<br><br>
+
+A functional block diagram of the MT41K SDRAM is shown in the Figure below.<br><br>
+<img src = "./sdram_block_diagram.JPG" align = "middle">
+<br><br>
+
+As can be seen in this block diagram, our MT41K has 8 memory banks. These memory banks are accessed
+using both a row and column, specified in the Address bits. The 3 bits on lines BA[2:0] specify
+the bank to which an ACTIVATE, READ, WRITE, or PRECHARGE command is being applied. In the case
+of our memory, the 15 address bits A[14:0] represent the row which we are trying to access. This
+adds up to the 18 total bits which are sent into the address register. This corresponds to 8
+banks with 2^15, or 32,768 rows each. Each row has 128 columns, and each column contains 128 bytes
+(as depicted by the 32,768 x 128 x 128 in the functional block diagram). This corresponds to 
+512MB per block or 4GB total.
+
+<br><br>
+According to the Micron documentation, "Accesses begin with the registration of an ACTIVATE command, 
+which is then
+followed by a READ or WRITE command. The address bits registered coincident with
+the ACTIVATE command are used to select the bank and row to be accessed. The address
+bits registered coincident with the READ or WRITE commands are used to select
+the bank and the starting column location for the burst access." 
+In the previous paragraph, we talked about accessing a bank and a row. Now that that bank and row has
+been activated, we need to use the address bits to specify which column(s) in the row we want to 
+access. As is shown in the functional block diagram, 10 bits are used to select the row (A[9:0]), giving
+access to 1024 possible columns. However, in the functional block diagram, only 7 bits of the 10-bit
+column address are fed into the column decoder, resulting in 128 columns.
+
+<br><br>
+
+The column address
+provided on inputs A[2:0] selects the starting column address, depending on the burst
+length and burst type selected (see Burst Order table for additional information).
+
+<img src = "./state_diagram.JPG" align = "middle">
+
+<br><br>
+As we can see in the diagram above, when we move from the Idle state of the SDRAM, we need to
+activate the bank before we can perform a read or write.
+
+<br><br>
+
+The most commonly used commands are, of course, READ and WRITE. However, there are also commands
+to change the mode of the SDRAM. Control, command, and address signals are registered at
+every positive edge of CK. The  RAS#, CAS#, and WE# (along with CS#) define the command
+being entered into the SDRAM. The truth table for all the different commands can be seen
+below.<br><br>
+
+<img src = "truth_table.JPG" align = "middle">
+<br>
+The notes for the truth table are as follows:
+<ol>
+<li> Commands are defined by the states of CS#, RAS#, CAS#, WE#, and CKE at the rising
+edge of the clock. The MSB of BA, RA, and CA are device-, density-, and configurationdependent.
+4Gb: x4, x8, x16 DDR3L SDRAM
+Commands – Truth Tables
+PDF: 09005aef84780270
+4Gb_DDR3L.pdf - Rev. I 9/13 EN 113 Micron Technology, Inc. reserves the right to change products or specifications without notice.
+© 2011 Micron Technology, Inc. All rights reserved.
+<li> RESET# is enabled LOW and used only for asynchronous reset. Thus, RESET# must be
+held HIGH during any normal operation.
+<li> The state of ODT does not affect the states described in this table.
+<li> Operations apply to the bank defined by the bank address. For MRS, BA selects one of
+four mode registers.
+<li> “V” means “H” or “L” (a defined logic level), and “X” means “Don’t Care.”
+<li> See Table 69 (page 115) for additional information on CKE transition.
+<li> Self refresh exit is asynchronous.
+<li> Burst READs or WRITEs cannot be terminated or interrupted. MRS (fixed) and OTF BL/BC
+are defined in MR0.
+<li> The purpose of the NOP command is to prevent the DRAM from registering any unwanted
+commands. A NOP will not terminate an operation that is executing.
+<li> The DES and NOP commands perform similarly.
+<li> The power-down mode does not perform any REFRESH operations.
+<li> ZQ CALIBRATION LONG is used for either ZQinit (first ZQCL command during initialization)
+or ZQoper (ZQCL command after initialization).
+</ol>
+
+
+<br><br>
+The MT41K can operate in three different modes, from which the
+programmer has to pick.
 
 
 </div>
