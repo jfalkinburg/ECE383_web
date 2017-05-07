@@ -98,14 +98,35 @@ handles its large amount of pins. According to Xilinx documentation, each bank h
 50 I/O pins. Also, there are not actually 35 banks - there are 10, as shown in
 the Figure of all the XC7A200T banks below.
 
+<br>
 <img src = "./fpga_banks.JPG" align = "middle">
+<br>
 
 So now that we can trace the physical connections between the Artix-7 FPGA and the
 SDRAM, how does the SDRAM actually work and how do we give it data?
 
 
-<h2>Details about the MT41K SDRAM</h2>
-It uses an 8<i>n</i>-prefetch architecture with an interface designed to transfer two data words per clock cycle at the I/O pins.
+<h3>SDRAM in General</h3>
+Before we get into the specifics of the MT41K SDRAM module, let's cover SDRAM in
+general. As anyone who has ever looked at a computer knows, a typical DDR3 memory 
+module comes in a DIMM (Dual-Inline Memory Module) which looks like the Figure
+below, which is a 4GB 240-pin DDR3 SDRAM containing eight 512 MB SDRAM modules I found
+on NewEgg for a price of $25.99.
+<br>
+<img src = "./dimm.jpg" align = "middle">
+<br>
+
+DIMM modules such as the one above easily fit into a modern motherboard and interface
+with the memory controller present on the motherboard. An assembler of a computer
+need not know how the memory actually works. An example of how the DDR3 DIMM
+module uses its 240 pins to connect to the eight individual SDRAM pins is shown
+in the datasheet <a href = "https://media.digikey.com/pdf/Data%20Sheets/Micron%20Technology%20Inc%20PDFs/MT8JTF(128,256)64A_RevB.pdf">
+here</a>.
+
+<h3>Details about the MT41K SDRAM</h3>
+Now that some context is given, let's go into how the MT41K in particular works.
+The MT41K uses an 8<i>n</i>-prefetch architecture
+with an interface designed to transfer two data words per clock cycle at the I/O pins.
 
 
 </div>
