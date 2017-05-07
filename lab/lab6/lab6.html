@@ -31,10 +31,15 @@ exactly the SDRAM can interface with the Artix-7.
 
 <h3>The SDRAM on the on the Nexys Video</h3>
 
-The Nexys Video contains a single Micron MT41K256M16HA-187E DDR3 memory chip. 
+The Nexys Video contains a single Micron MT41K256M16HA-187E DDR3 memory chip.
 The datasheet for the chip can be found
 <a href="https://www.micron.com/~/media/documents/products/data-sheet/dram/ddr3/4gb_1_35v_ddr3l.pdf">here</a>. 
-Let's break down what the part number for this SDRAM IC means.
+While Digilent claims
+that this memory chip has a capacity of 512MB, a closer inspection on Digikey and the data sheet show
+that the chip actually has a capacity of 4GB and, when in stock, sold for about $6.85 on Digikey (link
+<a href = https://www.digikey.com/product-detail/en/Micron-Technology-Inc./MT41K256M16HA-125-E/MT41K256M16HA-125-E-ND/4251401>
+here</a>). It is strange that Digilent is only using 1/8 of the memory available. Anyway,
+let's break down what the part number for this SDRAM IC means.
 <br><br>The MT stands for
 Micron Technology, and MT41K is the part number. 
 Next, the 256M16 means the configuration of the chip. 
@@ -60,25 +65,28 @@ which corresponds to a t<sub>ck</sub> of 1.875ns and a CL = 7.
 For a background on what FBGA (fine-pitch ball grid array) mounting is all about, 
 click <a href = https://en.wikipedia.org/wiki/Ball_grid_array>here</a>.
 
-<h3>Interface between the FPGA and the SDRAM</h3>
+<h3> Artix-7 Pinout </h3>
 The Xilinx XC7A200T-1SBG484C (Artix-7) FPGA is contained in
-a SBG484 BGA package. This results in a 19mm x 19mm package with
+an SBG484 BGA package. This results in a 19mm x 19mm package with
 a ball pitch of 0.8mm and a maximum of 
 285 I/O's which function on
 1.2-3.3V. The 484 (22x22) total pins on the Artix-7 
-can be seen in the figure below, and the types of pins are specified in the table below the pinout (I/O
-pins are shown as circles). <br><br>
+can be seen in the figure below, and the types of pins are specified in the table below the pinout. <br><br>
 
 <img src = "./fpga_pinout.JPG" align = "middle">
-
-A text file showing the configuration
-of all of the pins can be found
+<br><br>
+Also useful is a text file showing the configuration
+of all of the pins on the Artix-7, which can be found
 <a href = "https://www.xilinx.com/support/packagefiles/a7packages/xc7a200tsbg484pkg.txt"
->here</a>. Many of the pins in the picture above are used for configuration
+>here</a>. Note that many of the pins in the picture above are used for configuration
 of the FPGA on power-up or for power/ground.
 <br><br>
+
+
+<h3> Interface between the FPGA and the SDRAM </h3>
 The schematics pf the MT41K SDRAM included in the 
-Nexys Video schematic pdf on page 13 are shown below.<br>
+Nexys Video schematic pdf on page 13 are shown below.
+<br><br>
 
 
 <img src = "./ram1.JPG" align = "middle">
@@ -91,42 +99,45 @@ decoupled using the capacitors shown in the Figure below.
 
 <br>
 The schematic of the SDRAM above has pins DQ0-DQ15, which are the data pins, and 
-pins A0-A15 which are the address pins for the SDRAM. These pins as well as the others
+pins A0-A14 which are the address pins for the SDRAM. These pins as well as the others
 on the board are all connected to Bank 35 of the Artix-7,
-as shown in the Figure below.
+as shown in the Figure below. We will see later on why there are 15 address lines instead
+of 16.
 <br>
 <img src = "./fpga_pinout2.JPG" align = "middle">
 <br>
 
-Banks in all of the 7-series Xilinx FPGAs are important ways in which the Artix-7
-handles its large amount of pins. According to Xilinx documentation, each bank has
-50 I/O pins. Also, there are not actually 35 banks - there are 10, as shown in
-the Figure of all the XC7A200T banks below.
+Banks in the 7-series Xilinx FPGAs are important ways in which Xilinx FPGAs
+such as the Artix-7
+handle their large amount of pins. According to Xilinx documentation, each bank has
+50 I/O pins. Also, there are not actually 35 banks like one might think - there
+are 10, as shown in the Figure of all the XC7A200T banks below.
 
 <br>
 <img src = "./fpga_banks.JPG" align = "middle">
 <br>
 
-So now that we can trace the physical connections between the Artix-7 FPGA and the
-SDRAM, how does the SDRAM actually work and how do we give it data?
+So now that we can see the physical connections between the Artix-7 FPGA and the
+MT41K SDRAM module, how does the MT41K actually work and how do we give it data?
 
 
 <h3>SDRAM in General</h3>
 Before we get into the specifics of the MT41K SDRAM module, let's cover SDRAM in
-general. As anyone who has ever looked at a computer knows, a typical DDR3 memory 
-module comes in a DIMM (Dual-Inline Memory Module) which looks like the Figure
-below, which is a 4GB 240-pin DDR3 SDRAM containing eight 512 MB SDRAM modules I found
-on NewEgg for a price of $25.99.
+general. As anyone who has ever opened up a computer knows, a typical DDR3 memory 
+module comes in a DIMM (Dual-Inline Memory Module) package such as the one in the Figure
+below, which is a 4GB 240-pin DDR3 SDRAM containing eight 512 MB SDRAM modules. I found
+it on NewEgg for a price of $25.99.
 <br>
 <img src = "./dimm.jpg" align = "middle">
 <br>
 
 DIMM modules such as the one above easily fit into a modern motherboard and interface
 with the memory controller present on the motherboard. An assembler of a computer
-need not know how the memory actually works. An example of how the DDR3 DIMM
-module uses its 240 pins to connect to the eight individual SDRAM pins is shown
+need not know how this interface actually works - it's simply "plug
+and play". An example of how a DDR3 DIMM
+module uses its 240 pins to connect to the eight individual SDRAM ICs is shown
 in the datasheet <a href = "https://media.digikey.com/pdf/Data%20Sheets/Micron%20Technology%20Inc%20PDFs/MT8JTF(128,256)64A_RevB.pdf">
-here</a>.
+here</a>. In this lab, however, we will be "zooming in" on one SDRAM IC - the MT41K.
 
 <h3>Details about the MT41K SDRAM</h3>
 Now that some context is given, let's go into how the MT41K in particular works.
@@ -134,7 +145,9 @@ The MT41K uses an 8<i>n</i>-prefetch architecture
 with an interface designed to transfer two data words per clock cycle at the I/O pins.
 <br><br>
 
-There are four important parts to the operation of the SDRAM:
+There are four important signals sent from the Artix-7
+to enable the operation of the SDRAM:
+<br>
 <ul>
         <li> The address lines
         <li> The data lines
@@ -142,7 +155,12 @@ There are four important parts to the operation of the SDRAM:
         <li> The clock
                 <ul>
                 <li> The DDR3 SDRAM operates from a differential clock (CK and CK#). The crossing of CK
-going HIGH and CK# going LOW is referred to as the positive edge of CK
+				going HIGH and CK# going LOW is referred to as the positive edge of CK.
+				<li> As we have learned, the Nexys Video has an oscillator which runs at 100 MHz. 
+				According to the MT41K datasheet, the speed of our SDRAM module, -187E, should have
+				a clock cycle of 1.875ns with a CL (clock latency) of 7. This corresponds to a clock rate of
+				533 MHz, which is of course not possible with the oscillator present on our board. As you can see
+				in the Figure above, CK is hooked to FPGA pin J7.
                 </ul>
 </ul>
 <br><br>
@@ -224,8 +242,11 @@ or ZQoper (ZQCL command after initialization).
 
 
 <br><br>
-The MT41K can operate in three different modes, from which the
-programmer has to pick.
+Now that an introduction has been given to the MT41K SDRAM module on the Nexys Video board,
+write the VHDL code on your FPGA to interact with the MT41K. Once you have written and read
+a byte from the SDRAM, you have successfully completed Lab 6.
+
+<br><br><br>
 
 
 </div>
